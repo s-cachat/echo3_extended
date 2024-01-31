@@ -585,7 +585,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
     public String appCode() {
         if (appCode == null) {
             Digester d = new Digester();
-            appCode = org.apache.commons.codec.binary.Hex.encodeHexString(d.digest(getEntityManagerName().getBytes())).replace('=', '0');
+            appCode = new String(org.apache.commons.codec.binary.Hex.encodeHex(d.digest(getEntityManagerName().getBytes()))).replace('=', '0');
         }
         return appCode;
     }
