@@ -96,13 +96,6 @@ public class LoginSsoSlave {
     public boolean isDone() {
         return done;
     }
-    public static void main(String ... arg){
-        LoginSsoMaster l=new LoginSsoMaster("test");
-                
-        String s=l.generate("ZAETHT");
-        System.err.printf("generate %s, %s\r\n",l.getNom(),s);
-        LoginSsoSlave sl=new LoginSsoSlave(s);
-        System.err.printf("valid %s, nom %s, ts %d\r\n",sl.validate("ZAETHT", 5000),sl.getNom(),System.currentTimeMillis()-sl.getTs());
-    }
+
 
 }
