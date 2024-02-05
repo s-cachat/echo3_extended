@@ -426,12 +426,7 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
     public boolean save(boolean close) {
         logger.fine(String.format("save(%s)", current));
         errorMsg.setText("");
-        List<String> genericErrors = new ArrayList<String>() {
-            @Override
-            public boolean add(String e) {
-                return super.add(e); //To change body of generated methods, choose Tools | Templates.
-            }
-        };
+        List<String> genericErrors = new ArrayList<String>() ;
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();

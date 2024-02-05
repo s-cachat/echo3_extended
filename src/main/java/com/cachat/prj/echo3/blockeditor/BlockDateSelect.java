@@ -6,6 +6,7 @@ import com.cachat.util.BeanTools;
 import java.util.Date;
 import java.util.List;
 import jakarta.validation.Validator;
+import java.text.ParseException;
 import nextapp.echo.app.event.ChangeListener;
 
 /**
@@ -82,5 +83,12 @@ public class BlockDateSelect extends BlockField<DateSelect2> {
      */
     public void removeChangeListener(ChangeListener a) {
         editor.removeChangeListener(a);
+    }
+
+    /**
+     * donne la date sélectionnée
+     */
+    public Date getSelectedDate() throws ParseException {
+        return editor.getSelectedDate();
     }
 }

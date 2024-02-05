@@ -37,6 +37,7 @@ public class BlockLabel implements BlockInterface, BlockBase<Component> {
             label = new LabelEx(msg);
         }
     }
+
     /**
      * Constructeur, non html content
      *
@@ -45,6 +46,7 @@ public class BlockLabel implements BlockInterface, BlockBase<Component> {
     public BlockLabel(String msg) {
         this(msg, false);
     }
+
     /**
      * Constructeur, image
      *
@@ -66,7 +68,6 @@ public class BlockLabel implements BlockInterface, BlockBase<Component> {
             label.setLayoutData(layout);
         }
     }
-
 
     @Override
     public void copyObjectToUi() {
@@ -121,6 +122,9 @@ public class BlockLabel implements BlockInterface, BlockBase<Component> {
     }
 
     public void setText(String msg) {
+        if (msg == null) {
+            msg = "";
+        }
         if (label != null) {
             label.setText(msg);
         } else {
