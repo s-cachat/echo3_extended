@@ -138,8 +138,19 @@ public class BlockReadOnly extends BlockField<LabelEx> {
         try {
 
             if (hideIfNull) {
-                final Object val = BeanTools.getRaw(current, property);
-                if (val == null || (val instanceof String && ((String) val).trim().length() == 0)) {
+                boolean isnull;
+                if (properties == null) {
+                    final Object val = BeanTools.getRaw(current, property);
+                    isnull = (val == null || (val instanceof String && ((String) val).trim().length() == 0));
+                } else {
+                    isnull = true;
+                    for (String p : properties) {
+                        final Object val = BeanTools.getRaw(current, p);
+                        isnull &= (val == null || (val instanceof String && ((String) val).trim().length() == 0));
+                    }
+                }
+
+                if (isnull) {
                     editor.setVisible(false);
                     label.setVisible(false);
                     error.setVisible(false);
