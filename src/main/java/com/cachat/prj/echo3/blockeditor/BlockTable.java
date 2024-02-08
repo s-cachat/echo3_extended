@@ -61,9 +61,19 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     private final boolean canAdd;
     private final DeleteMode deleteMode;
     private boolean enabled = true;
+    /**
+     * couleur de fond des lignes impaires
+     */
     private Color c1 = new Color(220, 220, 220);
+    /**
+     * couleur de fond des lignes paires
+     */
     private Color c2 = new Color(255, 255, 255);
     protected LabelEx error;
+    /**
+     * le nombre de ligne maximal autorisé (-1 = infini)
+     */
+    private int maxRow = -1;
 
     /**
      * mode d'effacement
@@ -75,9 +85,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     }
     /**
      * les boutons d'éditions
-     *
      */
     private final List<Component> editButtons = new ArrayList<>();
+    /**
+     * les boutons d'ajout
+     */
+    private final List<Component> addButtons = new ArrayList<>();
 
     protected BlockTable(BlockTable<T> bp) throws CloneNotSupportedException {
         this(bp.li, bp.property, bp.current, bp.canAdd, bp.deleteMode, bp.clazz);
@@ -178,10 +191,10 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             for (Class cl : clazz) {
                 ButtonEx but = new ButtonEx(li.getString((clazz.length < 2 ? property : (property + "." + cl.getSimpleName())) + ".add"));
                 but.setStyleName("Button");
-
                 r.add(new Strut(20, 1));
                 r.add(but);
                 editButtons.add(but);
+                addButtons.add(but);
                 but.addActionListener((e) -> addRow(cl, property));
             }
         } else {
@@ -246,6 +259,14 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
 
     public void setC2(Color c2) {
         this.c2 = c2;
+    }
+
+    public int getMaxRow() {
+        return maxRow;
+    }
+
+    public void setMaxRow(int maxRow) {
+        this.maxRow = maxRow;
     }
 
     /**
@@ -712,6 +733,9 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         }
 
         public void update() {
+            if (maxRow > 0) {
+                addButtons.forEach(a -> a.setEnabled(getRowCount() < maxRow));
+            }
             fireTableDataChanged();
         }
     };
