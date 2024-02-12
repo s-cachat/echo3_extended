@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import jakarta.validation.Validator;
+import java.util.function.Consumer;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Font;
 import nextapp.echo.app.Row;
@@ -32,6 +33,10 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
      */
     private final Requester<T> requester;
     /**
+     * Fourni une liste d'objets pouvant correspondre à la suggestion
+     */
+    private final Requester2<T> requester2;
+    /**
      * mode lecture/écriture
      */
     protected SuggestField rwField;
@@ -42,7 +47,7 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
     /**
      * mode actuel
      */
-    private boolean canWrite=true;
+    private boolean canWrite = true;
 
     /**
      * Objet sélectionné
@@ -67,6 +72,7 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
     public BlockSuggest(BlockField bf) {
         super(bf.getLocalisedItem(), bf.getProperty());
         this.requester = ((BlockSuggest) bf).requester;
+        this.requester2 = ((BlockSuggest) bf).requester2;
         if (bf instanceof BlockSuggest) {
             this.propertyLabel = ((BlockSuggest) bf).getPropertyLabel();
             this.propertyDescription = ((BlockSuggest) bf).getPropertyDescription();
@@ -89,6 +95,25 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
     public BlockSuggest(LocalisedItem li, String property, Requester<T> requester, String propertyLabel, String propertyDescription) {
         super(li, property);
         this.requester = requester;
+        this.requester2 = null;
+        this.propertyLabel = propertyLabel;
+        this.propertyDescription = propertyDescription;
+        buildEditor();
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param li pour l'I18N
+     * @param property la propriété de type liste d'objet
+     * @param requester2 chargé de fournir les suggestions
+     * @param propertyLabel le libellé du propriété
+     * @param propertyDescription la description du propriété
+     */
+    public BlockSuggest(LocalisedItem li, String property, Requester2<T> requester2, String propertyLabel, String propertyDescription) {
+        super(li, property);
+        this.requester = null;
+        this.requester2 = requester2;
         this.propertyLabel = propertyLabel;
         this.propertyDescription = propertyDescription;
         buildEditor();
@@ -142,25 +167,19 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
     }
 
     protected final void buildEditor() {
-        editor=new Row();
+        editor = new Row();
         rwField = new SuggestField();
         rwField.setStyleName("Grid");
         rwField.addSuggestItemSelectListener(this);
         rwField.addServerFilterListener((e) -> {
             String str = e.getInputData();
             logger.log(Level.INFO, "serverFilterListener : {0}", str);
-            List<T> sl = requester.getSuggestion(str);
-            SuggestItem res[];
-            if (sl != null) {
-                res = new SuggestItem[sl.size()];
-                for (int i = 0; i < sl.size(); i++) {
-                    res[i] = suggest(sl.get(i));
-                }
+            if (requester != null) {
+                List<T> sl = requester.getSuggestion(str);
+                updateData(sl);
             } else {
-                res = new SuggestItem[0];
+                requester2.getSuggestion(str, sl -> updateData(sl));
             }
-            rwField.setSuggestModel(new SuggestModel(res));
-            error.setText(localisedItem.getBaseString("invalid"));
 
         });
         rwField.setDoServerFilter(true);
@@ -173,6 +192,20 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
         editor.add(roField);
         rwField.setVisible(canWrite);
         roField.setVisible(!canWrite);
+    }
+
+    private void updateData(List<T> sl) {
+        SuggestItem res[];
+        if (sl != null) {
+            res = new SuggestItem[sl.size()];
+            for (int i = 0; i < sl.size(); i++) {
+                res[i] = suggest(sl.get(i));
+            }
+        } else {
+            res = new SuggestItem[0];
+        }
+        rwField.setSuggestModel(new SuggestModel(res));
+        error.setText(localisedItem.getBaseString("invalid"));
     }
 
     /**
@@ -229,6 +262,25 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
         public List<T> getSuggestion(String crit);
     }
 
+    /**
+     * Fourni une liste d'objets pouvant correspondre à la suggestion. Le
+     * résultat est fourni via un callback, ce qui permet de générer l'ui dans
+     * le cadre d'une session de persistence, et donc de ne pas avoir de
+     * problème de lazy loading.
+     *
+     * @param <T> le type d'objet
+     */
+    public static interface Requester2<T> {
+
+        /**
+         * Fourni une liste d'objets pouvant correspondre à la suggestion
+         *
+         * @param crit la suggestion
+         * @param callback le callback (appelé dans le contexte d'une session de
+         * persistence si nécessaire)
+         */
+        public void getSuggestion(String crit, Consumer<List<T>> callback);
+    }
     //<editor-fold desc="Listeners" defaultstate="collapsed">
     // Les listeners pour une action
     List<ActionListener> listeners = new ArrayList<>();

@@ -8,6 +8,7 @@ import de.exxcellent.echolot.model.SuggestModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Font;
 import nextapp.echo.app.event.ActionEvent;
@@ -23,15 +24,21 @@ import nextapp.echo.app.event.ActionListener;
 public class SuggestField<T> extends de.exxcellent.echolot.app.SuggestField implements SuggestItemSelectListener {
 
     /**
-     * Fourni une liste d'objets pouvant correspondre à la suggestion
+     * Fourni une liste d'objets pouvant correspondre à la suggestion. Il faut
+     * fournir soit le requester, soit le requester2
      */
     private final Requester<T> requester;
+    /**
+     * Fourni une liste d'objets pouvant correspondre à la suggestion. Il faut
+     * fournir soit le requester, soit le requester2
+     */
+    private final Requester2<T> requester2;
 
     /**
      * Objet sélectionné
      */
     private T selected = null;
-    
+
     /**
      * Propriété des objets pour la description (optionnel)
      */
@@ -42,9 +49,37 @@ public class SuggestField<T> extends de.exxcellent.echolot.app.SuggestField impl
      */
     private final String propertyLabel;
 
+    /**
+     * Constructeur
+     *
+     * @param requester la fonction de recherche
+     * @param propertyLabel le ou les libellés principaux, séparés par des
+     * virgules
+     * @param propertyDescription le ou les libellés secondaires, séparés par
+     * des virgules. Peux être null.
+     */
     public SuggestField(Requester requester, String propertyLabel, String propertyDescription) {
         super();
         this.requester = requester;
+        this.requester2 = null;
+        this.propertyLabel = propertyLabel;
+        this.propertyDescription = propertyDescription;
+        init();
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param requester2 la fonction de recherche avec callback
+     * @param propertyLabel le ou les libellés principaux, séparés par des
+     * virgules
+     * @param propertyDescription le ou les libellés secondaires, séparés par
+     * des virgules. Peux être null.
+     */
+    public SuggestField(Requester2 requester2, String propertyLabel, String propertyDescription) {
+        super();
+        this.requester = null;
+        this.requester2 = requester2;
         this.propertyLabel = propertyLabel;
         this.propertyDescription = propertyDescription;
         init();
@@ -57,18 +92,28 @@ public class SuggestField<T> extends de.exxcellent.echolot.app.SuggestField impl
         addSuggestItemSelectListener(this);
         addServerFilterListener((e) -> {
             String str = e.getInputData();
-            List<T> sl = requester.getSuggestion(str);
-            SuggestItem res[] = new SuggestItem[sl.size()];
-            for (int i = 0; i < sl.size(); i++) {
-                res[i] = suggest(sl.get(i));
+            if (requester != null) {
+                List<T> sl = requester.getSuggestion(str);
+                updateData(sl);
+            } else {
+                requester2.getSuggestion(str, sl -> {
+                    updateData(sl);
+                });
             }
-            setSuggestModel(new SuggestModel(res));
         });
         setDoServerFilter(true);
         setShowDescription(true);
         if (propertyDescription != null) {
             setDescriptionFont(new Font(Font.ARIAL, Font.ITALIC, new Extent(8, Extent.PT)));
         }
+    }
+
+    private void updateData(List<T> sl) {
+        SuggestItem res[] = new SuggestItem[sl.size()];
+        for (int i = 0; i < sl.size(); i++) {
+            res[i] = suggest(sl.get(i));
+        }
+        setSuggestModel(new SuggestModel(res));
     }
 
     /**
@@ -127,7 +172,6 @@ public class SuggestField<T> extends de.exxcellent.echolot.app.SuggestField impl
     }
 
     //</editor-fold>
-    
     public T getSelectedValue() {
         return selected;
     }
@@ -139,7 +183,7 @@ public class SuggestField<T> extends de.exxcellent.echolot.app.SuggestField impl
     public String getPropertyLabel() {
         return propertyLabel;
     }
-    
+
     /**
      * Fourni une liste d'objets pouvant correspondre à la suggestion
      *
@@ -154,5 +198,25 @@ public class SuggestField<T> extends de.exxcellent.echolot.app.SuggestField impl
          * @return le résultat
          */
         public List<T> getSuggestion(String crit);
+    }
+
+    /**
+     * Fourni une liste d'objets pouvant correspondre à la suggestion. Le
+     * résultat est fourni via un callback, ce qui permet de générer l'ui dans
+     * le cadre d'une session de persistence, et donc de ne pas avoir de
+     * problème de lazy loading.
+     *
+     * @param <T> le type d'objet
+     */
+    public static interface Requester2<T> {
+
+        /**
+         * Fourni une liste d'objets pouvant correspondre à la suggestion
+         *
+         * @param crit la suggestion
+         * @param callback le callback (appelé dans le contexte d'une session de
+         * persistence si nécessaire)
+         */
+        public void getSuggestion(String crit, Consumer<List<T>> callback);
     }
 }

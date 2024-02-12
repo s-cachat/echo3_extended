@@ -7,6 +7,7 @@ import de.exxcellent.echolot.model.SuggestModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Font;
@@ -31,6 +32,10 @@ public class SuggestCrit<T> extends Crit {
      * Le requester
      */
     private final Requester<T> requester;
+    /**
+     * Le requester
+     */
+    private final Requester2<T> requester2;
 
     /**
      * Nom de la propriete libellé
@@ -105,12 +110,83 @@ public class SuggestCrit<T> extends Crit {
      * @param propLib le nom de la propriete libellé
      */
     public SuggestCrit(CritContainer cont, String prop, Requester<T> requester, String propLib) {
+        this(cont,prop,requester,null,propLib);
+    }
+    
+
+    /**
+     * Constructeur.
+     *
+     * @param cont le conteneur (la liste)
+     * @param prop le nom de la propriete critère de l'entité parente
+     * @param requester2 le requester
+     * @param propLib le nom de la propriete libellé
+     * @param mode le mode de sélection
+     * @param sizeLimit le nombre de suggestions à afficher
+     */
+    public SuggestCrit(CritContainer cont, String prop, Requester2<T> requester2, String propLib, ModeSelect mode, int sizeLimit) {
+        this(cont, prop, requester2, propLib);
+        this.mode = mode;
+        this.sizeLimit = sizeLimit;
+    }
+
+    /**
+     * Constructeur.
+     *
+     * @param cont le conteneur (la liste)
+     * @param prop le nom de la propriete critère de l'entité parente
+     * @param requester2 le requester
+     * @param propLib le nom de la propriete libellé
+     * @param sizeLimit le nombre de suggestions à afficher
+     */
+    public SuggestCrit(CritContainer cont, String prop, Requester2<T> requester2, String propLib, int sizeLimit) {
+        this(cont, prop, requester2, propLib);
+        this.sizeLimit = Math.max(0, sizeLimit);
+    }
+
+    /**
+     * Constructeur.
+     *
+     * @param cont le conteneur (la liste)
+     * @param prop le nom de la propriete critère de l'entité parente
+     * @param requester2 le requester
+     * @param propLib le nom de la propriete libellé
+     * @param mode le mode de sélection
+     */
+    public SuggestCrit(CritContainer cont, String prop, Requester2<T> requester2, String propLib, ModeSelect mode) {
+        this(cont, prop, requester2, propLib);
+        this.mode = mode;
+    }
+
+    /**
+     * Constructeur.
+     *
+     * @param cont le conteneur (la liste)
+     * @param prop le nom de la propriete critère de l'entité parente
+     * @param requester2 le requester
+     * @param propLib le nom de la propriete libellé
+     */
+    public SuggestCrit(CritContainer cont, String prop, Requester2<T> requester2, String propLib) {
+        this(cont,prop,null,requester2,propLib);
+    }
+    
+    /**
+     * Constructeur.
+     *
+     * @param cont le conteneur (la liste)
+     * @param prop le nom de la propriete critère de l'entité parente
+     * @param requester le requester (si défini, alors requester2 doit être null)
+     * @param requester2 le requester2 (si défini, alors requester doit être null)
+     * @param propLib le nom de la propriete libellé
+     */
+    private SuggestCrit(CritContainer cont, String prop, Requester<T> requester,Requester2<T> requester2, String propLib) {        
         super(cont, prop);
         critf.add(newLabel(cont.getString(prop), cont.getString(prop + ".tt")));
         sf = new SuggestField();
         sf.setStyleName("Grid");
         sf.setWidth(new Extent(99, Extent.PERCENT));
         this.requester = requester;
+        this.requester2 = requester2;
         this.propLib = propLib;
         sf.addSuggestItemSelectListener((e) -> {
             final SuggestItem si = e.getSuggestItem();
@@ -225,6 +301,25 @@ public class SuggestCrit<T> extends Crit {
         public List<T> getSuggestion(String crit);
     }
 
+    /**
+     * Fourni une liste d'objets pouvant correspondre à la suggestion. Le
+     * résultat est fourni via un callback, ce qui permet de générer l'ui dans
+     * le cadre d'une session de persistence, et donc de ne pas avoir de
+     * problème de lazy loading.
+     *
+     * @param <T> le type d'objet
+     */
+    public static interface Requester2<T> {
+
+        /**
+         * Fourni une liste d'objets pouvant correspondre à la suggestion
+         *
+         * @param crit la suggestion
+         * @param callback le callback (appelé dans le contexte d'une session de
+         * persistence si nécessaire)
+         */
+        public void getSuggestion(String crit, Consumer<List<T>> callback);
+    }
     //<editor-fold desc="Listeners" defaultstate="collapsed">
     // Les listeners pour une action
     List<ActionListener> listeners = new ArrayList<>();
