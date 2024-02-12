@@ -158,6 +158,7 @@ public class SuggestField<T> extends de.exxcellent.echolot.app.SuggestField impl
      *
      * @param actionListener le listener
      */
+    @Override
     public void addActionListener(ActionListener actionListener) {
         listeners.add(actionListener);
     }
