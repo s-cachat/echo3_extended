@@ -1,12 +1,15 @@
 package com.cachat.prj.echo3.blockeditor;
 
 import com.cachat.prj.echo3.base.LocalisedItem;
-import com.cachat.prj.echo3.components.DateSelect2;
+import com.cachat.prj.echo3.components.DateSelect3;
 import com.cachat.util.BeanTools;
 import java.util.Date;
 import java.util.List;
 import jakarta.validation.Validator;
 import java.text.ParseException;
+import java.util.ArrayList;
+import nextapp.echo.app.event.ActionListener;
+import nextapp.echo.app.event.ChangeEvent;
 import nextapp.echo.app.event.ChangeListener;
 
 /**
@@ -14,33 +17,30 @@ import nextapp.echo.app.event.ChangeListener;
  *
  * @author scachat
  */
-public class BlockDateSelect extends BlockField<DateSelect2> {
+public class BlockDateSelect extends BlockField<DateSelect3> {
 
     public BlockDateSelect(BlockField bf) {
         super(bf);
-        if (bf.editor instanceof DateSelect2) {
-            DateSelect2 x = (DateSelect2) bf.editor;
+        if (bf.editor instanceof DateSelect3) {
+            DateSelect3 x = (DateSelect3) bf.editor;
 
-            editor = new DateSelect2(x.isWithTime());
-            editor.setEnableButton(x.isEnableButton());
+            editor = new DateSelect3(x.isWithTime());
         }
     }
 
     public BlockDateSelect(LocalisedItem li, String property, boolean withTime, boolean withNull) {
         super(li, property);
-        editor = new DateSelect2(withTime);
-        editor.setButtonStyleName("Button");
-        editor.setEnableButton(withNull);
+        editor = new DateSelect3(withTime);
     }
 
     public BlockDateSelect(LocalisedItem li, String property, boolean withTime) {
         super(li, property);
-        editor = new DateSelect2(withTime);
+        editor = new DateSelect3(withTime);
     }
 
     public BlockDateSelect(LocalisedItem li, String property) {
         super(li, property);
-        editor = new DateSelect2();
+        editor = new DateSelect3();
     }
 
     @Override
@@ -53,11 +53,7 @@ public class BlockDateSelect extends BlockField<DateSelect2> {
     public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
         try {
             Date d = editor.getSelectedDate();
-            if (editor.isEnableButton() && !editor.isEnabled2()) {
-                BeanTools.setRaw(getParent().getCurrent(), property, null);
-            } else {
-                BeanTools.setRaw(getParent().getCurrent(), property, d);
-            }
+            BeanTools.setRaw(getParent().getCurrent(), property, d);
 
             error.setText((String) null);
             return validateProperty(validator, getParent().getCurrent(), property);
@@ -66,23 +62,34 @@ public class BlockDateSelect extends BlockField<DateSelect2> {
             return true;
         }
     }
+    private List<ChangeListener> listeners = new ArrayList<>();
+    private ActionListener al = null;
 
     /**
      * ajoute un changeListener
      *
-     * @param a le listener
+     * @param cl le listener
      */
-    public void addChangeListener(ChangeListener a) {
-        editor.addChangeListener(a);
+    public synchronized void addChangeListener(ChangeListener cl) {
+        if (al == null) {
+            al = e -> listeners.forEach(a -> a.stateChanged(new ChangeEvent(e.getSource())));
+            editor.addActionListener(al);
+        }
+        listeners.add(cl);
     }
 
     /**
      * supprime un changeListener
      *
-     * @param a le listener
+     * @param cl le listener
      */
-    public void removeChangeListener(ChangeListener a) {
-        editor.removeChangeListener(a);
+    public synchronized void removeChangeListener(ChangeListener cl) {
+        listeners.remove(cl);
+        if (listeners.isEmpty()) {
+            editor.removeActionListener(al);
+            al = null;
+        }
+
     }
 
     /**

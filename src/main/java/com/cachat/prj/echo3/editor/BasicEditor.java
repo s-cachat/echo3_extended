@@ -43,7 +43,7 @@ import nextapp.echo.app.list.ListModel;
 import nextapp.echo.app.text.StringDocument;
 import nextapp.echo.app.text.TextComponent;
 import com.cachat.prj.echo3.components.ButtonEx2;
-import com.cachat.prj.echo3.components.DateSelect2;
+import com.cachat.prj.echo3.components.DateSelect3;
 import com.cachat.util.BeanTools;
 import com.cachat.prj.echo3.ng.ButtonEx;
 import com.cachat.prj.echo3.ng.CheckBoxEx;
@@ -524,9 +524,8 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
         l.setStyleName("Grid");
         form.add(l);
         lst.add(l);
-        DateSelect2 tf = new DateSelect2();
+        DateSelect3 tf = new DateSelect3();
         tf.setStyleName("Grid");
-        tf.setEnableButton(false);
         //tf.setButtonStyleName("Button");
         form.add(tf);
         lst.add(tf);
@@ -1053,8 +1052,8 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
                         ((TextComponent) c).setText(BeanTools.get(cur, x.getValue()));
                     } else if (c instanceof DateTimeField) {
                         ((DateTimeField) c).setDate((java.util.Date) BeanTools.getRaw(cur, x.getValue()));
-                    } else if (c instanceof DateSelect2) {
-                        ((DateSelect2) c).setSelectedDate((java.util.Date) BeanTools.getRaw(cur, x.getValue()));
+                    } else if (c instanceof DateSelect3) {
+                        ((DateSelect3) c).setSelectedDate((java.util.Date) BeanTools.getRaw(cur, x.getValue()));
                     } else if (c instanceof CheckBox) {
                         ((CheckBox) c).setSelected((Boolean) BeanTools.getRaw(cur, x.getValue()));
                     } else if (c instanceof UploadImageControl) {
@@ -1152,8 +1151,8 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
                     } else if (x.getKey() instanceof DateTimeField) {
                         BeanTools.setRaw(cur, x.getValue(), ((DateTimeField) x.getKey()).getDate());
                         //logger.warning(String.format("Setting property %s of %s to %s : %s",x.getValue(),cur,((DateTimeField)x.getValue()).getDate(),BeanTools.getRaw(cur,x.getValue())));
-                    } else if (x.getKey() instanceof DateSelect2) {
-                        BeanTools.setRaw(cur, x.getValue(), ((DateSelect2) x.getKey()).getSelectedDate());
+                    } else if (x.getKey() instanceof DateSelect3) {
+                        BeanTools.setRaw(cur, x.getValue(), ((DateSelect3) x.getKey()).getSelectedDate());
                     } else if (x.getKey() instanceof CheckBox) {
                         BeanTools.setRaw(cur, x.getValue(), ((CheckBox) x.getKey()).isSelected());
                         logger.warning(String.format("Setting property %s of %s to %s : %s", x.getValue(), cur,

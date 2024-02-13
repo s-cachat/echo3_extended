@@ -1,3 +1,4 @@
+console.log("loaded datetimerange.js");
 /* global moment */
 
 /**

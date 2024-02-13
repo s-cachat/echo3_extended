@@ -1,6 +1,7 @@
 package com.cachat.prj.echo3.flotchart;
 
 import com.cachat.prj.echo3.base.BaseAppServlet;
+import static com.cachat.prj.echo3.components.GenericServices.JQUERY_SERVICE;
 import com.cachat.prj.echo3.ng.peers.Extended;
 import com.cachat.prj.echo3.outils.LocalResource;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,21 +23,20 @@ import nextapp.echo.webcontainer.WebContainerServlet;
 public class FlotChartPeer extends AbstractComponentSynchronizePeer {
     // Create a JavaScriptService containing the SpinButton JavaScript code.
 
-    private static final Service JS_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.FlotChart", "/com/cachat/prj/echo3/flotchart/FlotChart.js");
-    private static final Service JQUERY_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.jquery", "/com/cachat/prj/echo3/flotchart/js/jquery-1.11.2.min.js");
-    private static final Service FLOT_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.min.js");
-    private static final Service FLOT_TIME_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.time", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.time.min.js");
-    private static final Service FLOT_STACK_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.stack", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.stack.min.js");
-    private static final Service FLOT_PIE_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.pie", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.pie.min.js");
-    private static final Service FLOT_SELECTION_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.selection", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.selection.min.js");
-    private static final Service FLOT_NAVIGATE_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.navigate", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.navigate.min.js");
-    private static final Service FLOT_CROSSHAIR_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.crosshair", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.crosshair.min.js");
-    private static final Service FLOT_AXISLABEL_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.axisLabel", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.axislabel.js");
-    private static final Service FLOT_SAVE_AS_IMAGE_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.saveAsImage", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.saveAsImage.js");
-    private static final Service FLOT_ORDER_BARS_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.orderBars", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.orderBars.js");
-    private static final Service FLOT_TOOLTIP_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.tooltip", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.tooltip.min.js");
-    private static final Service FLOT_CATEGORIES_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.categories", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.categories.min.js");
-    private static final Service EXCANVAS_SERVICE = LocalResource.forJsResource(FlotChartPeer.class,"com.cachat.prj.echo3.flotchart.flot.excanvas", "/com/cachat/prj/echo3/flotchart/js/excanvas.min.js");
+    public static final Service JS_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.FlotChart", "/com/cachat/prj/echo3/flotchart/FlotChart.js");
+    private static final Service FLOT_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.min.js");
+    private static final Service FLOT_TIME_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.time", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.time.min.js");
+    private static final Service FLOT_STACK_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.stack", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.stack.min.js");
+    private static final Service FLOT_PIE_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.pie", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.pie.min.js");
+    private static final Service FLOT_SELECTION_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.selection", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.selection.min.js");
+    private static final Service FLOT_NAVIGATE_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.navigate", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.navigate.min.js");
+    private static final Service FLOT_CROSSHAIR_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.crosshair", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.crosshair.min.js");
+    private static final Service FLOT_AXISLABEL_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.axisLabel", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.axislabel.js");
+    private static final Service FLOT_SAVE_AS_IMAGE_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.saveAsImage", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.saveAsImage.js");
+    private static final Service FLOT_ORDER_BARS_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.orderBars", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.orderBars.js");
+    private static final Service FLOT_TOOLTIP_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.tooltip", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.tooltip.min.js");
+    private static final Service FLOT_CATEGORIES_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.categories", "/com/cachat/prj/echo3/flotchart/js/jquery.flot.categories.min.js");
+    private static final Service EXCANVAS_SERVICE = LocalResource.forJsResource(FlotChartPeer.class, "com.cachat.prj.echo3.flotchart.flot.excanvas", "/com/cachat/prj/echo3/flotchart/js/excanvas.min.js");
     private static final ObjectMapper json;
 
     static {
@@ -63,6 +63,7 @@ public class FlotChartPeer extends AbstractComponentSynchronizePeer {
         addOutputProperty(FlotChart.PROPERTY_MODEL);
         addOutputProperty(FlotChart.PROPERTY_DATA);
     }
+
     /*
      * Over-ridden to handle request of tag instances are that are serialised
      * as a JSON stucture.

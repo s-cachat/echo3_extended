@@ -1,5 +1,6 @@
 package com.cachat.prj.echo3.slickgrid;
 
+import static com.cachat.prj.echo3.components.GenericServices.JQUERY_SERVICE;
 import com.cachat.prj.echo3.ng.peers.Extended;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +24,6 @@ import nextapp.echo.webcontainer.service.JavaScriptService;
 public class SlickGridPeer extends AbstractComponentSynchronizePeer {
 
     private static final Service JS_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.slickgrid.SlickGrid", "com/cachat/prj/echo3/slickgrid/SlickGrid.js");
-    private static final Service JQUERY_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.flotchart.jquery", "com/cachat/prj/echo3/flotchart/js/jquery-1.11.2.min.js");
     private static final Service JQUERY_EVENT_DRAG = JavaScriptService.forResource("com.cachat.prj.slickgrid.jquery.event.drag", "com/cachat/prj/echo3/slickgrid/js/jquery.event.drag-2.3.0.js");
     private static final Service SLICK_CELLRANGEDECORATOR = JavaScriptService.forResource("com.cachat.prj.slickgrid.slick.cellrangedecorator", "com/cachat/prj/echo3/slickgrid/js/slick.cellrangedecorator.js");
     private static final Service SLICK_CELLSELECTIONMODEL = JavaScriptService.forResource("com.cachat.prj.slickgrid.slick.cellselectionmodel", "com/cachat/prj/echo3/slickgrid/js/slick.cellselectionmodel.js");
@@ -56,7 +56,7 @@ public class SlickGridPeer extends AbstractComponentSynchronizePeer {
         addOutputProperty(SlickGrid.PROPERTY_MODEL);
         addOutputProperty(SlickGrid.PROPERTY_DATA);
         addEvent(new EventPeer(SlickGrid.CELL_UPDATED,
-                SlickGrid.CELL_UPDATED_LISTENERS_CHANGED_PROPERTY,CellUpdateData.class) {
+                SlickGrid.CELL_UPDATED_LISTENERS_CHANGED_PROPERTY, CellUpdateData.class) {
             @Override
             public boolean hasListeners(Context context, Component c) {
                 return true;//at least we are a listener, to update the model

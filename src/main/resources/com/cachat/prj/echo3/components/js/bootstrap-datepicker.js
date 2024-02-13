@@ -1,3 +1,4 @@
+console.log("loaded bootstrap-datepicker.js");
 /*!
  * Datepicker for Bootstrap v1.5.0 (https://github.com/eternicode/bootstrap-datepicker)
  *

@@ -1,3 +1,4 @@
+console.log("loaded DateSelect3.js");
 DateSelect3 = {};
 DateSelect3 = Core.extend(Echo.Component, {
     $load: function () {
@@ -16,29 +17,46 @@ DateSelect3.Sync = Core.extend(Echo.Render.ComponentSync, {
     _container: null,
     renderAdd: function (update, parentElement) {
         console.log(update);
-        
+
         console.log("DateSelect3 renderAdd");
 
         this._container = document.createElement("span");
         this._container.id = this.component.renderId;
 
-        this._dateInput = document.createElement("input");
-        this._container.appendChild(this._dateInput);
-        this._dateInput.id = this.component.renderId + "_date";
-        this._dateInput.timepicker({
-            'showDuration': true,
-            'timeFormat': 'g:ia'
-        });
+        var startDate = this.component.render("startDate");
+        var endDate = this.component.render("endDate");
+        var withTime = this.component.render("withTime");
+        var withNull = this.component.render("withNull");
+        var step = this.component.render("step");
+        console.log("startDate ", startDate, ", endDate ", endDate, ", withTime ", withTime, ", withNull ", withNull);
+
+
 
         this._timeInput = document.createElement("input");
         this._container.appendChild(this._timeInput);
         this._timeInput.id = this.component.renderId + "_date";
-        this._timeInput.datepicker({
-            'format': 'm/d/yyyy',
-            'autoclose': true
-        });
-
-        this._container.datepair();
+        $(this._timeInput).datepicker();
+//        $(this._timeInput).datepicker({
+//            'format': 'd/m/yyyy',
+//            'autoclose': true
+//        });
+        if (withTime) {
+            this._dateInput = document.createElement("input");
+            this._container.appendChild(this._dateInput);
+            this._dateInput.id = this.component.renderId + "_date";
+            var options = {
+                'showDuration': true,
+                'timeFormat': 'H:i'
+            };
+            if (withNull) {
+                options.noneOption = ['-'];
+            }
+            if (step) {
+                options.step = step;
+            }
+            $(this._dateInput).timepicker(options);
+        }
+        $(this._container).datepair();
 
         this.component.addListener('change', function (e) {
             e.source.peer.component.set("value", e.v);

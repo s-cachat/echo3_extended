@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author user1
  */
-@WebServlet(name = "DateSelect2StaticRessources", urlPatterns = "/dateSelect2/*")
-public class DateSelect2StaticRessources extends /*TODO AbstractAppServlet*/ HttpServlet {
+@WebServlet(name = "GenericCssServlet", urlPatterns = "/echo3extended/css/*")
+public class GenericCssServlet extends HttpServlet {
 
     /**
      * Handles the HTTP <code>GET</code> method.

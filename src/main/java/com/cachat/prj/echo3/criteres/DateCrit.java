@@ -1,6 +1,6 @@
 package com.cachat.prj.echo3.criteres;
 
-import com.cachat.prj.echo3.components.DateSelect2;
+import com.cachat.prj.echo3.components.DateSelect3;
 import com.cachat.util.DateUtil;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,7 +25,7 @@ public class DateCrit extends Crit {
     /**
      * la date
      */
-    private DateSelect2 df;
+    private DateSelect3 df;
     /**
      * les actionListener
      */
@@ -90,9 +90,8 @@ public class DateCrit extends Crit {
             critf.add(l);
         }
 
-        df = new DateSelect2();
+        df = new DateSelect3();
         df.setStyleName("Button");
-        df.setEnableButton(canBeDisabled);
         critf.add(df);
         cont.addCrit(this);
         df.addActionListener(cont);
@@ -131,10 +130,6 @@ public class DateCrit extends Crit {
      */
     @Override
     public String updateWhere(List<Object> arg) {
-        if (!df.isEnabled2()) {
-            return null;
-        }
-        try {
             Date date = df.getSelectedDate();
             if (date == null) {
                 return null;
@@ -148,9 +143,7 @@ public class DateCrit extends Crit {
             arg.add(max);
             arg.add(min);
             return String.format("%1$s<? and %2$s>=?", prop, propFin);
-        } catch (ParseException pe) {
-            throw new RuntimeException(pe);
-        }
+
 
     }
 
@@ -166,7 +159,6 @@ public class DateCrit extends Crit {
 
     @Override
     public String getSummary() {
-        try {
             Date date = df.getSelectedDate();
             if (date == null) {
                 return null;
@@ -178,8 +170,6 @@ public class DateCrit extends Crit {
             cal.add(Calendar.DATE, 1);
             java.util.Date max = cal.getTime();
             return String.format("%1$s < %3$s %5$s %2$s >= %4$s", cont.getString(prop), cont.getString(propFin), format.format(max), format.format(min), cont.getBaseString("and"));
-        } catch (ParseException pe) {
-            throw new RuntimeException(pe);
-        }
+
     }
 }

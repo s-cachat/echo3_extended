@@ -1,3 +1,4 @@
+console.log("loaded DateSelect2.js");
 /* global Echo, Core, moment */
 DateSelect2 = {};
 DateSelect2 = Core.extend(Echo.Component, {
