@@ -200,13 +200,10 @@ public class SuggestCrit<T> extends Crit {
         });
         sf.addServerFilterListener((e) -> {
             String str = e.getInputData();
-            List<T> sl = this.requester.getSuggestion(str);
-            if (sl != null && sl.size() <= sizeLimit) {
-                SuggestItem res[] = new SuggestItem[sl.size()];
-                for (int i = 0; i < sl.size(); i++) {
-                    res[i] = suggest(sl.get(i));
-                }
-                sf.setSuggestModel(new SuggestModel(res));
+            if (this.requester2 != null) {
+                this.requester2.getSuggestion(str, this::handleSuggestions);
+            } else {
+                handleSuggestions(this.requester.getSuggestion(str));
             }
         });
         sf.setDoServerFilter(true);
@@ -230,6 +227,21 @@ public class SuggestCrit<T> extends Crit {
         cont.extendCritAreaHeight(CritContainer.CRIT_HEIGHT);
     }
 
+    /**
+     * Gére une liste de suggestions proposée par le requester
+     * 
+     * @param sl la liste de suggestions
+     */
+    private void handleSuggestions(List<T> sl) {
+        if (sl != null && sl.size() <= sizeLimit) {
+            SuggestItem res[] = new SuggestItem[sl.size()];
+            for (int i = 0; i < sl.size(); i++) {
+                res[i] = suggest(sl.get(i));
+            }
+            sf.setSuggestModel(new SuggestModel(res));
+        }
+    }
+    
     @Override
     public String updateWhere(List<Object> arg) {
         T s = getSelectedValue();
