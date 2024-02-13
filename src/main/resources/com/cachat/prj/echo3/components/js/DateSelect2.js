@@ -10,7 +10,7 @@ DateSelect2.Sync = Core.extend(Echo.Render.ComponentSync, {
     $load: function () {
         Echo.Render.registerPeer("DateSelect2", this);
         componentType : "DateSelect2";
-       document.head.innerHTML = document.head.innerHTML +'<link rel="stylesheet" type="text/css" href="dateSelect2/datetimerange.css" />';
+       document.head.innerHTML = document.head.innerHTML +'<link rel="stylesheet" type="text/css" href="echo3extended/css/datetimerange.css" />';
     },
     _picker: null,
     renderAdd: function (update, parentElement) {
