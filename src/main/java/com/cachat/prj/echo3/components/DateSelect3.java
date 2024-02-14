@@ -1,5 +1,6 @@
 package com.cachat.prj.echo3.components;
 
+import com.cachat.util.DateTimeUtil;
 import com.cachat.util.DateUtil;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
@@ -18,11 +21,10 @@ import nextapp.echo.app.event.ActionListener;
 public class DateSelect3 extends Component {
     // OUTPUT PROPERTIES ///////////////////////////////////////////////////////
 
-    public static final String PROPERTY_START_DATE_VALUE = "startDate";
-    public static final String PROPERTY_END_DATE_VALUE = "endDate";
+    public static final String PROPERTY_DATE_VALUE = "value";
     public static final String PROPERTY_WITH_TIME = "withTime";
     public static final String PROPERTY_WITH_NULL = "withNull";
-    public static final int PROPERTY_STEP = 15;
+    public static final String PROPERTY_STEP = "step";
     /**
      * si true, permet la sélection de l'heure
      */
@@ -39,15 +41,14 @@ public class DateSelect3 extends Component {
     /**
      * Format pour l'envoi au serveur
      */
-    private final SimpleDateFormat jsFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private final SimpleDateFormat jsFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     /**
      * Donne la liste de propriétés
      */
     public static final String[] getOutputProperties() {
         return new String[]{
-            PROPERTY_START_DATE_VALUE,
-            PROPERTY_END_DATE_VALUE,
+            PROPERTY_DATE_VALUE,
             PROPERTY_WITH_TIME,
             PROPERTY_WITH_NULL
         };
@@ -110,7 +111,7 @@ public class DateSelect3 extends Component {
      * @todo Supprimer le ParseException de la signature
      * @return La date sélectionnée, ou null si désactivé
      */
-    public Date getSelectedDate()  {
+    public Date getSelectedDate() {
         return date;
     }
 
@@ -144,7 +145,7 @@ public class DateSelect3 extends Component {
             DateUtil.midnight(this.date);
         }
         if (updateClient) {
-            set(PROPERTY_START_DATE_VALUE, this.date == null ? null : jsFormat.format(this.date));
+            set(PROPERTY_DATE_VALUE, this.date == null ? null : jsFormat.format(this.date));
         }
     }
 
@@ -169,30 +170,21 @@ public class DateSelect3 extends Component {
     public void processInput(String inputName, Object inputValue) {
         super.processInput(inputName, inputValue);
         switch (inputName) {
-            case PROPERTY_START_DATE_VALUE -> {
-                setSelectedDate(parseDate((String) inputValue), false);
+            case PROPERTY_DATE_VALUE -> {
+                try {
+                    if (withTime) {
+                        setSelectedDate(DateTimeUtil.parse((String) inputValue));
+                    } else {
+                        setSelectedDate(DateUtil.parse((String) inputValue));
+                    }
+                } catch (ParseException ex) {
+                    Logger.getLogger(DateSelect3.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 fireAction();
             }
         }
     }
 
-    private Date parseDate(String input) {
-        try {
-            String val;
-            if (input == null) {
-                return null;
-            } else if (input.contains("+")) {
-                // on supprime le fuseau horaire
-                val = input.substring(0, input.indexOf("+"));
-            } else {
-                val = input;
-            }
-
-            return jsFormat.parse(val);
-        } catch (ParseException ex) {
-            return null;
-        }
-    }
     // ActionListener //////////////////////////////////////////////////////////
     private final List<ActionListener> actionListeners = new ArrayList<>();
 
@@ -207,6 +199,10 @@ public class DateSelect3 extends Component {
     private void fireAction() {
         ActionEvent e = new ActionEvent(this, "change");
         actionListeners.stream().forEach((a) -> a.actionPerformed(e));
+    }
+
+    public boolean hasActionListeners() {
+        return !actionListeners.isEmpty();
     }
 
 }
