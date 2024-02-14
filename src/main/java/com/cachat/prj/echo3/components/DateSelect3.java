@@ -39,9 +39,13 @@ public class DateSelect3 extends Component {
     private Date date;
 
     /**
-     * Format pour l'envoi au serveur
+     * Format pour l'envoi au client, date et heure
      */
-    private final SimpleDateFormat jsFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private final SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    /**
+     * Format pour l'envoi au client, date seule
+     */
+    private final SimpleDateFormat dFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * Donne la liste de propriétés
@@ -145,7 +149,7 @@ public class DateSelect3 extends Component {
             DateUtil.midnight(this.date);
         }
         if (updateClient) {
-            set(PROPERTY_DATE_VALUE, this.date == null ? null : jsFormat.format(this.date));
+            set(PROPERTY_DATE_VALUE, this.date == null ? null : (withTime ? dtFormat : dFormat).format(this.date));
         }
     }
 
