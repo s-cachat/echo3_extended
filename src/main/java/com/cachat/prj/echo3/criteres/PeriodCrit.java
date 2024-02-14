@@ -1,6 +1,7 @@
 package com.cachat.prj.echo3.criteres;
 
 import com.cachat.prj.echo3.base.DateSelect;
+import com.cachat.prj.echo3.components.DateSelect3;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import nextapp.echo.app.Extent;
@@ -24,11 +25,11 @@ public class PeriodCrit extends Crit implements ActionListener {
     /**
      * la date de debut
      */
-    private DateSelect dfDebut;
+    private DateSelect3 dfDebut;
     /**
      * la date de fin
      */
-    private DateSelect dfFin;
+    private DateSelect3 dfFin;
     /**
      * longueur maxi de la période, en jours (-1 = illimité)
      */
@@ -80,17 +81,13 @@ public class PeriodCrit extends Crit implements ActionListener {
         this.maxLen = maxLen;
         critf.add(newLabel(cont.getString(libKey), cont.getString(libKey + ".tt")));
         Row row = new Row();
-        dfDebut = new DateSelect();
+        dfDebut = new DateSelect3(false);
         dfDebut.setStyleName("Button");
-        dfDebut.setWidth(new Extent(75, Extent.PX));
-        dfDebut.setHeight(new Extent(20, Extent.PX));
         dfDebut.addActionListener(this);
         row.add(dfDebut);
         row.add(new Label("=>"));
-        dfFin = new DateSelect();
+        dfFin = new DateSelect3(false);
         dfFin.setStyleName("Button");
-        dfFin.setWidth(new Extent(75, Extent.PX));
-        dfFin.setHeight(new Extent(20, Extent.PX));
         dfFin.addActionListener(this);
         row.add(dfFin);
         Calendar now = new GregorianCalendar();
