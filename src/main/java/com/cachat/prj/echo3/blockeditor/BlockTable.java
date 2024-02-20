@@ -346,6 +346,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/delete.png"));
             this.line = line;
             addActionListener(this);
+            setEnabled(canDelete(line.getCurrent()));
         }
 
         @Override
@@ -385,6 +386,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         public Object clone() {
             return new ButtonDel(line);
         }
+
     }
 
     public class ButtonActivable extends ButtonEx implements ActionListener, BlockInterface {
@@ -395,6 +397,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/delete.png"));
             this.line = line;
             addActionListener(this);
+            setEnabled(canDelete(line.getCurrent()));
         }
 
         @Override
@@ -763,5 +766,15 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             return true;
         }
         return rows.stream().anyMatch((c) -> c.appendError(pp, msg));
+    }
+
+    /**
+     * vérifie si cet élément peut être effacé/désactivé
+     *
+     * @param current l'élément
+     * @return true si il peut être effacé/désactivé
+     */
+    protected boolean canDelete(T current) {
+        return true;
     }
 }
