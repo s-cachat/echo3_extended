@@ -80,6 +80,30 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
     }
 
     /**
+     * Constructeur. Taille fixe sauf si non modale
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le domaine de la fenetre
+     */
+    public BlockEditor(BaseApp app, String prefixe, String domaine) {
+        this(app, prefixe, domaine, new Extent(800), new Extent(600));
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le domaine de la fenetre
+     * @param w la largeur de la fenetre
+     * @param h la hauteur de la fenetre
+     */
+    public BlockEditor(BaseApp app, String prefixe, String domaine, int w, int h) {
+        this(app, prefixe, domaine, new Extent(w), new Extent(h));
+    }
+
+    /**
      * Constructeur
      *
      * @param app l'application
@@ -281,11 +305,12 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
             ok.setEnabled(enabled);
             cancel.setEnabled(enabled);
         }
+
         /**
          * change uniquement la possibilité d'appuyer sur ok
          */
         public void setOkEnabled(boolean enabled) {
-            ok.setEnabled(enabled);            
+            ok.setEnabled(enabled);
         }
 
         @Override
@@ -426,7 +451,7 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
     public boolean save(boolean close) {
         logger.fine(String.format("save(%s)", current));
         errorMsg.setText("");
-        List<String> genericErrors = new ArrayList<String>() ;
+        List<String> genericErrors = new ArrayList<String>();
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -457,7 +482,7 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
                     if (m == null || m.isBlank()) {
                         genericErrors.add(String.format("Erreur \"%s\"", cv.getPropertyPath()));
                     } else {
-                        
+
                         if (!form.appendError(pp, m)) {
                             genericErrors.add(m);
                         }

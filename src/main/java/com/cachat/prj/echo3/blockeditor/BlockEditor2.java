@@ -44,6 +44,28 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
     public BlockEditor2(BaseApp app, String prefixe, String domaine, Extent w, Extent h) {
         super(app, prefixe, domaine, w, h);
     }
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le domaine de la fenetre
+     * @param w la largeur de la fenetre
+     * @param h la hauteur de la fenetre
+     */
+    public BlockEditor2(BaseApp app, String prefixe, String domaine, int w, int h) {
+        super(app, prefixe, domaine, w, h);
+    }
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le domaine de la fenetre
+     */
+    public BlockEditor2(BaseApp app, String prefixe, String domaine) {
+        super(app, prefixe, domaine);
+    }
 
     protected class BlockButton extends BlockEditor.BlockButton {
 
