@@ -78,7 +78,7 @@ import nextapp.echo.app.table.AbstractTableModel;
  * Copyright 2003-2014 SST Informatique
  * @param <TypeObjet> le type de l'objet a éditer
  */
-public abstract class BasicEditor<TypeObjet> extends BasicWindow implements FullScreen{
+public abstract class BasicEditor<TypeObjet> extends BasicWindow implements FullScreen {
 
     /**
      * optionnel, la liste correspondante
@@ -128,6 +128,32 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
     @Deprecated
     public BasicEditor(BaseApp app, String prefixe, Extent w, Extent h) {
         this(app, prefixe, "generique", w, h);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param w la largeur de la fenetre
+     * @param h la hauteur de la fenetre
+     * @param domaine le code domaine de la fenetre (pour affichage du visuel
+     * associ?)
+     */
+    public BasicEditor(BaseApp app, String prefixe, String domaine, int w, int h) {
+        this(app, prefixe, domaine, new Extent(w), new Extent(h));
+    }
+
+    /**
+     * Constructeur. Fenêtre de taille fixe 800x600, sauf si non modale
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le code domaine de la fenetre (pour affichage du visuel
+     * associ?)
+     */
+    public BasicEditor(BaseApp app, String prefixe, String domaine) {
+        this(app, prefixe, domaine, new Extent(800), new Extent(600));
     }
 
     /**
@@ -1305,7 +1331,7 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
                             index.add(index.size());
                             data.add(TableEditor.this.type.getConstructor().newInstance());
                             model.fireTableDataChanged();
-                        } catch (NoSuchMethodException|InvocationTargetException|InstantiationException | IllegalAccessException ex) {
+                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }
                     }
