@@ -4,6 +4,7 @@ import com.cachat.prj.echo3.components.DirectHtml;
 import com.cachat.prj.echo3.ng.LabelEx;
 import java.util.List;
 import jakarta.validation.Validator;
+import nextapp.echo.app.Color;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.ImageReference;
 import nextapp.echo.app.LayoutData;
@@ -130,5 +131,23 @@ public class BlockLabel implements BlockInterface, BlockBase<Component> {
         } else {
             dhtml.setText(msg);
         }
+    }
+
+    /**
+     * fixe la couleur de l'arrière plan
+     *
+     * @param color la couleur
+     */
+    public void setBackground(Color color) {
+        label.setBackground(color);
+    }
+
+    /**
+     * fixe la couleur de l'avant plan
+     *
+     * @param color la couleur
+     */
+    public void setForeground(Color color) {
+        label.setForeground(color);
     }
 }
