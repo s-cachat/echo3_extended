@@ -43,12 +43,13 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
      * la liste a renseigner
      */
     protected TypeObjet data;
-    
+
     public BlockSingleToggle(BlockField bf) {
         super(bf);
-        this.unSelectedStyleName = ((BlockSingleToggle< TypeObjet>) bf).unSelectedStyleName;
-        this.selectedStyleName = ((BlockSingleToggle< TypeObjet>) bf).selectedStyleName;
-        ((BlockSingleToggle< TypeObjet>) bf).items.entrySet().forEach((x) -> items.put(new ToggleButtonEx(x.getKey().getText(), unSelectedStyleName, selectedStyleName), x.getValue()));
+        BlockSingleToggle<TypeObjet> obf = (BlockSingleToggle< TypeObjet>) bf;
+        this.unSelectedStyleName = obf.unSelectedStyleName;
+        this.selectedStyleName = obf.selectedStyleName;
+        obf.items.entrySet().forEach((x) -> items.put(new ToggleButtonEx(x.getKey().getText(), unSelectedStyleName, selectedStyleName), x.getValue()));
     }
 
     /**
@@ -91,11 +92,24 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
      * @param cols le nombre de colonnes
      */
     public BlockSingleToggle(LocalisedItem li, String property, Class<TypeObjet> items, String unSelectedStyleName, String selectedStyleName, int cols) {
+        this(li, property, items, unSelectedStyleName, selectedStyleName, cols, false);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param li pour l'I18N
+     * @param property la propriété de type liste d'objet
+     * @param items la liste d'objet a choisir
+     * @param propLib la propriété des objets a choisir a utiliser comme label
+     * @param cols le nombre de colonnes
+     */
+    public BlockSingleToggle(LocalisedItem li, String property, Class<TypeObjet> items, String unSelectedStyleName, String selectedStyleName, int cols, boolean withNull) {
         super(li, property);
         this.unSelectedStyleName = unSelectedStyleName;
         this.selectedStyleName = selectedStyleName;
         createGrid(li, cols);
-        setList(items);
+        setList(items,withNull);
     }
 
     /**
@@ -176,9 +190,9 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
      * après.
      *
      * @param items la classe pour la liste d'enums a sélectionner
-     * @param propLib la propriété a afficher
+     * @param withNull si true, ajoute le choix vide
      */
-    public void setList(Class<TypeObjet> items) {
+    public void setList(Class<TypeObjet> items, boolean withNull) {
         this.items.clear();
         if (editor != null) {
             editor.removeAll();
@@ -189,9 +203,15 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
                 editor.add(cb);
                 cb.addActionListener(e -> setSelected(o, cb));
             }
+            if (withNull) {
+                ToggleButtonEx cb = new ToggleButtonEx(li.getString(String.format("%s.%s", items.getSimpleName(), "null")), unSelectedStyleName, selectedStyleName);
+                this.items.put(cb, null);
+                editor.add(cb);
+                cb.addActionListener(e -> setSelected(null, cb));
+            }
         }
     }
-    
+
     @Override
     public void copyObjectToUi() {
         data = (TypeObjet) BeanTools.getRaw(getParent().getCurrent(), property);
@@ -201,7 +221,7 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
             });
         }
     }
-    
+
     @Override
     public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
         try {
@@ -213,7 +233,7 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
             return true;
         }
     }
-    
+
     private void setSelected(TypeObjet o, ToggleButtonEx cb) {
         data = o;
         for (ToggleButtonEx t : items.keySet()) {
@@ -223,7 +243,7 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
         }
         cb.setSelected(true);
     }
-    
+
     protected void createGrid(LocalisedItem li, int cols) {
         editor = new Grid(cols);
         editor.setInsets(new Insets(4));
