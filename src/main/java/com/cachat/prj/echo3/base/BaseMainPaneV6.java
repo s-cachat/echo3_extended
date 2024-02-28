@@ -142,7 +142,20 @@ public abstract class BaseMainPaneV6 extends MainPane {
      * fin d'affichage d'un toast
      */
     private TimerTask endToast;
+    /**
+     * container pour les toast (message fugitif)
+     */
+    private final ContainerEx toastErrorCE;
 
+    /**
+     * label pour les toast
+     */
+    private final Label toastError;
+
+    /**
+     * fin d'affichage d'un toast
+     */
+    private TimerTask endToastError;
     /**
      * liste de fenetres affich?es, dans l'ordre
      */
@@ -232,15 +245,15 @@ public abstract class BaseMainPaneV6 extends MainPane {
             Row r = new Row();
             String url = app.getHelpUrl();
             if (url != null) {
-            helpBtn = new ButtonEx2("?");
-            helpBtn.setStyleName("HeaderButton");
-            helpBtn.setAlignment(Alignment.ALIGN_CENTER);
-                helpBtn.addActionListener(e -> {                   
+                helpBtn = new ButtonEx2("?");
+                helpBtn.setStyleName("HeaderButton");
+                helpBtn.setAlignment(Alignment.ALIGN_CENTER);
+                helpBtn.addActionListener(e -> {
                     Command command = new BrowserOpenWindowCommand(url, "extra", new Extent(800), new Extent(600), BrowserOpenWindowCommand.FLAG_REPLACE | BrowserOpenWindowCommand.FLAG_RESIZABLE);
                     app.enqueueCommand(command);
-            });
-            r.add(helpBtn);
-            r.add(new Strut(6, 6));
+                });
+                r.add(helpBtn);
+                r.add(new Strut(6, 6));
             }
             backBtn = new ButtonEx2("⇦");
             backBtn.setStyleName("HeaderButton");
@@ -322,6 +335,11 @@ public abstract class BaseMainPaneV6 extends MainPane {
         toastCE.add(toast = new Label());
         toastCE.setVisible(false);
         add(toastCE);
+        toastErrorCE = new ContainerEx(10, null, 10, 10, null, 22);
+        toastErrorCE.setStyleName("toastError");
+        toastErrorCE.add(toastError = new Label());
+        toastErrorCE.setVisible(false);
+        add(toastErrorCE);
     }
 
     /**
@@ -505,6 +523,38 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 }
             };
             toastTimer.schedule(endToast, 5000);
+        }
+    }
+
+    /**
+     * affiche un message fugitif en bas de page. peut ne pas être implémenté
+     * (dans ce cas ne fait rien)
+     *
+     * @param message le message
+     */
+    @Override
+    public void toastError(String message) {
+        synchronized (toastError) {
+            if (endToastError != null) {
+                endToastError.cancel();
+                toastError.setText(message);
+            } else {
+                toastError.setText(message);
+                toastErrorCE.setVisible(true);
+            }
+            endToastError = new TimerTask() {
+                @Override
+                public void run() {
+                    app.enqueueTask(() -> {
+                        synchronized (toastError) {
+                            toastError.setText("");
+                            toastErrorCE.setVisible(false);
+                            endToastError = null;
+                        }
+                    });
+                }
+            };
+            toastTimer.schedule(endToastError, 5000);
         }
     }
 
