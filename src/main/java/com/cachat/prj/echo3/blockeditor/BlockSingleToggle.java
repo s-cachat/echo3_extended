@@ -109,7 +109,7 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
         this.unSelectedStyleName = unSelectedStyleName;
         this.selectedStyleName = selectedStyleName;
         createGrid(li, cols);
-        setList(items,withNull);
+        setList(items, withNull);
     }
 
     /**
@@ -216,9 +216,17 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
     public void copyObjectToUi() {
         data = (TypeObjet) BeanTools.getRaw(getParent().getCurrent(), property);
         if (data != null) {
-            items.entrySet().forEach((x) -> {
-                x.getKey().setSelected(data.equals(x.getValue()));
-            });
+            if (editor.isEnabled()) {
+                items.entrySet().forEach((x) -> {
+                    x.getKey().setSelected(data.equals(x.getValue()));
+                    x.getKey().setVisible(true);
+                }
+                );
+            } else {
+                items.entrySet().forEach((x) -> {
+                    x.getKey().setVisible(data.equals(x.getValue()));
+                });
+            }
         }
     }
 
