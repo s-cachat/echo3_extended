@@ -108,7 +108,8 @@ public class BrowserCapability {
                         majorVersion = Integer.parseInt(v[1]);
                         if (!v[2].matches("\\d+")) {
                             if (!v[0].equals("APPLEWEBKIT")) {//Exception
-                                throw new RuntimeException("bad minor\"" + v[2] + "\", type=" + browserType + ", brand=" + browserBrand);
+                                minorVersion = 0;
+                                //throw new RuntimeException("bad minor\"" + v[2] + "\", type=" + browserType + ", brand=" + browserBrand);
                             } else {
                                 minorVersion = 0;
                             }
