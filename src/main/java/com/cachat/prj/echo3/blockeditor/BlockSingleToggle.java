@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import jakarta.validation.Validator;
+import java.util.Arrays;
 import nextapp.echo.app.Grid;
 import nextapp.echo.app.Insets;
 import nextapp.echo.app.Row;
@@ -88,7 +89,6 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
      * @param li pour l'I18N
      * @param property la propriété de type liste d'objet
      * @param items la liste d'objet a choisir
-     * @param propLib la propriété des objets a choisir a utiliser comme label
      * @param cols le nombre de colonnes
      */
     public BlockSingleToggle(LocalisedItem li, String property, Class<TypeObjet> items, String unSelectedStyleName, String selectedStyleName, int cols) {
@@ -101,7 +101,6 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
      * @param li pour l'I18N
      * @param property la propriété de type liste d'objet
      * @param items la liste d'objet a choisir
-     * @param propLib la propriété des objets a choisir a utiliser comme label
      * @param cols le nombre de colonnes
      */
     public BlockSingleToggle(LocalisedItem li, String property, Class<TypeObjet> items, String unSelectedStyleName, String selectedStyleName, int cols, boolean withNull) {
@@ -197,12 +196,12 @@ public class BlockSingleToggle<TypeObjet> extends BlockField<Grid> {
         if (editor != null) {
             editor.removeAll();
             LocalisedItem li = getLocalisedItem();
-            for (TypeObjet o : items.getEnumConstants()) {
-                ToggleButtonEx cb = new ToggleButtonEx(li.getString(String.format("%s.%s", items.getSimpleName(), o.toString())), unSelectedStyleName, selectedStyleName);
-                this.items.put(cb, o);
-                editor.add(cb);
-                cb.addActionListener(e -> setSelected(o, cb));
-            }
+                for (TypeObjet o : items.getEnumConstants()) {
+                    ToggleButtonEx cb = new ToggleButtonEx(li.getString(String.format("%s.%s", items.getSimpleName(), o.toString())), unSelectedStyleName, selectedStyleName);
+                    this.items.put(cb, o);
+                    editor.add(cb);
+                    cb.addActionListener(e -> setSelected(o, cb));
+                }
             if (withNull) {
                 ToggleButtonEx cb = new ToggleButtonEx(li.getString(String.format("%s.%s", items.getSimpleName(), "null")), unSelectedStyleName, selectedStyleName);
                 this.items.put(cb, null);
