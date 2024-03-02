@@ -2,6 +2,7 @@ package com.cachat.prj.echo3.ng.table;
 
 import com.cachat.prj.echo3.models.ListTableModel;
 import java.util.List;
+import java.util.logging.Logger;
 import nextapp.echo.app.event.TableModelEvent;
 import nextapp.echo.app.event.TableModelListener;
 
@@ -37,9 +38,13 @@ public class DefaultPageableTableModel implements PageableTableModel {
     public int getTotalPages() {
         int v1 = (int) (rowPerPage == 0 ? 0 : Math.ceil(((double) listModel.getRowCount()) / ((double) rowPerPage)));
         int v2 = rowPerPage == 0 ? 0 : listModel.getRowCount() / rowPerPage;
-        System.err.printf("ROW count %d rows, %d per page, 1=%d / 2=%d\r\n", listModel.getRowCount(), rowPerPage, v1, v2);
+        logger.finest("ROW count " + listModel.getRowCount() + " rows, " + rowPerPage + " per page, 1=" + v1 + " / 2=" + v2 + "\r\n");
         return v1;
     }
+    /**
+     * le logger
+     */
+    private static final Logger logger = Logger.getLogger(DefaultPageableTableModel.class.getSimpleName());
 
     @Override
     public int getTotalRows() {
