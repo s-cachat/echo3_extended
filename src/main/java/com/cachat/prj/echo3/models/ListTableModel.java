@@ -93,7 +93,7 @@ public abstract class ListTableModel<TypeObjet> extends AbstractTableModel {
         req = sb.toString();
         Query q = em.createQuery(req);
         for (int i = 0; i < arg.size(); i++) {
-            logger.log(Level.WARNING, "set param {0}{1} to {2}", new Object[]{i, 1, arg.get(i)});
+            logger.log(Level.FINEST, "set param {0}{1} to {2}", new Object[]{i, 1, arg.get(i)});
             q.setParameter("arg" + (i + 1), arg.get(i));
         }
         return q;
