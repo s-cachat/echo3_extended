@@ -1,4 +1,4 @@
-console.log("loaded jquery-3.7.1.js echolot");
+console.log("loaded jquery-3.7.1.js echo3 extended");
 /*!
  * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
