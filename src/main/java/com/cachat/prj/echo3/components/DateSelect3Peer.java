@@ -27,9 +27,9 @@ public class DateSelect3Peer extends AbstractComponentSynchronizePeer {
     static {
         WebContainerServlet.getServiceRegistry().add(JQUERY_SERVICE);
         WebContainerServlet.getServiceRegistry().add(JQUERY_UI_SERVICE);
-        WebContainerServlet.getServiceRegistry().add(JS_SERVICE);
         WebContainerServlet.getServiceRegistry().add(JQUERY_DATEPICKER);
         WebContainerServlet.getServiceRegistry().add(JQUERY_TIMEPICKER);
+        WebContainerServlet.getServiceRegistry().add(JS_SERVICE);        
     }
 
     public DateSelect3Peer() {
