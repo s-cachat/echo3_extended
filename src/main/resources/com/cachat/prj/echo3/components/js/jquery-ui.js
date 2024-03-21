@@ -1,4 +1,4 @@
-console.log("loaded jquery-ui.js echolot");
+console.log("loaded jquery-ui.js echo3 extended");
 /*! jQuery UI - v1.13.2 - 2024-02-13
 * http://jqueryui.com
 * Includes: widget.js, position.js, keycode.js, unique-id.js, widgets/autocomplete.js, widgets/menu.js

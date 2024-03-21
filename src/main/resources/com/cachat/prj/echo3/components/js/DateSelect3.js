@@ -11,6 +11,9 @@ DateSelect3.Sync = Core.extend(Echo.Render.ComponentSync, {
         Echo.Render.registerPeer("DateSelect3", this);
         componentType : "DateSelect3";
         document.head.innerHTML = document.head.innerHTML
+                + '<link rel="stylesheet" type="text/css" href="echolot/css/jquery/ui/jquery-ui.min.css" />'
+                + '<link rel="stylesheet" type="text/css" href="echolot/css/jquery/ui/jquery-ui.structure.min.css" />'
+                + '<link rel="stylesheet" type="text/css" href="echolot/css/jquery/ui/jquery-ui.theme.min.css" />';
                 + '<link rel="stylesheet" type="text/css" href="echo3extended/css/jquery-ui-datepicker.css" />'
                 + '<link rel="stylesheet" type="text/css" href="echo3extended/css/jquery-ui-timepicker-addon.css" />';
     },

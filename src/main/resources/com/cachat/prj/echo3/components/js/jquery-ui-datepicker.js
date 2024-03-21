@@ -1,3 +1,4 @@
+console.log("loaded jquery-ui-datepicker.js echo3 extended");
 /*! jQuery UI - v1.13.2 - 2024-02-13
 * http://jqueryui.com
 * Includes:  widgets/datepicker.js, widgets/mouse.js, widgets/slider.js
