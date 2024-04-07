@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import jakarta.validation.Validator;
+import java.util.function.Function;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.ChangeEvent;
@@ -34,7 +35,14 @@ public class BlockSelect<T> extends BlockField<SelectFieldEx> implements ActionL
      * la liste contient la valeur null
      */
     protected boolean gotNull;
+    /**
+     * le libellé a extraire (nécessaire sauf si propFunc est défini)
+     */
     private String propLib;
+    /**
+     * l'extracteur de libellé (nécessaire sauf si propLib est défini)
+     */
+    private Function<T, String> propFunc;
     private MyModel model;
 
     public BlockSelect(BlockField bf) {
@@ -43,6 +51,7 @@ public class BlockSelect<T> extends BlockField<SelectFieldEx> implements ActionL
         this.items = new ArrayList<>(((BlockSelect) bf).items);
         this.gotNull = ((BlockSelect) bf).gotNull;
         this.propLib = ((BlockSelect) bf).propLib;//nécessaire si on veut refaire un setList
+        this.propFunc = ((BlockSelect) bf).propFunc;//nécessaire si on veut refaire un setList
         buildEditor();
     }
 
@@ -82,20 +91,47 @@ public class BlockSelect<T> extends BlockField<SelectFieldEx> implements ActionL
     }
 
     /**
+     * Constructeur
+     *
+     * @param li pour l'I18N
+     * @param property la propriété de type liste d'objet
+     * @param items la liste d'objet a choisir
+     * @param propFunc l'extracteur de libellé
+     */
+    public BlockSelect(LocalisedItem li, String property, List<T> items, Function<T, String> propFunc) {
+        super(li, property);
+        this.propFunc = propFunc;
+        labels = new ArrayList<>();
+        this.items = new ArrayList<>();
+        items.stream().forEach((o) -> {
+            labels.add(o == null ? "-" : propFunc.apply(o));
+            this.items.add(o);
+        });
+        buildEditor();
+    }
+
+    /**
      * Met à jour la liste de choix en modifiant propLib
      *
      * @param items la liste de choix
      */
     public void setList(List<T> items) {
-        if (propLib == null) {
+        if (propLib == null && propFunc == null) {
             throw new RuntimeException("Invalid state");
         }
         labels = new ArrayList<>();
         this.items = new ArrayList<>();
-        items.stream().forEach((o) -> {
-            labels.add(o == null ? "-" : buildLib(o, propLib));
-            this.items.add(o);
-        });
+        if (propFunc != null) {
+            items.stream().forEach((o) -> {
+                labels.add(o == null ? "-" : propFunc.apply(o));
+                this.items.add(o);
+            });
+        } else {
+            items.stream().forEach((o) -> {
+                labels.add(o == null ? "-" : buildLib(o, propLib));
+                this.items.add(o);
+            });
+        }
         model.update();
     }
 
@@ -191,8 +227,12 @@ public class BlockSelect<T> extends BlockField<SelectFieldEx> implements ActionL
     public void copyObjectToUi() {
         Object bean = getParent().getCurrent();
         T o = (T) BeanTools.getRaw(bean, property);
-        if (o != null && !items.contains(o) && propLib != null) {
-            labels.add(addExtraItem(buildLib(o, propLib)));
+        if (o != null && !items.contains(o) && (propLib != null || propFunc != null)) {
+            if (propFunc != null) {
+                labels.add(addExtraItem(propFunc.apply(o)));
+            } else {
+                labels.add(addExtraItem(buildLib(o, propLib)));
+            }
             this.items.add(o);
         }
         editor.setSelectedIndex(items.indexOf(o));
