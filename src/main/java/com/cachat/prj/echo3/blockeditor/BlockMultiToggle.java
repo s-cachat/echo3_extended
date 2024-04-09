@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import jakarta.validation.Validator;
-import nextapp.echo.app.Color;
 import nextapp.echo.app.Grid;
 import nextapp.echo.app.Insets;
 import nextapp.echo.app.Row;
@@ -47,9 +46,12 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
 
     public BlockMultiToggle(BlockField bf) {
         super(bf);
+        BlockMultiToggle bmc = (BlockMultiToggle) bf;
         this.unSelectedStyleName = ((BlockMultiToggle< TypeObjet>) bf).unSelectedStyleName;
         this.selectedStyleName = ((BlockMultiToggle< TypeObjet>) bf).selectedStyleName;
         ((BlockMultiToggle< TypeObjet>) bf).items.entrySet().forEach((x) -> items.put(new ToggleButtonEx(x.getKey().getText(), unSelectedStyleName, selectedStyleName), x.getValue()));
+        createGrid(bmc.localisedItem, ((Grid) bmc.editor).getSize());
+        items.keySet().forEach(a -> editor.add(a));
     }
 
     /**
