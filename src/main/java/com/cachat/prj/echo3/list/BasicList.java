@@ -920,7 +920,6 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * @return la requête
      */
     protected Query createQuery(EntityManager em, String req, List<Object> arg) {
-        logger.severe(String.format("Requete \"%s\" avec les parametres \"%s\"", req, arg));
         StringBuffer sb = new StringBuffer();
         int n = 1;
         Matcher m = qm.matcher(req);
@@ -929,6 +928,8 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         }
         m.appendTail(sb);
         req = sb.toString();
+        logger.severe(String.format("Requete \"%s\" avec les parametres \"%s\"", req, arg));
+
         Query q = em.createQuery(req);
         for (int i = 0; i < arg.size(); i++) {
             logger.log(Level.FINEST, "set param {0}{1} to {2}", new Object[]{i, 1, arg.get(i)});
