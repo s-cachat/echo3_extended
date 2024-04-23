@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.exception.DRException;
 import nextapp.echo.app.*;
@@ -346,12 +348,12 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         listModel = newTableModel();
         critArea = new ContainerEx();
         mainArea = new ContainerEx();
-        
+
         mainArea.add(mainCol = new Column());
         if (extensible) {
             extensionContainer = new ContainerEx();
         }
-        
+
         critArea.add(critf = newCritForm());
         buts = new Row();
         addCrits();
@@ -484,7 +486,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             critArea.setStyleName("CritFixed");
         }
         list.setInsets(new Insets(8, 0, 8, 0));
-        
+
         list.setStyleName("DefaultT");
         list.setDefaultRenderer(Activable.class, new DefaultTableCellRenderer() {
             @Override
@@ -532,7 +534,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
                     } else if (canView(obj)) {
                         r.add(new ViewButton(obj));
                     }
-                    
+
                 }
                 return r;
             }
@@ -574,7 +576,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         mainCol.add(buts);
         mainCol.add(list);
         buts.setAlignment(Alignment.ALIGN_RIGHT);
-        
+
         if (canEdit(null)) {
             if (types.length > 3) {
                 String[] tl = new String[types.length + 1];
@@ -618,7 +620,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             add(mainContainer);
             mainContainer.setBounds(0, 0, 0, 0, null, null);
             mainContainer.setScrollBarPolicy(Scrollable.NEVER);
-            
+
             if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
                 mainContainer.setRight(12);
                 mainContainer.setBottom(6);
@@ -637,11 +639,11 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             if (navArea != null) {
                 mainContainer.add(navArea);
             }
-            
+
             if (legendArea != null) {
                 mainContainer.add(legendArea);
             }
-            
+
             mainContainer.add(mainArea);
             if (extensionContainer != null) {
                 add(extensionContainer);
@@ -653,12 +655,12 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         int bottom = legendArea == null ? 0 : legendAreaHeight;
         int butAreaHeight = buts.getComponentCount() == 0 ? 0 : 36;
         critArea.setBounds(0, 0, extensionWidth, null, null, critAreaHeight);
-        
+
         int height = critAreaHeight;
         if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6 && !criteriaAlwaysVisible) {
             height = critRowHeight;
         }
-        
+
         butArea.setBounds(0, height, extensionWidth, null, null, butAreaHeight);
         if (navArea != null) {
             navArea.setBounds(0, height + butAreaHeight, extensionWidth, null, null, navAreaHeight);
@@ -907,6 +909,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             j++;
         }
     }
+    private static Pattern qm = Pattern.compile("\\?");
 
     /**
      * Fabrique une requête
@@ -918,6 +921,14 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      */
     protected Query createQuery(EntityManager em, String req, List<Object> arg) {
         logger.severe(String.format("Requete \"%s\" avec les parametres \"%s\"", req, arg));
+        StringBuffer sb = new StringBuffer();
+        int n = 1;
+        Matcher m = qm.matcher(req);
+        while (m.find()) {
+            m.appendReplacement(sb, ":arg" + (n++));
+        }
+        m.appendTail(sb);
+        req = sb.toString();
         Query q = em.createQuery(req);
         for (int i = 0; i < arg.size(); i++) {
             q.setParameter(i + 1, arg.get(i));
@@ -946,11 +957,11 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             critContainer.setHeight(critRowHeight);
         }
     }
-    
+
     public int getLegendAreaHeight() {
         return legendAreaHeight;
     }
-    
+
     public void setLegendAreaHeight(int legendAreaHeight) {
         this.legendAreaHeight = legendAreaHeight;
     }
@@ -1133,9 +1144,9 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             addAction((e) -> action());
             this.o = o;
             update();
-            
+
         }
-        
+
         @Override
         public void update() {
             this.iconImage = app.getStyles().getIcon(((Activable) o).getActif() ? "add" : "delete");
@@ -1210,7 +1221,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             this.o = obj;
             update();
         }
-        
+
         @Override
         public void update() {
             final boolean actif = ((Activable) o).getActif();
@@ -1274,7 +1285,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             });
             update();
         }
-        
+
     }
 
     /**
@@ -1309,7 +1320,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             setToolTipText(getBaseString("edit"));
             update();
         }
-        
+
     }
 
     /**
@@ -1344,7 +1355,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             setToolTipText(getBaseString("eye"));
             update();
         }
-        
+
         @Override
         protected void update() {
             setText(null);
@@ -1373,7 +1384,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             });
             update();
         }
-        
+
         @Override
         protected void update() {
             setText(null);
@@ -1403,7 +1414,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             setToolTipText(getBaseString("delete"));
             update();
         }
-        
+
     }
 
     /**
@@ -1427,7 +1438,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             });
             update();
         }
-        
+
     }
 
     /**
@@ -1462,12 +1473,12 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             }
         }
     }
-    
+
     class MyHeaderRenderer extends DefaultTableCellRenderer {
-        
+
         public MyHeaderRenderer() {
         }
-        
+
         @Override
         public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
             ContainerEx ce = new ContainerEx(0, 0, 0, 0, new LabelEx(String.valueOf(value)));
