@@ -12,6 +12,9 @@ import com.cachat.prj.echo3.ng.able.Scrollable;
 import java.util.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import nextapp.echo.app.*;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
@@ -197,12 +200,23 @@ public abstract class AbstractBasicReport<TypeObjet> extends BasicWindow impleme
     @Override
     public abstract void update(TypeObjet objet);
     protected static long reportNo = System.currentTimeMillis();
+    private static Pattern qm = Pattern.compile("\\?");
 
     protected Query createQuery(EntityManager em, String req, List<Object> arg) {
+        StringBuffer sb = new StringBuffer();
+        int n = 1;
+        Matcher m = qm.matcher(req);
+        while (m.find()) {
+            m.appendReplacement(sb, ":arg" + (n++));
+        }
+        m.appendTail(sb);
+        req = sb.toString();
         logger.severe(String.format("Requete \"%s\" avec les parametres \"%s\"", req, arg));
+
         Query q = em.createQuery(req);
         for (int i = 0; i < arg.size(); i++) {
-            q.setParameter(i + 1, arg.get(i));
+            logger.log(Level.FINEST, "set param {0}{1} to {2}", new Object[]{i, 1, arg.get(i)});
+            q.setParameter("arg" + (i + 1), arg.get(i));
         }
         return q;
     }
