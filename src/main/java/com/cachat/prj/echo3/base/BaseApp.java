@@ -637,7 +637,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     public void setSuperAdmin(boolean superAdmin) {
         this.superAdmin = superAdmin;
-        if (initialSuperAdmin = null) {
+        if (initialSuperAdmin == null) {
             initialSuperAdmin = superAdmin;
         }
     }
