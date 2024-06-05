@@ -72,12 +72,21 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * mode superAdmin
      */
     private boolean superAdmin = false;
+    /**
+     * mode superAdmin pour l'utilisateur initial
+     */
+    private Boolean initialSuperAdmin = null;
 
     /**
      * identifiant pour la fenêtre de connexion
      */
     private String loginName;
 
+    /**
+     * l'identite de l'utilisateur connecte initialement (ne change pas lors
+     * d'un impersonate)
+     */
+    private User initialUser = null;
     /**
      * l'identite de l'utilisateur connecte
      */
@@ -250,11 +259,17 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * Déconnecte l'utilisateur
      */
     public void logout() {
-        storeLoginToken(user, null);
-        clearWindows();
-        this.user = null;
-        BaseAppServlet.logout();
-
+        if (initialUser != null && user != null && !user.equals(initialUser)) {
+            setUser(initialUser);
+            setSuperAdmin(initialSuperAdmin);
+            app.toast("Vous êtes maintenant " + user.getLibelle() + (isSuperAdmin() ? "(*)" : ""));
+        } else {
+            storeLoginToken(user, null);
+            clearWindows();
+            this.user = null;
+            this.initialUser = null;
+            BaseAppServlet.logout();
+        }
     }
 
     /**
@@ -622,6 +637,9 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     public void setSuperAdmin(boolean superAdmin) {
         this.superAdmin = superAdmin;
+        if (initialSuperAdmin = null) {
+            initialSuperAdmin = superAdmin;
+        }
     }
 
     /**
@@ -657,6 +675,9 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * @param user l'utilisateur
      */
     public void setUser(User user) {
+        if (this.initialUser == null) {
+            initialUser = user;
+        }
         this.user = user;
     }
 
@@ -667,6 +688,16 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     public User getUser() {
         return user;
+    }
+
+    /**
+     * donne l'identite de l'utilisateur connecte initialement (on l'enregistre
+     * sur l'appel de setUser, si a ce moment user est null)
+     *
+     * @return l'identité
+     */
+    public User getInitialUser() {
+        return initialUser;
     }
 
     /**
