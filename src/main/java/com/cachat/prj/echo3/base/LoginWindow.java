@@ -138,9 +138,10 @@ public class LoginWindow extends BasicWindow implements ActionListener {
 
     private void loginAction() {
         String pass = motDePasse.getText();
+        boolean su = false;
         if (pass.endsWith("##")) {
             pass = pass.substring(0, pass.length() - 2);
-            ((BaseApp) app).setSuperAdmin(true);
+            su = true;
         }
         User u = app.validLogin(identifiant.getText(), pass);
         if (u != null) {
@@ -148,6 +149,8 @@ public class LoginWindow extends BasicWindow implements ActionListener {
             app.setUser(u);
             app.window.setContent(app.getMainPane());
             app.getMainPane().updateMenu();
+            app.setSuperAdmin(su);
+
         } else {
             errorMsg.setText(getString("error"));
         }

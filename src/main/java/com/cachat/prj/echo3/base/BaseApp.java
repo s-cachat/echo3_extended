@@ -199,11 +199,23 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * Saute l'étape de login
      */
     public void skipLogin() {
-        User u = () -> "Anonymous";
-        setUser(u);
+
+        setUser(new AnonymousUser());
         clearWindows();
         setMainPane(app.getMainPane());
         getMainPane().updateMenu();
+    }
+
+    private class AnonymousUser implements User {
+
+        public AnonymousUser() {
+        }
+
+        @Override
+        public String getLibelle() {
+            return "Anonymous";
+        }
+
     }
 
     /**
@@ -675,7 +687,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * @param user l'utilisateur
      */
     public void setUser(User user) {
-        if (this.initialUser == null) {
+        if (this.initialUser == null && !(user instanceof AnonymousUser)) {
             initialUser = user;
         }
         this.user = user;
