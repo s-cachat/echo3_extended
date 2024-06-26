@@ -1,13 +1,14 @@
 package com.cachat.prj.echo3.blockeditor;
 
 import com.cachat.prj.echo3.base.LocalisedItem;
-import com.cachat.prj.echo3.components.DateSelect3;
+import com.cachat.prj.echo3.components.DateSelect4;
 import com.cachat.util.BeanTools;
 import java.util.Date;
 import java.util.List;
 import jakarta.validation.Validator;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.ChangeEvent;
 import nextapp.echo.app.event.ChangeListener;
@@ -17,30 +18,30 @@ import nextapp.echo.app.event.ChangeListener;
  *
  * @author scachat
  */
-public class BlockDateSelect extends BlockField<DateSelect3> {
+public class BlockDateSelect extends BlockField<DateSelect4> {
 
     public BlockDateSelect(BlockField bf) {
         super(bf);
-        if (bf.editor instanceof DateSelect3) {
-            DateSelect3 x = (DateSelect3) bf.editor;
+        if (bf.editor instanceof DateSelect4) {
+            DateSelect4 x = (DateSelect4) bf.editor;
 
-            editor = new DateSelect3(x.isWithTime());
+            editor = new DateSelect4(x);
         }
     }
 
     public BlockDateSelect(LocalisedItem li, String property, boolean withTime, boolean withNull) {
         super(li, property);
-        editor = new DateSelect3(withTime);
+        editor = new DateSelect4(withTime);
     }
 
     public BlockDateSelect(LocalisedItem li, String property, boolean withTime) {
         super(li, property);
-        editor = new DateSelect3(withTime);
+        editor = new DateSelect4(withTime);
     }
 
     public BlockDateSelect(LocalisedItem li, String property) {
         super(li, property);
-        editor = new DateSelect3();
+        editor = new DateSelect4();
     }
 
     @Override
