@@ -661,9 +661,9 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             height = critRowHeight;
         }
 
-        butArea.setBounds(0, height, extensionWidth, null, null, butAreaHeight);
+        butArea.setBounds(null, height, extensionWidth, null, null, butAreaHeight);
         if (navArea != null) {
-            navArea.setBounds(0, height + butAreaHeight, extensionWidth, null, null, navAreaHeight);
+            navArea.setBounds(0, height + butAreaHeight, null, null, null, navAreaHeight);
         }
         mainArea.setBounds(0, height + navAreaHeight + butAreaHeight, extensionWidth, bottom, null, null);
         mainArea.setScrollBarPolicy(Scrollable.AUTO);
