@@ -4,7 +4,6 @@ import com.cachat.prj.echo3.base.LocalisedItem;
 import com.cachat.util.BeanTools;
 import java.util.List;
 import jakarta.validation.Validator;
-import nextapp.echo.app.Extent;
 import com.cachat.prj.echo3.quill.QuillEditor;
 
 /**
@@ -17,16 +16,19 @@ public class BlockQuill extends BlockField<QuillEditor> {
     public BlockQuill(BlockField x) {
         super(x);
         editor = new QuillEditor();
-
-        editor.setWidth(new Extent(100, Extent.PERCENT));
-        editor.setHeight(new Extent(200, Extent.PX));
+        editor.setLeft(0);
+        editor.setRight(0);
+        editor.setBottom(0);
+        editor.setTop(0);
     }
 
     public BlockQuill(LocalisedItem li, String property) {
         super(li, property);
         editor = new QuillEditor();
-        editor.setWidth(new Extent(100, Extent.PERCENT));
-        editor.setHeight(new Extent(200, Extent.PX));
+        editor.setLeft(0);
+        editor.setRight(0);
+        editor.setBottom(0);
+        editor.setTop(0);
     }
 
     @Override
