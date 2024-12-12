@@ -10,91 +10,117 @@ import java.util.Map;
  *
  * @author SST Informatique &lt;sst@cachat.org&gt;
  * @license protected
- * <p>Copyright 2003 SST Informatique
+ * <p>
+ * Copyright 2003 SST Informatique
  */
 public class MapListModel<T> extends AbstractRawListModel {
 
-   /**
-    * Constructeur
-    * @param values les valeurs
-    * @param propName le nom de la propriete a utiliser comme libelle
-    */
-   public MapListModel(LinkedHashMap<T, String> values) {
-      this(values,  false);
-   }
-   /**
-    * avec valeur neutre
-    */
-   private boolean neutre;
+    /**
+     * Constructeur
+     *
+     * @param values les valeurs
+     */
+    public MapListModel(LinkedHashMap<T, String> values) {
+        this(values, false);
+    }
+    /**
+     * avec valeur neutre
+     */
+    private boolean neutre;
 
-   /**
-    * Constructeur
-    * @param values les valeurs
-    * @param propName le nom de la propriete a utiliser comme libelle
-    * @param neutre si true, ajoute une valeur neutre en tete
-    */
-   public MapListModel(LinkedHashMap<T, String> values, boolean neutre) {
-      this.neutre = neutre;
-      setData(values);
-   }
+    /**
+     * Constructeur
+     *
+     * @param values les valeurs
+     * @param neutre si true, ajoute une valeur neutre en tete
+     */
+    public MapListModel(LinkedHashMap<T, String> values, boolean neutre) {
+        this.neutre = neutre;
+        setData(values);
+    }
 
-   /**
-    * change la liste de donnee
-    */
-   public void setData(LinkedHashMap<T, String> values) {
-      int s1 = this.values == null ? 0 : this.values.size();
-      if (neutre) {
-         this.keys.add(null);
-         this.values.add("");
-      }
-      for (Map.Entry<T, String> o : values.entrySet()) {
-         this.values.add(o.getValue());
-         this.keys.add(o.getKey());
-      }
+    /**
+     * change la liste de donnee
+     *
+     * @param values la nouvelle liste d'objets vers leur libellés
+     */
+    public void setData(LinkedHashMap<T, String> values) {
+        int s1 = this.values == null ? 0 : this.values.size();
+        if (neutre) {
+            this.keys.add(null);
+            this.values.add("");
+        }
+        for (Map.Entry<T, String> o : values.entrySet()) {
+            this.values.add(o.getValue());
+            this.keys.add(o.getKey());
+        }
 
-      fireContentsChanged(0, Math.max(s1, values.size()));
-   }
-   /**
-    * les valeurs
-    */
-   private List<String> values = new ArrayList<String>();
-   /**
-    * les clés
-    */
-   private List<T> keys = new ArrayList<T>();
-  
+        fireContentsChanged(0, Math.max(s1, values.size()));
+    }
 
-   /**
-    * donne une valeur
-    */
-   @Override
-   public Object get(int i) {
-      Object v = i < values.size() ? values.get(i) : null;
-      return v == null ? "" : v;
-   }
+    /**
+     * change la liste de donnee
+     *
+     * @param values la nouvelle liste de libellés vers l'objet correspondant
+     */
+    public void setDataReverse(LinkedHashMap<String, T> values) {
+        int s1 = this.values == null ? 0 : this.values.size();
+        if (neutre) {
+            this.keys.add(null);
+            this.values.add("");
+        }
+        for (Map.Entry<String, T> o : values.entrySet()) {
+            this.values.add(o.getKey());
+            this.keys.add(o.getValue());
+        }
 
-   /**
-    * donne une valeur
-    */
-   @Override
-   public T getRaw(int i) {
-      T v = i >= 0 && i < keys.size() ? keys.get(i) : null;
-      return v;
-   }
+        fireContentsChanged(0, Math.max(s1, values.size()));
+    }
+    /**
+     * les valeurs
+     */
+    private List<String> values = new ArrayList<>();
+    /**
+     * les clés
+     */
+    private List<T> keys = new ArrayList<>();
 
-   /**
-    * donne le nombre de valeurs
-    */
-   @Override
-   public int size() {
-      return values.size();
-   }
+    /**
+     * donne une valeur (libelle)
+     *
+     * @param i l'index
+     */
+    @Override
+    public Object get(int i) {
+        Object v = i < values.size() ? values.get(i) : null;
+        return v == null ? "" : v;
+    }
 
-   /**
-    * donne l'index d'une valeur
-    */
-   public int indexOf(T value) {
-      return values.indexOf(value);
-   }
+    /**
+     * donne une valeur (valeur brute)
+     *
+     * @param i l'index
+     */
+    @Override
+    public T getRaw(int i) {
+        T v = i >= 0 && i < keys.size() ? keys.get(i) : null;
+        return v;
+    }
+
+    /**
+     * donne le nombre de valeurs
+     */
+    @Override
+    public int size() {
+        return values.size();
+    }
+
+    /**
+     * donne l'index d'une valeur
+     *
+     * @param value la valeur
+     */
+    public int indexOf(T value) {
+        return values.indexOf(value);
+    }
 }
-
