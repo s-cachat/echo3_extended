@@ -64,6 +64,24 @@ public class BlockTextArea extends BlockField<TextArea> {
         }
     }
 
+    /**
+     * donne le texte actuellement affiché
+     *
+     * @return le texte
+     */
+    public String getText() {
+        return editor.getText();
+    }
+
+    /**
+     * fixe le texte affiché (mais ne change pas le bean)
+     *
+     * @param texte le texte
+     */
+    public void setText(String texte) {
+        editor.setText(texte);
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         editor.setEditable(enabled);
