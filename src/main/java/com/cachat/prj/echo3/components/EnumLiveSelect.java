@@ -49,8 +49,7 @@ public class EnumLiveSelect<T, V extends Enum> extends Row {
      * @param o l'objet principal
      * @param enumClass le type de la propriété
      * @param property le nom de la propriété
-     * @param saveAction l'action pour l'enregistrement (elle sera appelée avec
-     * un entity manager avec une transaction en cours)
+     * @param saveAction l'action pour l'enregistrement
      * @param unselectedStyle le style désélectionné
      * @param selectedStyle le style sélectionné
      */
@@ -66,8 +65,7 @@ public class EnumLiveSelect<T, V extends Enum> extends Row {
      * @param enumClass le type de la propriété
      * @param enumConstants les valeurs de l'enum a présenter
      * @param property le nom de la propriété
-     * @param saveAction l'action pour l'enregistrement (elle sera appelée avec
-     * un entity manager avec une transaction en cours)
+     * @param saveAction l'action pour l'enregistrement 
      * @param unselectedStyle le style désélectionné
      * @param selectedStyle le style sélectionné
      */
@@ -80,13 +78,13 @@ public class EnumLiveSelect<T, V extends Enum> extends Row {
             try (ACEntityManager em = EntityManagerUtil.getACEntityManager(app.getEntityManagerName())) {
                 T oo = (T) em.find(o.getClass(), EntityManagerUtil.getId(o));
                 BeanTools.setRaw(oo, property, selectedValue);
-                em.getTransaction().begin();
                 if (saveAction != null) {
                     saveAction.save(em, oo);
                 } else {
+                    em.getTransaction().begin();
                     em.merge(oo);
+                    em.getTransaction().commit();
                 }
-                em.getTransaction().commit();
             } catch (RollbackException ex) {
                 Throwable ex2 = ex.getCause();
                 if (ex2 != null && ex2 instanceof ConstraintViolationException cve) {
