@@ -314,7 +314,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
                 Field f = current.getClass().getDeclaredField(property);
                 otm = f.getAnnotation(OneToMany.class);
             } catch (NoSuchFieldException | SecurityException ex) {
-                Logger.getLogger(BlockTable.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BlockTable.class.getName()).log(Level.SEVERE, current.getClass().getName() + " / " + property, ex);
             }
 
             if (otm == null) {
