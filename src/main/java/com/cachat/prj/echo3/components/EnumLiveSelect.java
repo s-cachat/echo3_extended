@@ -81,9 +81,7 @@ public class EnumLiveSelect<T, V extends Enum> extends Row {
                 if (saveAction != null) {
                     saveAction.save(em, oo);
                 } else {
-                    em.getTransaction().begin();
                     em.merge(oo);
-                    em.getTransaction().commit();
                 }
             } catch (RollbackException ex) {
                 Throwable ex2 = ex.getCause();
