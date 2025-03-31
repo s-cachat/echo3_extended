@@ -20,6 +20,7 @@ module com.cachat.gui.echo3extended{
     requires org.apache.commons.fileupload2.jakarta.servlet6;
     requires org.apache.commons.fileupload2.core;
     requires org.apache.commons.io;
+    requires com.google.gson;
     exports com.cachat.net;
     exports com.cachat.service;
     exports com.cachat.prj.echo3.base;

@@ -203,10 +203,9 @@ public abstract class BaseAppServlet extends WebContainerServlet {
         try {
             super.process(request, response);
         } finally {
-            loginSSO.set(null);            loginExterne.set(null);
-
+            loginSSO.set(null);
+            loginExterne.set(null);
         }
-
     }
 
     /**
