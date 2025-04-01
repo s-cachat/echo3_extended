@@ -20,7 +20,10 @@ public class SynObject {
         this.height = height;
         this.view = view;
     }
-
+    /**
+     * notre identifiant unique (pour le synoptique)
+     */
+    private String uid;
     /**
      * position x
      */
@@ -37,6 +40,10 @@ public class SynObject {
      * hauteur
      */
     protected double height;
+    /**
+     * angle
+     */
+    protected double angle;
     /**
      * visibilité
      */
@@ -73,10 +80,6 @@ public class SynObject {
      * notre synoptique
      */
     private Synoptique synoptique;
-    /**
-     * notre identifiant unique (pour le synoptique)
-     */
-    private String uid;
 
     public double getLeft() {
         return left;
@@ -108,6 +111,14 @@ public class SynObject {
 
     public void setHeight(double height) {
         this.height = height;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
 
     public boolean isVisible() {

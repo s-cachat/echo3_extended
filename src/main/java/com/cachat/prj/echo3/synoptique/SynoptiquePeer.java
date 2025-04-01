@@ -29,16 +29,16 @@ public class SynoptiquePeer extends AbstractComponentSynchronizePeer {
 
     public SynoptiquePeer() {
         addOutputProperty(Synoptique.ACTION);
-        addEvent(new AbstractComponentSynchronizePeer.EventPeer(Synoptique.OBJECT_CLIC, Synoptique.OBJECT_CLIC, String.class) {
+        addEvent(new AbstractComponentSynchronizePeer.EventPeer(Synoptique.OBJECT_CLIC, Synoptique.OBJECT_CLIC, SynClicEvent.class) {
             @Override
             public boolean hasListeners(Context context, Component c) {
-                return ((Synoptique) c).hasClicListeners();
+                return true;//((Synoptique) c).hasClicListeners();
             }
         });
-        addEvent(new AbstractComponentSynchronizePeer.EventPeer(Synoptique.OBJECT_EDIT, Synoptique.OBJECT_EDIT, String.class) {
+        addEvent(new AbstractComponentSynchronizePeer.EventPeer(Synoptique.OBJECT_EDIT, Synoptique.OBJECT_EDIT, SynModifiedEvent.class) {
             @Override
             public boolean hasListeners(Context context, Component c) {
-                return ((Synoptique) c).hasEditListeners();
+                return true;//((Synoptique) c).hasEditListeners();
             }
         });
     }

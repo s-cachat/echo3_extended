@@ -2,40 +2,9 @@ Synoptique = {};
 Synoptique = Core.extend(Echo.Component, {
     $load: function () {
         Echo.ComponentFactory.registerType("Synoptique", this);
+        console.log("Synoptique load : ", this.toString(1));
     },
-    componentType: "Synoptique",
-    doAction: function (info) {
-        this.fireEvent({type: "action", source: this, v: info});
-
-        console.log("ACTION : " + info);
-    },
-    _getFidFromEvent: function (e) {
-        var feature = null;
-        if (e.feature) {
-            feature = e.feature;
-//            console.log("Got feature 1");
-//            console.log(feature);
-        } else {
-            if (e.target) {
-                var target = e.target;
-                var fid = target.featureId;
-//                console.log("Event from mouse : " + fid);
-//                console.log(e);
-                if (this.peer._openlayer && this.peer._openlayer.vectorLayer) {
-                    feature = this.peer._openlayer.vectorLayer.getFeatureById(fid);
-//                    console.log("Got feature 2");
-//                    console.log(feature);
-                } else {
-                    console.log("no vectorLayer in");
-                    console.log(this.peer);
-                }
-            } else {
-//                console.log("Event from mouse : no target");
-//                console.log(e);
-            }
-        }
-        return feature ? feature.fid : null;
-    }
+    componentType: "Synoptique"
 });
 Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
     $load: function () {
@@ -46,7 +15,6 @@ Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
     _canvas: null,
     _fabric: null,
     _content: {},
-    _click: null,
     renderAdd: function (update, parentElement) {
         console.log("Synoptique renderAdd");
         this._div = document.createElement("div");
@@ -60,7 +28,7 @@ Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
     },
     renderDisplay: function () {
         if (!this._fabric) {
-            console.log("Synoptique renderDisplay create");
+            console.log("Synoptique renderDisplay create this", this);
             this._canvas.width = this._div.offsetWidth;
             this._canvas.height = this._div.offsetHeight;
             this._fabric = new fabric.Canvas(this._canvas);
@@ -73,48 +41,43 @@ Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
             });
             rect.id = "S99";
             this._fabric.add(rect);
-            var myself = this;
+            const _this = this;
             rect.on("modified", function (e) {
-                console.log("rect clic ",myself,e);
-                myself.fireEvent({type: "action", source: this, v: {
-                    action: "clic",
-                    id: rect.id
-                }});
+                _this._modifiedEvent(rect, e);
             });
             rect.on("mouseup", function (e) {
-                console.log("rect mouseup ",myself,e);
-                myself.fireEvent({type: "action", source: this, v: {
-                    action: "modified",
-                    id: rect.id
-                }});
+                _this._clicEvent(rect, e);
             });
-
-
         } else {
             console.log("Synoptique renderDisplay");
         }
 //        console.trace();
     },
-    _clic: function (src, e) {
-        console.log("clic", src, e);
-        this.fireEvent({type: "action", source: this, v: {
-                action: "clic",
-                id: src.id
-            }});
+    _modifiedEvent(source, event) {
+        console.log("modified source", source," event ",event);
+        this.component.fireEvent({
+            type: 'objectEdit',
+            source: this,
+            left:source.left,
+            top:source.top,
+            width:source.width,
+            height:source.height,
+            angle:source.angle
+        });
     },
-    _modified: function (src, e) {
-        console.log("modified", src, e);
-        this.fireEvent({type: "action", source: this, v: {
-                action: "modified",
-                id: src.id
-            }});
-    },    
+    _clicEvent(source, event) {
+        console.log("modified source", source," event ",event);
+        this.component.fireEvent({
+            type: 'objectClic', 
+            source: this,
+            uid: source.uid});
+    },
     renderDispose: function (update) {
-        console.log("Map renderDispose " + update);
+        console.log("Synoptique renderDispose " + update);
         this._div = null;
     },
     renderUpdate: function (update) {
-        console.log("Map renderUpdate ", update);
+        console.log("Synoptique renderUpdate ", update);
         console.log(update);
         var pu = update._propertyUpdates;
         if (pu) {
