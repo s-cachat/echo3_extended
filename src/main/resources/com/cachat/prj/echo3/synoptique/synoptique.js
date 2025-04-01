@@ -71,17 +71,44 @@ Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
                 width: 20,
                 height: 20
             });
+            rect.id = "S99";
             this._fabric.add(rect);
+            var myself = this;
+            rect.on("modified", function (e) {
+                console.log("rect clic ",myself,e);
+                myself.fireEvent({type: "action", source: this, v: {
+                    action: "clic",
+                    id: rect.id
+                }});
+            });
+            rect.on("mouseup", function (e) {
+                console.log("rect mouseup ",myself,e);
+                myself.fireEvent({type: "action", source: this, v: {
+                    action: "modified",
+                    id: rect.id
+                }});
+            });
+
 
         } else {
             console.log("Synoptique renderDisplay");
         }
 //        console.trace();
     },
-    _clickEvent: function (e) {
-        var fid = this.peer.component._getFidFromEvent(e);
-        this.peer.component.doAction("clic");
+    _clic: function (src, e) {
+        console.log("clic", src, e);
+        this.fireEvent({type: "action", source: this, v: {
+                action: "clic",
+                id: src.id
+            }});
     },
+    _modified: function (src, e) {
+        console.log("modified", src, e);
+        this.fireEvent({type: "action", source: this, v: {
+                action: "modified",
+                id: src.id
+            }});
+    },    
     renderDispose: function (update) {
         console.log("Map renderDispose " + update);
         this._div = null;
