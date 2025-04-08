@@ -13,23 +13,27 @@ public class SynModifiedEvent {
     /**
      * position x
      */
-    protected double left;
+    protected Double left;
     /**
      * position y
      */
-    protected double top;
+    protected Double top;
     /**
      * largeur
      */
-    protected double width;
+    protected Double width;
     /**
      * hauteur
      */
-    protected double height;
+    protected Double height;
     /**
      * angle
      */
-    protected double angle;
+    protected Double angle;
+    /**
+     * evenement
+     */
+    private String objectEdit;
 
     public String getUid() {
         return uid;
@@ -39,44 +43,52 @@ public class SynModifiedEvent {
         this.uid = uid;
     }
 
-    public double getLeft() {
+    public Double getLeft() {
         return left;
     }
 
-    public void setLeft(double left) {
+    public void setLeft(Double left) {
         this.left = left;
     }
 
-    public double getTop() {
+    public Double getTop() {
         return top;
     }
 
-    public void setTop(double top) {
+    public void setTop(Double top) {
         this.top = top;
     }
 
-    public double getWidth() {
+    public Double getWidth() {
         return width;
     }
 
-    public void setWidth(double width) {
+    public void setWidth(Double width) {
         this.width = width;
     }
 
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(Double height) {
         this.height = height;
     }
 
-    public double getAngle() {
+    public Double getAngle() {
         return angle;
     }
 
-    public void setAngle(double angle) {
+    public void setAngle(Double angle) {
         this.angle = angle;
+    }
+
+    public String getObjectEdit() {
+        return objectEdit;
+    }
+
+    public void setObjectEdit(String objectEdit) {
+        this.objectEdit = objectEdit;
     }
 
     @Override

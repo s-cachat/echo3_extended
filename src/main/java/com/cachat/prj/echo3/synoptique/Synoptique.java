@@ -25,18 +25,59 @@ import nextapp.echo.app.Extent;
 public class Synoptique extends Component implements Positionable, Sizeable {
 
     /*package protected*/ static final Logger logger = Logger.getLogger(Synoptique.class.getName());
-
+    /**
+     * evenement modification d'un objet
+     */
     public static final String OBJECT_EDIT = "objectEdit";
+    /**
+     * evenement clic sur un objet
+     */
     public static final String OBJECT_CLIC = "objectClic";
-    public static final String ACTION = "objectClic";
+    /**
+     * prorpiete mise à jour du synoptiquie
+     */
+    public static final String ACTION = "action";
+    /**
+     * les objets de ce synoptique
+     */
     private Map<String, SynObject> objects = new HashMap<>();
-    private static int nextId = 1;
+
+    /**
+     * prochaines actions a envoyer
+     */
     private SynAction action = null;
+    /**
+     * verrou pour l'accès à action
+     */
     private ReentrantLock actionLock = new ReentrantLock();
+    /**
+     * map des uid vers les objets ayant un listener clic
+     */
     private Map<String, SynObject> objectWithClicListener = new HashMap<>();
+    /**
+     * map des uid vers les objets ayant un listener modification
+     */
     private Map<String, SynObject> objectWithEditListener = new HashMap<>();
 
+    /**
+     * les vues utilisées par ce synoptique
+     */
+    private Map<String, SynView> views = new HashMap<>();
+
+
     public Synoptique() {
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        SynManager.getInstance().register(this);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        SynManager.getInstance().unregister(this);
     }
 
     /**
@@ -45,7 +86,6 @@ public class Synoptique extends Component implements Positionable, Sizeable {
      * @param obj l'objet
      */
     public void add(SynObject obj) {
-        obj.setUid(String.format("S_%d", nextId++));
         actionLock.lock();
         try {
             objects.put(obj.getUid(), obj);
@@ -59,10 +99,16 @@ public class Synoptique extends Component implements Positionable, Sizeable {
             if (obj.hasEditListener()) {
                 objectWithEditListener.put(obj.getUid(), obj);
             }
+            SynView view = obj.getView();
+            if (view != null) {
+                views.put(view.getUid(), view);
+            }
         } finally {
             actionLock.unlock();
         }
-        firePropertyChange(ACTION, null, action);
+        if (getApplicationInstance() != null) {
+            firePropertyChange(ACTION, null, action);
+        }
     }
 
     /**
@@ -133,9 +179,50 @@ public class Synoptique extends Component implements Positionable, Sizeable {
         }
     }
 
+    /**
+     * donne l'action en cours
+     *
+     * @return
+     */
+    public SynAction getAction() {
+        return action;
+    }
+
+    public void setAction(SynAction action) {
+        this.action = action;
+    }
+
+    /**
+     * supprime tous les objets
+     */
     @Override
     public void clear() {
-        //TODO
+        actionLock.lock();
+        try {
+            if (action == null) {
+                action = new SynAction();
+            }
+            objects.values().forEach(obj -> {
+
+                action.getDel().add(obj.getUid());
+            });
+            objects.clear();
+            objectWithClicListener.clear();
+            objectWithEditListener.clear();
+        } finally {
+            actionLock.unlock();
+        }
+        firePropertyChange(ACTION, action, null);
+    }
+
+    /**
+     * donne un objet à partir de son uid
+     *
+     * @param uid l'uid
+     * @return l'objet ou null
+     */
+    public SynObject getObject(String uid) {
+        return objects.get(uid);
     }
 
     /**
@@ -282,6 +369,7 @@ public class Synoptique extends Component implements Positionable, Sizeable {
     @Override
     public void processInput(String inputName, Object inputValue) {
         super.processInput(inputName, inputValue);
+        System.err.printf("EVENT %s => %s\r\n", inputName, inputValue);
         switch (inputName) {
             case OBJECT_EDIT:
                 //TODO;

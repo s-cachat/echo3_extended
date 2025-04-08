@@ -23,7 +23,7 @@ public class SynObject {
     /**
      * notre identifiant unique (pour le synoptique)
      */
-    private String uid;
+    private String uid = SynManager.newUid();
     /**
      * position x
      */
@@ -223,7 +223,7 @@ public class SynObject {
         return uid;
     }
 
-    /*package protected*/ void setUid(String uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

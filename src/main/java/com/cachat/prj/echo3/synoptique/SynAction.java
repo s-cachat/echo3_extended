@@ -2,12 +2,14 @@ package com.cachat.prj.echo3.synoptique;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * une action a faire sur le synoptique
  *
  * @author scachat
  */
+@XmlRootElement
 public class SynAction {
 
     /**
@@ -43,5 +45,18 @@ public class SynAction {
         }
         return del;
     }
+
+    public void setAdd(List<SynObject> add) {
+        this.add = add;
+    }
+
+    public void setUpdate(List<SynObject> update) {
+        this.update = update;
+    }
+
+    public void setDel(List<String> del) {
+        this.del = del;
+    }
+    
 
 }

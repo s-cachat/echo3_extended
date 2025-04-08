@@ -359,7 +359,7 @@ public abstract class BaseAppServlet extends WebContainerServlet {
      *
      * @return la session http si existante
      */
-    public HttpSession getSession() {
+    public static HttpSession getSession() {
         HttpServletRequest req = requestTL.get();
         if (req == null) {
             return null;
