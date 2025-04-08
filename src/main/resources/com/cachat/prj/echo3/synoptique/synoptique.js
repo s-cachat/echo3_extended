@@ -192,6 +192,15 @@ Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
             if (action.height) {
                 obj.height = action.height;
             }
+            if (action.view.fill) {
+                obj.fill = action.view.fill;
+            }
+            if (action.view.stroke) {
+                obj.stroke = action.view.stroke;
+            }
+            if (action.view.strokeWidth) {
+                obj.strokeWidth = action.view.strokeWidth;
+            }
         }
     },
     renderDisplay: function () {
@@ -226,16 +235,24 @@ Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
             var obj;
             if (action.view) {
                 switch (action.view.type) {
-                    case "RECT":
-                        obj = new fabric.Rect();
+                    case "synViewBasic":
+                        switch (action.view.subType) {
+                            case "RECT":
+                                obj = new fabric.Rect();
+                                break;
+                            default:
+                                console.log("unsupported view synViewBasic subtype ", action.view.type);
+                        }
                         break;
+                    default:
+                        console.log("unsupported view type ", action.view.type);
                 }
             }
             if (obj !== undefined) {
                 obj.uid = action.uid;
                 this._fabric.add(obj);
                 this._content[obj.uid] = obj;
-                this.updateObj(action, obj);
+                this._updateObj(action, obj);
                 const _this = this;
                 if (obj.movable || obj.resizeable) {
                     rect.on("modified", function (e) {
@@ -252,7 +269,7 @@ Synoptique.Sync = Core.extend(Echo.Render.ComponentSync, {
         for (const action of actions.update) {
             var obj = this._content[action.uid];
             if (obj !== undefined) {
-                this.updateObj(action, obj);
+                this._updateObj(action, obj);
             }
         }
         for (const action of actions.del) {
