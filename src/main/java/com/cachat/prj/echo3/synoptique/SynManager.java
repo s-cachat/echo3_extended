@@ -47,6 +47,17 @@ public class SynManager {
      */
     public Synoptique getSynoptique(String uid) {
         HttpSession s = BaseAppServlet.getSession();
+        return getSynoptique(s, uid);
+    }
+
+    /**
+     * donne le synoptique (attaché à la session http en cours)
+     *
+     * @param s la session http
+     * @param uid l'uid du synoptique
+     * @return le synoptique ou null
+     */
+    public Synoptique getSynoptique(HttpSession s, String uid) {
         if (s == null) {
             return null;
         }
@@ -73,7 +84,7 @@ public class SynManager {
             synoptiques = new HashMap<>();
             s.setAttribute("synoptiques_fabric", synoptiques);
         }
-        synoptiques.put(synoptique.getRenderId(), synoptique);
+        synoptiques.put("C."+synoptique.getRenderId(), synoptique);
 
     }
 

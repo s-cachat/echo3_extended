@@ -1,10 +1,13 @@
 package com.cachat.prj.echo3.synoptique;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  * un visuel géométrique simple
  *
  * @author scachat
  */
+@XmlSeeAlso(SynViewText.class)
 public class SynViewBasic extends SynView {
 
     /**
@@ -13,11 +16,10 @@ public class SynViewBasic extends SynView {
     public enum SubType {
         CIRCLE,
         ELLIPSE,
-        LINE,
         POLYGON,
         POLYLINE,
         RECT,
-        TRIANGLE
+        TEXT
     }
     /**
      * Type de forme

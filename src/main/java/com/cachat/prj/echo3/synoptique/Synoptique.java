@@ -64,7 +64,6 @@ public class Synoptique extends Component implements Positionable, Sizeable {
      */
     private Map<String, SynView> views = new HashMap<>();
 
-
     public Synoptique() {
     }
 
@@ -100,9 +99,11 @@ public class Synoptique extends Component implements Positionable, Sizeable {
                 objectWithEditListener.put(obj.getUid(), obj);
             }
             SynView view = obj.getView();
-            if (view != null) {
+            if (view != null && !(view instanceof SynViewBasic)) {
+                logger.severe("Store view " + view.getClass().getSimpleName() + " " + view.getUid() + " for object " + obj.getUid());
                 views.put(view.getUid(), view);
             }
+            obj.setSynoptique(this);
         } finally {
             actionLock.unlock();
         }
@@ -129,10 +130,13 @@ public class Synoptique extends Component implements Positionable, Sizeable {
             if (obj.hasEditListener()) {
                 objectWithEditListener.put(obj.getUid(), obj);
             }
+            //TODO handle view delete/change
         } finally {
             actionLock.unlock();
         }
-        firePropertyChange(ACTION, action, action);
+        if (getApplicationInstance() != null) {
+            firePropertyChange(ACTION, null, action);
+        }
     }
 
     /**
@@ -149,11 +153,25 @@ public class Synoptique extends Component implements Positionable, Sizeable {
             if (action == null) {
                 action = new SynAction();
             }
+            //TODO handle view delete
             action.getDel().add(obj.getUid());
+            obj.setSynoptique(null);
         } finally {
             actionLock.unlock();
         }
-        firePropertyChange(ACTION, action, null);
+        if (getApplicationInstance() != null) {
+            firePropertyChange(ACTION, null, action);
+        }
+    }
+
+    /**
+     * donne la vue
+     *
+     * @param uid l'uid de la vue demandée
+     * @return la vue ou null
+     */
+    public SynView getView(String uid) {
+        return views.get(uid);
     }
 
     /**

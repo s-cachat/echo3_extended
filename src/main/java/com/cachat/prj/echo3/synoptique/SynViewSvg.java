@@ -16,7 +16,7 @@ public class SynViewSvg extends SynView {
      * @param content une image png
      */
     public SynViewSvg(byte[] content) {
-        contentType = "image/svg";
+        contentType = "image/svg+xml";
         this.content = content;
     }
 
