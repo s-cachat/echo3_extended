@@ -14,6 +14,7 @@ import nextapp.echo.app.*;
 import nextapp.echo.app.event.WindowPaneEvent;
 import nextapp.echo.app.event.WindowPaneListener;
 import nextapp.echo.webcontainer.command.BrowserOpenWindowCommand;
+import nextapp.echo.webcontainer.command.BrowserRedirectCommand;
 import org.jasypt.util.digest.Digester;
 
 /**
@@ -280,7 +281,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
             clearWindows();
             this.user = null;
             this.initialUser = null;
-            BaseAppServlet.logout();
+            app.enqueueCommand(new BrowserRedirectCommand("logout"));
         }
     }
 

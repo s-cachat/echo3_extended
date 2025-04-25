@@ -333,10 +333,7 @@ public abstract class BaseAppServlet extends WebContainerServlet {
         } else {
             for (Enumeration<String> en = s.getAttributeNames(); en.hasMoreElements();) {
                 String n = en.nextElement();
-                Object o = s.getAttribute(n);
-                if (o instanceof BaseApp) {
-                    s.setAttribute(n, null);
-                }
+                s.setAttribute(n, null);
             }
         }
         Cookie[] cookies = req.getCookies();
@@ -346,12 +343,6 @@ public abstract class BaseAppServlet extends WebContainerServlet {
                 res.addCookie(cookie);
             }
         }
-//        try {
-//            res.sendRedirect("index.html");
-//        } catch (IOException ex) {
-//            Logger.getLogger(BaseAppServlet.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
     }
 
     /**
