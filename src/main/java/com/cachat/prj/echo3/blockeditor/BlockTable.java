@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.Validator;
+import java.util.function.Consumer;
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Border;
 import nextapp.echo.app.Color;
@@ -385,6 +386,59 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         @Override
         public Object clone() {
             return new ButtonDel(line);
+        }
+
+    }
+
+    /**
+     * un bouton effectuant une action sur l'objet de la ligne ou il est ajouté
+     *
+     * @param <T> le type d'objet du tableau
+     */
+    public static class Action<T> extends ButtonEx implements BlockInterface {
+
+        private final Consumer<T> action;
+        private T current;
+        private BlockContainer parent;
+        private String label;
+
+        public Action(String label, Consumer<T> action) {
+            super(label);
+            this.label = label;
+            this.action = action;
+            addActionListener(e -> action.accept(current));
+        }
+
+        @Override
+        public void copyObjectToUi() {
+            current=(T) parent.getCurrent();
+        }
+
+        @Override
+        public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
+            return false;
+        }
+
+        @Override
+        public void setParent(BlockContainer parent) {
+            this.parent = parent;
+        }
+
+        /**
+         * ajouter un message d'erreur sur un champ
+         *
+         * @param pp le chemin de la propriété
+         * @param msg le message
+         * @return true si le message a pu être ajouté, false sinon
+         */
+        @Override
+        public boolean appendError(String pp, String msg) {
+            return false;
+        }
+
+        @Override
+        public Object clone() {
+            return new Action(label,action);
         }
 
     }
