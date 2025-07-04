@@ -43,7 +43,7 @@ import nextapp.echo.app.table.DefaultTableCellRenderer;
  * @author scachat
  */
 public class BlockTable<T> implements BlockContainer, BlockBase<Column>, LocalisedItem {
-
+    
     protected static final transient Logger logger = Logger.getLogger("BlockEditor");
     protected final LocalisedItem li;
     private final Column column;
@@ -92,7 +92,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
      * les boutons d'ajout
      */
     private final List<Component> addButtons = new ArrayList<>();
-
+    
     protected BlockTable(BlockTable<T> bp) throws CloneNotSupportedException {
         this(bp.li, bp.property, bp.current, bp.canAdd, bp.deleteMode, bp.clazz);
         for (BlockInterface bi : childs) {
@@ -181,13 +181,13 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         ColumnLayoutData cld = new ColumnLayoutData();
         cld.setAlignment(Alignment.ALIGN_TOP);
         LabelEx label = new LabelEx(li.getString(property));
-
+        
         removed = new ArrayList<>();
         added = new ArrayList<>();
         Row r = new Row();
         column.add(r);
         r.add(label);
-
+        
         if (canAdd) {
             for (Class cl : clazz) {
                 ButtonEx but = new ButtonEx(li.getString((clazz.length < 2 ? property : (property + "." + cl.getSimpleName())) + ".add"));
@@ -205,7 +205,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         error.setStyleName("ErrorMsg");
         r.add(error);
         column.add(new Strut(3, 3));
-
+        
         this.li = li;
         this.current = current;
     }
@@ -245,27 +245,27 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         model.fireTableStructureChanged();
         model.update();
     }
-
+    
     public Color getC1() {
         return c1;
     }
-
+    
     public void setC1(Color c1) {
         this.c1 = c1;
     }
-
+    
     public Color getC2() {
         return c2;
     }
-
+    
     public void setC2(Color c2) {
         this.c2 = c2;
     }
-
+    
     public int getMaxRow() {
         return maxRow;
     }
-
+    
     public void setMaxRow(int maxRow) {
         this.maxRow = maxRow;
     }
@@ -289,12 +289,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     public String getString(String key) {
         return li.getString(property + "." + key);
     }
-
+    
     @Override
     public String getBaseString(String key) {
         return li.getBaseString(key);
     }
-
+    
     @Override
     public Locale getLocale() {
         return li.getLocale();
@@ -317,7 +317,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             } catch (NoSuchFieldException | SecurityException ex) {
                 Logger.getLogger(BlockTable.class.getName()).log(Level.SEVERE, current.getClass().getName() + " / " + property, ex);
             }
-
+            
             if (otm == null) {
                 try {
                     Method m = current.getClass().getMethod("get" + property.substring(0, 1).toUpperCase() + property.substring(1));
@@ -338,34 +338,34 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             }
         }
     }
-
+    
     class ButtonDel extends ButtonEx implements ActionListener, BlockInterface {
-
+        
         BlockLine line;
-
+        
         public ButtonDel(BlockLine line) {
             super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/delete.png"));
             this.line = line;
             addActionListener(this);
             setEnabled(canDelete(line.getCurrent()));
         }
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             setEnabled(false);
             removeRow(line);
         }
-
+        
         @Override
         public void copyObjectToUi() {
             //nop
         }
-
+        
         @Override
         public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
             return false;
         }
-
+        
         @Override
         public void setParent(BlockContainer parent) {
             //nop
@@ -382,12 +382,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         public boolean appendError(String pp, String msg) {
             return false;
         }
-
+        
         @Override
         public Object clone() {
             return new ButtonDel(line);
         }
-
+        
     }
 
     /**
@@ -395,65 +395,54 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
      *
      * @param <T> le type d'objet du tableau
      */
-    public static class Action<T> extends ButtonEx implements BlockInterface {
-
+    public static class Action<T> extends BlockField<ButtonEx> {
+        
         private final Consumer<T> action;
         private T current;
-        private BlockContainer parent;
-        private String label;
+        private String styleName;
 
-        public Action(String label, Consumer<T> action) {
-            super(label);
-            this.label = label;
-            this.action = action;
-            addActionListener(e -> action.accept(current));
+        public Action(BlockField x) {
+            this(x.getLocalisedItem(), x.getProperty(), ((Action) x).action, ((Action) x).styleName);
+        }
+        
+        public Action(LocalisedItem li, String property, Consumer<T> action) {
+            this(li, property, action, null);
         }
 
+        public Action(LocalisedItem li, String property, Consumer<T> action, String styleName) {
+            super(li, property);
+            editor = new ButtonEx(li.getString(property));
+            this.action = action;
+            this.styleName = styleName;
+            if (styleName != null) {
+                editor.setStyleName(styleName);
+            }
+            editor.addActionListener(e -> action.accept(current));
+        }
+        
         @Override
         public void copyObjectToUi() {
-            current=(T) parent.getCurrent();
+            current = (T) getParent().getCurrent();
         }
-
+        
         @Override
         public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
             return false;
         }
-
-        @Override
-        public void setParent(BlockContainer parent) {
-            this.parent = parent;
-        }
-
-        /**
-         * ajouter un message d'erreur sur un champ
-         *
-         * @param pp le chemin de la propriété
-         * @param msg le message
-         * @return true si le message a pu être ajouté, false sinon
-         */
-        @Override
-        public boolean appendError(String pp, String msg) {
-            return false;
-        }
-
-        @Override
-        public Object clone() {
-            return new Action(label,action);
-        }
-
+        
     }
-
+    
     public class ButtonActivable extends ButtonEx implements ActionListener, BlockInterface {
-
+        
         BlockLine line;
-
+        
         public ButtonActivable(BlockLine line) {
             super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/delete.png"));
             this.line = line;
             addActionListener(this);
             setEnabled(canDelete(line.getCurrent()));
         }
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             Object x = line.getCurrent();
@@ -463,7 +452,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
                 setIcon(new ResourceImageReference(actif ? "/com/cachat/prj/echo3/blockeditor/add.png" : "/com/cachat/prj/echo3/blockeditor/delete.png"));
             }
         }
-
+        
         @Override
         public void copyObjectToUi() {
             Object x = line.getCurrent();
@@ -472,12 +461,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
                 setIcon(new ResourceImageReference(actif ? "/com/cachat/prj/echo3/blockeditor/add.png" : "/com/cachat/prj/echo3/blockeditor/delete.png"));
             }
         }
-
+        
         @Override
         public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
             return false;
         }
-
+        
         @Override
         public void setParent(BlockContainer parent) {
             //nop
@@ -494,7 +483,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         public boolean appendError(String pp, String msg) {
             return false;
         }
-
+        
         @Override
         public Object clone() {
             return new ButtonActivable(line);
@@ -510,7 +499,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     @Override
     public final BlockInterface add(BlockInterface bf) {
         childs.add(bf);
-
+        
         model.update();
         if (bf instanceof BlockBase) {//impossible
             throw new RuntimeException("BlockBase not valid as a child of BlockTable");
@@ -554,11 +543,11 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
      * contient les données d'une ligne de tableau
      */
     public class BlockLine implements BlockContainer<T> {
-
+        
         private final List<BlockInterface> lineChilds = new ArrayList<>();
         private final T current;
         private BlockContainer parent;
-
+        
         public BlockLine(T current) {
             this.current = current;
             for (BlockInterface bf : childs) {
@@ -579,30 +568,30 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
                 }
             }
         }
-
+        
         @Override
         public final BlockInterface add(BlockInterface bf) {
             lineChilds.add(bf);
             bf.setParent(this);
             return bf;
         }
-
+        
         @Override
         public void remove(BlockInterface bf) {
             lineChilds.remove(bf);
             bf.setParent(null);
         }
-
+        
         @Override
         public T getCurrent() {
             return current;
         }
-
+        
         @Override
         public Component getComponent() {
             return null;
         }
-
+        
         public Component getComponent(int column) {
             BlockInterface x = lineChilds.get(column);
             if (x instanceof Component) {
@@ -614,7 +603,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             col.add(bf.error);
             return col;
         }
-
+        
         public BlockField getBlockInterface(String property) {
             if (property == null) {
                 return null;
@@ -629,12 +618,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             }
             return null;
         }
-
+        
         @Override
         public void copyObjectToUi() {
             lineChilds.forEach((bi) -> bi.copyObjectToUi());
         }
-
+        
         @Override
         public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
             boolean errors = false;
@@ -655,38 +644,38 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         public boolean appendError(String pp, String msg) {
             return false;
         }
-
+        
         @Override
         public void setParent(BlockContainer parent) {
             this.parent = parent;
         }
-
+        
         @Override
         public void setVisible(boolean visible) {
             //nop
         }
-
+        
         @Override
         public void setEnabled(boolean enabled) {
             lineChilds.forEach((x) -> x.setEnabled(enabled));
         }
-
+        
         @Override
         public Object clone() {
             return new BlockLine(current);
         }
     }
-
+    
     @Override
     public void remove(BlockInterface bf) {
         childs.remove(bf);
     }
-
+    
     @Override
     public List<T> getCurrent() {
         return current;
     }
-
+    
     @Override
     public void copyObjectToUi() {
         rows.clear();
@@ -700,12 +689,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         model.update();
         rows.forEach((r) -> r.setEnabled(enabled));
     }
-
+    
     @Override
     public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
         boolean errors = false;
         error.setText("");
-
+        
         for (BlockLine b : rows) {
             errors |= b.copyUiToObject(validator, genericErrors);
         }
@@ -719,7 +708,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         added.clear();
         return errors;
     }
-
+    
     @Override
     public Column getComponent() {
         if (table == null) {
@@ -727,56 +716,56 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         }
         return column;
     }
-
+    
     @Override
     public void setParent(BlockContainer parent) {
         this.parent = parent;
     }
-
+    
     public BlockContainer getParent() {
         return parent;
     }
-
+    
     @Override
     public void setVisible(boolean visible) {
         rows.forEach((r) -> setVisible(visible));
     }
-
+    
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         rows.forEach((r) -> r.setEnabled(enabled));
         editButtons.forEach((a) -> a.setVisible(enabled));
     }
-
+    
     @Override
     public Object clone() throws CloneNotSupportedException {
         return new BlockTable(this);
     }
-
+    
     private class EditTableModel extends AbstractTableModel {
-
+        
         @Override
         public Class getColumnClass(int column) {
             return Component.class;
         }
-
+        
         @Override
         public String getColumnName(int column) {
             return column < childs.size() ? ((BlockField) childs.get(column)).label.getText() : "";
         }
-
+        
         @Override
         public int getColumnCount() {
             return childs.size() + (deleteMode != DeleteMode.NONE ? 1 : 0);
         }
-
+        
         @Override
         public int getRowCount() {
             int res = (getCurrent() == null) ? 0 : rows.size();
             return res;
         }
-
+        
         @Override
         public Object getValueAt(int column, int row) {
             Component x = rows.get(row).getComponent(column);
@@ -788,7 +777,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             }
             return x;
         }
-
+        
         public void update() {
             if (maxRow > 0) {
                 addButtons.forEach(a -> a.setEnabled(getRowCount() < maxRow));
