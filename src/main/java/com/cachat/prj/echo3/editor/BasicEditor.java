@@ -52,6 +52,7 @@ import com.cachat.prj.echo3.ng.SelectFieldEx;
 import com.cachat.prj.echo3.ng.Strut;
 import com.cachat.prj.echo3.ng.TableEx;
 import com.cachat.prj.echo3.ng.TextFieldEx;
+import com.cachat.util.ACEntityManager;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
@@ -1044,8 +1045,7 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
      * exemple dans le cas de sous objet.
      */
     public void edite(TypeObjet o, boolean refresh) {
-        EntityManager em = EntityManagerUtil.getEntityManager(app.getEntityManagerName());
-        try {
+        try (ACEntityManager em = EntityManagerUtil.getACEntityManager(app.getEntityManagerName())) {
             if (refresh) {
                 cur = refresh(em, o);
                 if (cur == null && o != null) {
@@ -1108,8 +1108,6 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
                 }
             }
             startEdite();
-        } finally {
-            em.close();
         }
     }
 

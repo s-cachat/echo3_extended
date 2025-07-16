@@ -53,7 +53,7 @@ public interface Styles {
     public ImageReference getIcon(String name);
 
     /**
-     * donne l'image demand�e
+     * donne l'image demandée
      *
      * @param name le nom de l'image
      * @return l'image, ou l'image debug si elle n'existe pas
