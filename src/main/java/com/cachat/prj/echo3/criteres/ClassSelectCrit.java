@@ -28,7 +28,7 @@ public class ClassSelectCrit extends Crit {
      * constructeur
      *
      * @param cont le conteneur réfèrant
-     * @param prop le nom de la propriete critere
+     * @param prop l'alias de la table (qui sera utilisé dans la fonction lpql type()) 
      * @param values les valeurs
      * @param neutre si true, ajoute une valeur neutre
      */
@@ -63,7 +63,11 @@ public class ClassSelectCrit extends Crit {
         AbstractRawListModel arl = (AbstractRawListModel) tf.getModel();
         Object v = arl.getRaw(tf.getSelectedIndex());
         if (v != null) {
-            return String.format("%s=%s", prop, v);
+            if (prop.contains("DTYPE")) {//old style, depends on hibernate implementation
+                return String.format("%s=%s", prop, v);
+            } else {
+                return String.format("type(%s)=%s", prop, v);
+            }
         } else {
             return null;
         }
