@@ -61,7 +61,7 @@ public interface Styles {
     public ImageReference getImage(String name);
 
     /**
-     * donne l'image demand�e
+     * donne l'image demandée
      *
      * @param name le nom de l'image
      * @return l'image, ou null si elle n'existe pas
