@@ -117,9 +117,20 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
         cform = new Column();
         errorMsg = new DirectHtml("");
         errorMsg.setStyleName("ErrorMsg");
-        add(new ContainerEx(0, 0, 0, 0, cform));
+        ContainerEx cformCe;
+        add(cformCe = new ContainerEx(0, 0, 0, 0, cform));
         reinitForm();
         if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
+            
+            ContainerEx bc = getBottomComponent();
+            if (bc != null) {
+                cformCe.setBottom(bc.getHeight());
+                bc.setBottom(0);
+                bc.setLeft(0);
+                bc.setRight(0);
+                add(bc);
+            }
+            
             cform.setInsets(new Insets(6, 6, 12, 6));
             contentPane.setInsets(new Insets(-6, 0, 0, 0));
         } else {
@@ -135,6 +146,17 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
     public abstract BlockContainer initForm();
 
     /**
+     * Donne le composant à ajouter en bas de page, en permanence, utilisé
+     * seulement dans les versions 6 et supérieures
+     *
+     * @return Le composant, null si u*il n'y en a pas. Ce composant doit avoir
+     * une hauteur fixe
+     */
+    public ContainerEx getBottomComponent() {
+        return null;
+    }
+
+    /**
      * Reinitialise le formulaire
      */
     public final void reinitForm() {
@@ -145,6 +167,38 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
         p.add(errorMsg);
         form = initForm();
         cform.add(form.getComponent());
+    }
+
+    protected class BottomBlockButton extends ContainerEx {
+
+        private final BlockButton blockButton;
+
+        public BottomBlockButton(int height) {
+            setHeight(height);
+            blockButton = new BlockButton();
+            add(blockButton.getComponent());
+        }
+
+        public Component getComponent() {
+            return blockButton.getComponent();
+        }
+
+        public void setOkEnabled(boolean enabled) {
+            blockButton.setOkEnabled(enabled);
+        }
+
+        public void addButton(Button b) {
+            blockButton.addButton(b);
+        }
+
+        protected void addButtonLeft(Button b) {
+            blockButton.addButtonLeft(b);
+        }
+
+        protected void addButtonRight(Button b) {
+            blockButton.addButtonRight(b);
+        }
+
     }
 
     protected class BlockButton implements BlockBase<Component>, BlockInterface {
@@ -553,4 +607,5 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
             return n;
         }
     }
+
 }
