@@ -37,8 +37,11 @@ Extended = {
                 case 2:
                     element.style.position = "absolute";
                     break;
-                case 3:
+                case 4:
                     element.style.position = "relative";
+                    break;
+                case 8:
+                    element.style.position = "fixed";
                     break;
             }
 

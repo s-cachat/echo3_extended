@@ -43,7 +43,7 @@ import nextapp.echo.app.table.DefaultTableCellRenderer;
  * @author scachat
  */
 public class BlockTable<T> implements BlockContainer, BlockBase<Column>, LocalisedItem {
-    
+
     protected static final transient Logger logger = Logger.getLogger("BlockEditor");
     protected final LocalisedItem li;
     private final Column column;
@@ -92,7 +92,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
      * les boutons d'ajout
      */
     private final List<Component> addButtons = new ArrayList<>();
-    
+
     protected BlockTable(BlockTable<T> bp) throws CloneNotSupportedException {
         this(bp.li, bp.property, bp.current, bp.canAdd, bp.deleteMode, bp.clazz);
         for (BlockInterface bi : childs) {

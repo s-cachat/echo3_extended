@@ -230,7 +230,7 @@ public class PeriodCrit extends Crit implements ActionListener {
         String pFin = cont.getString(propFin);
         if (min != null) {
             if (max != null) {
-                return String.format("%1$s < %3$s %5$s %2$s >= %4$s", p, pFin, format.format(max), format.format(min), cont.getBaseString("and"));
+                return String.format("%1$s %2$s %3$s => %4$s", p, cont.getBaseString("entre"), format.format(min), format.format(max));
             } else {
                 return String.format("%1$s > %2$s", pFin, format.format(min));
             }
