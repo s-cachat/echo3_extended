@@ -98,8 +98,8 @@
 
         //for each selected element
         return this.each(function () {
-
             var element = $(this);
+console.log("time add function to ",element);
 
             //Adjust settings by data attributes
             var dataOptions = {}, _data = element.data();

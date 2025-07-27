@@ -13,18 +13,12 @@ TimeSelect.Sync = Core.extend(Echo.Render.ComponentSync, {
     },
     _field: null,
     renderAdd: function (update, parentElement) {
-        console.log(update);
-        console.log("TimeSelect renderAdd",this.component.renderId);
         this._field = document.createElement("input");
         this._field.id = this.component.renderId;
 
         var time = this.component.render("value");
-        console.log(this.component.renderId, " time ", time);
         conf = {};
-        
-        $(this._field).clockTimePicker({
-            minimum:0
-        });
+
 
         this.component.addListener('change', function (e) {
             console.log("change ", e.v);
@@ -41,6 +35,11 @@ TimeSelect.Sync = Core.extend(Echo.Render.ComponentSync, {
         if (time) {
             this._field.value = time;
         }
+        $(this._field).clockTimePicker({
+            minimum: 0,
+            alwaysSelectHoursFirst: true
+        });
+
     },
     renderDisplay: function () {
         if (!this._field) {
