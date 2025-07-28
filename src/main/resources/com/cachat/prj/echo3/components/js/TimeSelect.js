@@ -13,10 +13,12 @@ TimeSelect.Sync = Core.extend(Echo.Render.ComponentSync, {
     },
     _field: null,
     renderAdd: function (update, parentElement) {
+        console.log(update);
         this._field = document.createElement("input");
         this._field.id = this.component.renderId;
 
         var time = this.component.render("value");
+        console.log(this.component.renderId, " time ", time);
         conf = {};
 
 
@@ -27,7 +29,6 @@ TimeSelect.Sync = Core.extend(Echo.Render.ComponentSync, {
 
         const _this = this;
         this._field.onchange = function (e) {
-            console.log("change ", e.target.value);
             _this.component.fireEvent({type: 'change', source: _this.component, v: e.target.value});
         };
         Echo.Sync.renderComponentDefaults(this.component, this._field);

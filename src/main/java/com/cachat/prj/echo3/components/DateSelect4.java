@@ -52,14 +52,12 @@ public class DateSelect4 extends Component {
     /**
      * Format pour l'envoi au client, date et heure
      */
-    private final SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    /**
-     * Format pour l'envoi au client, date seule
-     */
-    private final SimpleDateFormat dFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     /**
      * Donne la liste de propriétés
+     *
+     * @return les propriétés
      */
     public static final String[] getOutputProperties() {
         return new String[]{
@@ -240,7 +238,7 @@ public class DateSelect4 extends Component {
             DateUtil.midnight(this.date);
         }
         if (updateClient) {
-            set(PROPERTY_DATE_VALUE, this.date == null ? null : (withTime ? dtFormat : dFormat).format(this.date));
+            set(PROPERTY_DATE_VALUE, this.date == null ? null : dateFormat.format(this.date));
         }
     }
 
@@ -265,7 +263,7 @@ public class DateSelect4 extends Component {
             DateUtil.midnight(this.date);
         }
         if (updateClient) {
-            set(PROPERTY_DATE2_VALUE, this.date == null ? null : (withTime ? dtFormat : dFormat).format(this.date));
+            set(PROPERTY_DATE2_VALUE, this.date == null ? null : dateFormat.format(this.date));
         }
     }
 
@@ -298,9 +296,9 @@ public class DateSelect4 extends Component {
             case PROPERTY_DATE_VALUE -> {
                 try {
                     if (withTime) {
-                        setSelectedDate(DateTimeUtil.parse((String) inputValue));
+                        setSelectedDate(DateTimeUtil.parse((String) inputValue), false);
                     } else {
-                        setSelectedDate(DateUtil.parse((String) inputValue));
+                        setSelectedDate(DateUtil.parse((String) inputValue), false);
                     }
                 } catch (ParseException ex) {
                     Logger.getLogger(DateSelect4.class.getName()).log(Level.SEVERE, null, ex);

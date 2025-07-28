@@ -2,6 +2,7 @@ package com.cachat.prj.echo3.components;
 
 import static com.cachat.prj.echo3.components.GenericServices.JQUERY_SERVICE;
 import static com.cachat.prj.echo3.components.GenericServices.JQUERY_UI_SERVICE;
+import static com.cachat.prj.echo3.components.TimeSelectPeer.JS_TIME_PICKER_SERVICE;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.update.ClientUpdateManager;
 import nextapp.echo.app.util.Context;
@@ -26,7 +27,7 @@ public class DateSelect4Peer extends AbstractComponentSynchronizePeer {
 
     static {
         WebContainerServlet.getServiceRegistry().add(JS_FLAT_PICKER_SERVICE);
-        WebContainerServlet.getServiceRegistry().add(JS_SERVICE);        
+        WebContainerServlet.getServiceRegistry().add(JS_SERVICE);
     }
 
     public DateSelect4Peer() {
@@ -78,6 +79,8 @@ public class DateSelect4Peer extends AbstractComponentSynchronizePeer {
         // Add ContainerEx JavaScript library to client.
         serverMessage.addLibrary(JS_FLAT_PICKER_SERVICE.getId());
         serverMessage.addLibrary(JS_FLAT_PICKER_FR_SERVICE.getId());
+        serverMessage.addLibrary(JQUERY_SERVICE.getId());
+        serverMessage.addLibrary(JS_TIME_PICKER_SERVICE.getId());
         serverMessage.addLibrary(JS_SERVICE.getId());
     }
 

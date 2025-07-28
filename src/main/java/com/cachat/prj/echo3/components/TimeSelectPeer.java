@@ -18,7 +18,7 @@ import nextapp.echo.webcontainer.service.JavaScriptService;
 public class TimeSelectPeer extends AbstractComponentSynchronizePeer {
 
     private static final Service JS_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.TimeSelect", "com/cachat/prj/echo3/components/js/TimeSelect.js");
-    private static final Service JS_TIME_PICKER_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.TimePicker", "com/cachat/prj/echo3/components/js/jquery-clock-timepicker.js");
+    public static final Service JS_TIME_PICKER_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.TimePicker", "com/cachat/prj/echo3/components/js/jquery-clock-timepicker.js");
     public static final String CHANGE_LISTENERS_CHANGED_PROPERTY = "changeListeners";
     public static final String ON_CHANGE_ACTION = "change";
 
@@ -75,8 +75,8 @@ public class TimeSelectPeer extends AbstractComponentSynchronizePeer {
         // Obtain outgoing 'ServerMessage' for initial render.
         ServerMessage serverMessage = (ServerMessage) context.get(ServerMessage.class);
         // Add ContainerEx JavaScript library to client.
-        serverMessage.addLibrary(JS_TIME_PICKER_SERVICE.getId());
         serverMessage.addLibrary(JQUERY_SERVICE.getId());
+        serverMessage.addLibrary(JS_TIME_PICKER_SERVICE.getId());
         serverMessage.addLibrary(JS_SERVICE.getId());
     }
 

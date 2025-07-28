@@ -6,7 +6,6 @@
 (function ($) {
 
     $.fn.clockTimePicker = function (options, _value) {
-        console.log("Yeah !!!!!!!!!!!!! time picker");
         if (typeof options == 'string' && (options == 'value' || options == 'val') && !_value)
             return $(this).val();
 
@@ -99,7 +98,6 @@
         //for each selected element
         return this.each(function () {
             var element = $(this);
-console.log("time add function to ",element);
 
             //Adjust settings by data attributes
             var dataOptions = {}, _data = element.data();
