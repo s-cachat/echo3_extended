@@ -79,6 +79,14 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
             case 8:
                 this._div.style.overflow = "hidden";
                 break;
+            case 16:
+                this._div.style.overflowX = "hidden";
+                this._div.style.overflowY = "scroll";
+                break;
+            case 32:
+                this._div.style.overflowX = "scroll";
+                this._div.style.overflowY = "hidden";
+                break;
         }
 
         var flexBasis = this.component.render("flexBasis");

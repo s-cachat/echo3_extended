@@ -10,11 +10,10 @@ import nextapp.echo.app.Color;
  * <p>
  * <h3>SCROLLBARS</h3>
  *
- * Since a
- * <code>Scrollable</code> can be made a fixed size, by setting its width and/or
- * height properties, it has support for a scroll bar policy which controls how
- * scroll bars are used if the content of the component will not fit into the
- * fixed size.
+ * Since a <code>Scrollable</code> can be made a fixed size, by setting its
+ * width and/or height properties, it has support for a scroll bar policy which
+ * controls how scroll bars are used if the content of the component will not
+ * fit into the fixed size.
  * <p>
  * If the scroll bar policy is NEVER, then no scroll bars will be shown and the
  * content inside the component will be clipped to the bounding rectangle.
@@ -55,6 +54,14 @@ public interface Scrollable extends Sizeable {
      * the components dimensions and the scollbars are hidden.
      */
     public static final int CLIPHIDE = 8;
+    /**
+     * ALWAYS for Y, NEVER for X
+     */
+    public static final int ALWAYS_Y = 16;
+    /**
+     * ALWAYS for X, NEVER for Y
+     */
+    public static final int ALWAYS_X = 32;
     public static final String PROPERTY_SCROLL_BAR_POLICY = "scrollBarPolicy";
     public static final String PROPERTY_SCROLL_BAR_BASE_COLOR = "scrollBarBaseColor";
     public static final String PROPERTY_SCROLL_BAR_PROPERTIES = "scrollBarProperties";
@@ -76,7 +83,8 @@ public interface Scrollable extends Sizeable {
      * Returns the base color of the ScrollBarProperties associated with this
      * <code>Scrollable</code>
      *
-     * @return the base color of the ScrollBarProperties associated with      * this <code>Scrollable</code>
+     * @return the base color of the ScrollBarProperties associated with * this
+     * <code>Scrollable</code>
      */
     public Color getScrollBarBaseColor();
 
@@ -84,7 +92,8 @@ public interface Scrollable extends Sizeable {
      * Returns the ScrollBarProperties associated with this
      * <code>Scrollable</code>
      *
-     * @return the ScrollBarProperties associated with      * this <code>Scrollable</code>
+     * @return the ScrollBarProperties associated with * this
+     * <code>Scrollable</code>
      */
     public ScrollBarProperties getScrollBarProperties();
 
@@ -111,8 +120,7 @@ public interface Scrollable extends Sizeable {
     public void setScrollBarBaseColor(Color newValue);
 
     /**
-     * Sets the ScrollBarProperties associated with this
-     * <code>Scrollable</code>
+     * Sets the ScrollBarProperties associated with this <code>Scrollable</code>
      *
      * @param newValue - the new ScrollBarProperties to use
      */
