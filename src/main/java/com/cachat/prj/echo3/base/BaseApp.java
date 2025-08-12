@@ -272,6 +272,10 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * Déconnecte l'utilisateur
      */
     public void logout() {
+        for (ChildApp c : childs) {
+            // c.enqueueCommand(new CommandJavaScriptEval("window.close();"));
+            c.logout();
+        }
         if (initialUser != null && user != null && !user.equals(initialUser)) {
             setUser(initialUser);
             setSuperAdmin(initialSuperAdmin);
@@ -1084,4 +1088,28 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
         }
     }
     //</editor-fold>
+
+    /**
+     * les app (fenêtre de navigateur) filles
+     */
+    private List<ChildApp> childs = new ArrayList<>();
+
+    /**
+     * enregistre une app (fenêtre de navigateur) fille a fermer lors du logout
+     *
+     * @param child Une app fille
+     */
+    public void addChildApp(ChildApp child) {
+        childs.add(child);
+    }
+
+    /**
+     * donne les app filles
+     *
+     * @return la liste
+     */
+    public List<ChildApp> getChildsApp() {
+        return Collections.unmodifiableList(childs);
+    }
+
 }
