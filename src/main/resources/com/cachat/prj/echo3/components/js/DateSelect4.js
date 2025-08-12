@@ -19,12 +19,26 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
     withTime: false,
     setDate: function (date) {
         if (date) {
-            if (this.withTime) {
-                var dt = new Date(date);
-                this._dateField.value = new Intl.DateTimeFormat("fr-FR").format(dt);
-                this._timeField.value = new Intl.DateTimeFormat("fr-FR", {timeStyle: "short"}).format(dt);
+            var dt;
+            console.log("in1 ", date);
+            if (date.match(/\d\d?\/\d\d\/\d\d\d\d \d\d:\d\d(\/\d\d)?/)) {
+                const words = date.split(/[\/ ]/);
+                console.log(words);
+                console.log(words[2] + "-" + words[1] + "-" + words[0] + "T" + words[3]);
+                dt = new Date(words[2] + "-" + words[1] + "-" + words[0] + "T" + words[3]);
+                console.log("date cnv 1 ", date, dt);
             } else {
-                this._dateField.value = new Intl.DateTimeFormat("fr-FR").format(dt);
+                dt = new Date(date);
+                console.log("date cnv 2 ", date, dt);
+            }
+            var varDate = new Intl.DateTimeFormat("fr-FR", {dateStyle: "short"}).format(dt);
+            this._dateField.value = varDate;
+            if (this.withTime) {
+                var varTime = new Intl.DateTimeFormat("fr-FR", {timeStyle: "short"}).format(dt);
+                console.log("Date ", varDate, "Time", varTime);
+                this._timeField.value = varTime;
+            } else {
+                console.log("Date ", varDate);
             }
         }
     },
@@ -75,7 +89,7 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
         } else {
             conf.defaultDate = date;
         }
-        this.setDate(date);
+
 
         if (this._timeField !== null) {
             var t = document.createElement("table");
@@ -98,12 +112,12 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
             parentElement.appendChild(this._dateField);
         }
         flatpickr(this._dateField, conf);
+        this.setDate(date);
+        const _this = this;
         this.component.addListener('change', function (e) {
             console.log("change ", e.v);
-            this.setDate( e.v);
+            _this.setDate(e.v);
         });
-
-        const _this = this;
         this._dateField.onchange = function (e) {
             _this.fireEvent();
         };
