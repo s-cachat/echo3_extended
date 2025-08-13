@@ -433,7 +433,13 @@ public abstract class BaseMainPaneV6 extends MainPane {
         }
     }
 
-    public abstract HomeWindow getHomeWindow();
+    /**
+     * deprecated !!!
+     */
+    public HomeWindow getHomeWindow() {
+        logger.severe("Use of deprecated getHomeWindow");
+        return app.newHomeWindow();
+    }
 
     @Override
     public synchronized void addWindow(WindowPane w, WindowPane parent) {

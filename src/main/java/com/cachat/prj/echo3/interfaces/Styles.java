@@ -32,7 +32,7 @@ public interface Styles {
     public String getStylePath();
 
     /**
-     * donne la feuille de style par d�faut
+     * donne la feuille de style par défaut
      *
      * @return la feuille de style
      */

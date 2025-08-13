@@ -191,7 +191,7 @@ public abstract class BaseMainPane extends MainPane {
             zoneCE.setRight(new Extent(10));
             zoneCE.setLeft(new Extent(10));
             zoneCE.setPosition(Positionable.ABSOLUTE);
-            zoneCE.setStyleName("zoneCE");
+            zoneCE.setStyleName("ZoneCE");
             add(zoneCE);
             headCE = new ContainerEx();
             headCE.setTop(new Extent(0));
@@ -199,7 +199,7 @@ public abstract class BaseMainPane extends MainPane {
             headCE.setRight(new Extent(0));
             headCE.setLeft(new Extent(0));
             headCE.setPosition(Positionable.ABSOLUTE);
-            headCE.setStyleName("headCE");
+            headCE.setStyleName("HeadCE");
             add(headCE);
             mainCE = new ContainerEx();
             mainCE.setBottom(new Extent(47));
@@ -207,7 +207,7 @@ public abstract class BaseMainPane extends MainPane {
             mainCE.setLeft(new Extent(4));
             mainCE.setRight(new Extent(4));
             mainCE.setPosition(Positionable.ABSOLUTE);
-            mainCE.setStyleName("mainCE");
+            mainCE.setStyleName("MainCE");
             mainCE.setScrollBarPolicy(Scrollable.CLIPHIDE);
             add(mainCE);
             titleCE = new ContainerEx();
@@ -226,7 +226,7 @@ public abstract class BaseMainPane extends MainPane {
             legalCE.setRight(new Extent(0));
             legalCE.setPosition(Positionable.ABSOLUTE);
             LabelEx legal = new LabelEx(app.getCopyright());
-            legal.setStyleName("copyright");
+            legal.setStyleName("Copyright");
             legalCE.add(legal);
             add(legalCE);
             String logoPart = app.getUrlLogoProprietaire();
