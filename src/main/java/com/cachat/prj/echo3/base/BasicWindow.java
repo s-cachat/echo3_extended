@@ -81,7 +81,7 @@ public abstract class BasicWindow extends WindowPane implements LocalisedItem {
     public BaseApp getApp() {
         return app;
     }
-    
+
     /**
      * Donne le préfixe des icônes
      *
@@ -161,6 +161,20 @@ public abstract class BasicWindow extends WindowPane implements LocalisedItem {
     }
 
     /**
+     * Constructeur simplifié. La taille de la fenêtre est fixée à 800,600
+     * arbitrairement (en fait elle n'est utilisée que pour les fenêtres
+     * modales) Le domaine est défini à "" (il n'est pas utilisé dans les styles
+     * actuels, mais il pourrait l'être pour certaines applications)
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre, utilisé pour récupérer les
+     * chaines de caractères dont le titre (.title)
+     */
+    public BasicWindow(BaseApp app, String prefixe) {
+        this(app, prefixe, "", new Extent(800), new Extent(600));
+    }
+
+    /**
      * Constructeur
      *
      * @param app l'application
@@ -232,7 +246,6 @@ public abstract class BasicWindow extends WindowPane implements LocalisedItem {
         super.remove(contentPane);
         return contentPane;
     }
-
 
     /**
      * Ajoute un composant
@@ -358,5 +371,5 @@ public abstract class BasicWindow extends WindowPane implements LocalisedItem {
     public String toString() {
         return "BasicWindow{" + "titre1=" + titre1 + ", prefixe=" + prefixe + '}';
     }
-    
+
 }

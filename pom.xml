@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cachat.prj</groupId>
     <artifactId>echo3_extended</artifactId>
-    <version>3.0</version>
+    <version>4.0</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -18,17 +18,17 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>echo3_extra_webcontainer</artifactId>
-            <version>${project.version}</version>
+            <version>4.0</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>echolot_webcontainer</artifactId>
-            <version>${project.version}</version>
+            <version>4.0</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>sstCommon</artifactId>
-            <version>${project.version}</version>
+            <version>4.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.servicemix.bundles</groupId>

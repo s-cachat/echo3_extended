@@ -12,12 +12,14 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nextapp.echo.app.Alignment;
+import nextapp.echo.app.Color;
 import nextapp.echo.app.Command;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Insets;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.Row;
+import nextapp.echo.app.StyleSheet;
 import nextapp.echo.app.WindowPane;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.WindowPaneEvent;
@@ -77,6 +79,10 @@ public abstract class BaseMainPaneV6 extends MainPane {
      * le conteneur du menu horizontale sous le header
      */
     protected ContainerEx menu2CE;
+    /**
+     * drapeau : le menu 2 doit être visible
+     */
+    protected boolean menu2visible = true;
 
     /**
      * le conteneur pour le titre
@@ -92,11 +98,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
      * le conteneur du pied de page
      */
     protected ContainerEx footerCE;
-
-    /**
-     * le conteneur des boutons sur la bande horizontale
-     */
-    protected ContainerEx headerButtonCE;
 
     /**
      * le conteneur des boutons qui gères les actions sur le connexion
@@ -167,61 +168,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
     protected WindowPane modalWindow = null;
 
     /**
-     * hauteur du header, en pixel
-     */
-    public static final int HEIGHT_HEADER = 48;
-
-    /**
-     * largeur de connectCE, en pixel
-     */
-    public static final int WIDTH_CONNECT_CE = 207;
-
-    /**
-     * hauteur du barre de titre, en pixel
-     */
-    public static final int HEIGHT_TITLE = 44;
-
-    /**
-     * hauteur du sous menu horizontale, en pixel
-     */
-    public static final int INNER_HEIGHT_MENU_2 = 48;
-
-    /**
-     * hauteur du sous menu horizontale, en pixel
-     */
-    public static final int OUTER_HEIGHT_MENU_2 = 48;
-
-    /**
-     * largeur extetieur du menu vérticale à gauche, en pixel
-     */
-    public static final int WIDTH_MENU_1 = 165;
-
-    /**
-     * hauteur du pied de page en pixel
-     */
-    public static final int HEIGHT_FOOTER = 30;
-
-    /**
-     * Décalage du titre du haut de la page avec le sous menu visible
-     */
-    protected Extent offsetTitleTopSubmenu = new Extent(HEIGHT_HEADER + OUTER_HEIGHT_MENU_2, Extent.PX);
-
-    /**
-     * Décalage du titre du haut de la page avec le sous menu invisible
-     */
-    protected Extent offsetTitleTopNoSubmenu = new Extent(HEIGHT_HEADER, Extent.PX);
-
-    /**
-     * Décalage du contenu du haut de la page avec le sous menu visible
-     */
-    protected Extent offsetMainTopSubmenu = new Extent(HEIGHT_HEADER + OUTER_HEIGHT_MENU_2 + HEIGHT_TITLE, Extent.PX);
-
-    /**
-     * Décalage du haut de la page avec le sous menu invisible
-     */
-    protected Extent offsetMainTopNoSubmenu = new Extent(HEIGHT_HEADER + HEIGHT_TITLE, Extent.PX);
-
-    /**
      * Constructeur
      *
      * @param app l'application
@@ -231,23 +177,23 @@ public abstract class BaseMainPaneV6 extends MainPane {
         logger.severe("Constructeur BaseMainPaneV6");
         try {
             // Logo container
-            logoCE = new ContainerEx(0, 0, null, null, WIDTH_MENU_1, HEIGHT_HEADER);
+            logoCE = new ContainerEx();
             logoCE.add(new Label(app.getStyles().getImage("pageLogoV6.png")));
             logoCE.setStyleName("LogoCE");
             add(logoCE);
 
             // Container for connection buttons
-            connectCE = new ContainerEx(0, 0, 0, null, WIDTH_CONNECT_CE, HEIGHT_HEADER);
-            connectCE.setStyleName("ConnectZone");
+            connectCE = new ContainerEx();
+            connectCE.setStyleName("ConnectCE");
+            add(connectCE);
 
-            contextButtonsCE = new ContainerEx(WIDTH_CONNECT_CE, 0, 0, 0, null, null);
-            contextButtonsCE.setStyleName("ContextButtons");
+            contextButtonsCE = new ContainerEx();
+            contextButtonsCE.setStyleName("ContextButtonsCE");
             Row r = new Row();
             String url = app.getHelpUrl();
             if (url != null) {
                 helpBtn = new ButtonEx2("?");
-                helpBtn.setStyleName("HeaderButton");
-                helpBtn.setAlignment(Alignment.ALIGN_CENTER);
+                helpBtn.setStyleName("ContextButton");
                 helpBtn.addActionListener(e -> {
                     Command command = new BrowserOpenWindowCommand(url, "extra", new Extent(800), new Extent(600), BrowserOpenWindowCommand.FLAG_REPLACE | BrowserOpenWindowCommand.FLAG_RESIZABLE);
                     app.enqueueCommand(command);
@@ -256,8 +202,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 r.add(new Strut(6, 6));
             }
             backBtn = new ButtonEx2("⇦");
-            backBtn.setStyleName("HeaderButton");
-            backBtn.setAlignment(Alignment.ALIGN_CENTER);
+            backBtn.setStyleName("ContextButton");
             backBtn.setVisible(false);
             r.add(backBtn);
             backBtn.addActionListener(closeBtnListener = e -> {
@@ -270,44 +215,40 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 }
             });
             contextButtonsCE.add(r);
+            add(contextButtonsCE);
             // Title label
             title = new LabelEx();
             title.setStyleName("Title");
             title.setLineWrap(false);
 
             // Title container
-            titleCE = new ContainerEx(WIDTH_MENU_1, HEIGHT_HEADER + OUTER_HEIGHT_MENU_2, 0, null, null, null);
+            titleCE = new ContainerEx();
             titleCE.setStyleName("TitleCE");
             titleCE.add(title);
             titleCE.setZIndex(9999);
             titleCE.setVisible(false);
             add(titleCE);
-            // Container for buttons on the horizontal band
-            headerButtonCE = new ContainerEx(null, 0, 0, 0, null, HEIGHT_HEADER);
-            headerButtonCE.setStyleName("HeaderButtonCE");
-            headerButtonCE.add(connectCE);
-            headerButtonCE.add(contextButtonsCE);
 
             // header
-            headerCE = new ContainerEx(null, 0, 0, null, null, HEIGHT_HEADER);
+            headerCE = new ContainerEx();
             headerCE.setStyleName("HeaderCE");
-            headerCE.add(headerButtonCE);
+            headerCE.add(new LabelEx("TODO header CE"));
             add(headerCE);
 
             // Vertical menu (main menu)
-            menu1CE = new ContainerEx(0, HEIGHT_HEADER, null, 0, WIDTH_MENU_1, null);
-            menu1CE.setStyleName("Menu");
+            menu1CE = new ContainerEx();
+            menu1CE.setStyleName("Menu1CE");
             add(menu1CE);
 
             // Horizontal sub menu (below header)
-            menu2CE = new ContainerEx(WIDTH_MENU_1, HEIGHT_HEADER, 0, null, null, INNER_HEIGHT_MENU_2);
-            menu2CE.setStyleName("SubMenu");
+            menu2CE = new ContainerEx();
+            menu2CE.setStyleName("Menu2CE");
             menu2CE.setVisible(false);
             add(menu2CE);
 
             // Footer
-            footerCE = new ContainerEx(WIDTH_MENU_1, null, 0, 0, null, HEIGHT_FOOTER);
-            footerCE.setPosition(Positionable.ABSOLUTE);
+            footerCE = new ContainerEx();
+            footerCE.setStyleName("FooterCE");
             r = new Row();
             r.setInsets(new Insets(0, 8, 0, 0));
             r.setAlignment(Alignment.ALIGN_CENTER);
@@ -318,12 +259,12 @@ public abstract class BaseMainPaneV6 extends MainPane {
             add(footerCE);
 
             // Main content container
-            mainCE = new ContainerEx(WIDTH_MENU_1, HEIGHT_HEADER + HEIGHT_TITLE, 0, HEIGHT_FOOTER + 6, null, null);
+            mainCE = new ContainerEx();
             mainCE.setStyleName("MainCE");
             mainCE.setScrollBarPolicy(ContainerEx.CLIPHIDE);
             add(mainCE);
 
-            homeWindow = getHomeWindow();
+            homeWindow = app.newHomeWindow();
             addWindow(homeWindow, null);
         } catch (Throwable t) {
             logger.log(Level.SEVERE, "EE", t);
@@ -331,12 +272,12 @@ public abstract class BaseMainPaneV6 extends MainPane {
 
         // Toast container
         toastCE = new ContainerEx(10, null, 10, 10, null, 22);
-        toastCE.setStyleName("toast");
+        toastCE.setStyleName("Toast");
         toastCE.add(toast = new Label());
         toastCE.setVisible(false);
         add(toastCE);
         toastErrorCE = new ContainerEx(10, null, 10, 10, null, 22);
-        toastErrorCE.setStyleName("toastError");
+        toastErrorCE.setStyleName("ToastError");
         toastErrorCE.add(toastError = new Label());
         toastErrorCE.setVisible(false);
         add(toastErrorCE);
@@ -347,41 +288,37 @@ public abstract class BaseMainPaneV6 extends MainPane {
      *
      * @param window la fenêtre
      */
-    public void updateLayout(BasicWindow window) {
+    public void updateLayout(WindowPane window) {
         if (window != null && window instanceof FullScreen) {
-            titleCE.setTop(0);
-            titleCE.setLeft(0);
-            titleCE.setRight(null);
-            titleCE.setStyleName("TitleCEHeader");
-            mainCE.setTop(offsetTitleTopNoSubmenu);
-            mainCE.setLeft(0);
-            mainCE.setBottom(0);
-            logoCE.setVisible(false);
-            menu1CE.setVisible(false);
+            headerCE.setStyleName("HeaderCEFS");
+            titleCE.setStyleName("TitleCEFS");
+            mainCE.setStyleName("MainCEFS");
+            logoCE.setStyleName("LogoCEFS");
+            menu1CE.setStyleName("Menu1CEFS");
+            menu2CE.setStyleName("Menu2CEFS");
+            connectCE.setStyleName("ConnectCEFS");
+            footerCE.setStyleName("FooterCEFS");
         } else {
-            if (menu2CE.isVisible()) {
-                titleCE.setTop(offsetTitleTopSubmenu);
-                mainCE.setTop(offsetMainTopSubmenu);
+            headerCE.setStyleName("HeaderCE");
+            logoCE.setStyleName("LogoCE");
+            menu1CE.setStyleName("Menu1CE");
+            
+            connectCE.setStyleName("ConnectCE");
+            footerCE.setStyleName("FooterCE");
+            if (window == null) {
+                backBtn.setVisible(false);
             } else {
-                titleCE.setTop(offsetTitleTopNoSubmenu);
-                mainCE.setTop(offsetMainTopNoSubmenu);
+                backBtn.setVisible(true);
             }
-            mainCE.setLeft(WIDTH_MENU_1);
-            mainCE.setBottom(HEIGHT_FOOTER);
-            titleCE.setLeft(WIDTH_MENU_1);
-            titleCE.setRight(0);
-            titleCE.setStyleName("TitleCE");
-            logoCE.setVisible(true);
-            menu1CE.setVisible(true);
+            if (menu2visible) {
+                titleCE.setStyleName("TitleCE");
+                mainCE.setStyleName("MainCE");menu2CE.setStyleName("Menu2CE");
+            } else {
+                titleCE.setStyleName("TitleCEN2");
+                mainCE.setStyleName("MainCEN2");menu2CE.setStyleName("Menu2CEN2");
+            }
         }
 
-        if (window == null) {
-            backBtn.setVisible(false);
-            headerButtonCE.setWidth(new Extent(WIDTH_CONNECT_CE + HEIGHT_HEADER, Extent.PX));
-        } else {
-            backBtn.setVisible(true);
-            headerButtonCE.setWidth(new Extent(WIDTH_CONNECT_CE + (HEIGHT_HEADER * 2), Extent.PX));
-        }
     }
 
     /**
@@ -390,22 +327,9 @@ public abstract class BaseMainPaneV6 extends MainPane {
      * @param visible visible si true, invisible sinon
      */
     protected void setSubMenuVisible(boolean visible) {
+        this.menu2visible = visible;
+        updateLayout(activeWindow);
         menu2CE.setVisible(visible);
-        if (visible) {
-            if (!backBtn.isVisible()) {
-                titleCE.setTop(offsetTitleTopSubmenu);
-                mainCE.setTop(offsetMainTopSubmenu);
-            } else {
-                mainCE.setTop(offsetTitleTopSubmenu);
-            }
-        } else {
-            if (!backBtn.isVisible()) {
-                titleCE.setTop(offsetTitleTopNoSubmenu);
-                mainCE.setTop(offsetMainTopNoSubmenu);
-            } else {
-                mainCE.setTop(offsetTitleTopNoSubmenu);
-            }
-        }
     }
 
     private String getDefaultTitle() {
@@ -431,14 +355,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
             remove(modalWindow);
             modalWindow = null;
         }
-    }
-
-    /**
-     * deprecated !!!
-     */
-    public HomeWindow getHomeWindow() {
-        logger.severe("Use of deprecated getHomeWindow");
-        return app.newHomeWindow();
     }
 
     @Override
@@ -477,6 +393,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 BasicWindow bw = (BasicWindow) w;
                 title.setText(bw.getTitre2());
                 titleCE.setVisible(true);
+                titleCE.setHeight(21);
                 activeWindow = bw;
                 activeCE = bw.getContentPane();
                 mainCE.add(activeCE);
