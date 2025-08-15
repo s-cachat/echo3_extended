@@ -5,19 +5,10 @@
  */
 package com.cachat.prj.echo3.base;
 
-import nextapp.echo.app.Color;
-import nextapp.echo.app.Extent;
-import nextapp.echo.app.FillImage;
-import nextapp.echo.app.FillImageBorder;
-import nextapp.echo.app.Insets;
-
 /**
  * la fenetre de connexion
- *
- * @deprecated use LoginPaneV6
  */
-@Deprecated(forRemoval = true)
-public class LoginBasePane extends BaseMainPane implements WithErrorStatusField {
+public class LoginBasePaneV6 extends BaseMainPaneV6 implements WithErrorStatusField {
 
     /**
      * la fenetre
@@ -29,14 +20,10 @@ public class LoginBasePane extends BaseMainPane implements WithErrorStatusField 
      *
      * @param app l'instance de l'application
      */
-    public LoginBasePane(BaseApp app) {
+    public LoginBasePaneV6(BaseApp app) {
         super(app);
         window = new LoginWindow(app);
         window.setClosable(false);
-        window.setTitleBackgroundImage(new FillImage(app.getStyles().getImage("titleWindowBck.png")));
-        window.setTitleHeight(new Extent(35));
-        window.setTitleInsets(new Insets(5, 6, 0, 0));
-        window.setBorder(new FillImageBorder(Color.BLACK, new Insets(2), new Insets(2)));
         add(window);
         window.setParent(this);
     }

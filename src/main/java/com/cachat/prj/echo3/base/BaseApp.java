@@ -295,7 +295,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * @return la fenêtre
      */
     protected MainPane newLoginPane() {
-        return new LoginBasePane(this);
+        return new LoginBasePaneV6(this);
     }
 
     /**

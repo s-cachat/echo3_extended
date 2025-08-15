@@ -59,7 +59,7 @@ public class ConnectZone extends Row {
         if (showProfilWindow != null) {
             profilButton = new Button("Anonymous");
             profilButton.setLineWrap(false);
-            profilButton.addActionListener(a -> app.addOrActivatePane("com.cachat.prj.serversupervisiontool.gui.admin.UserPrefPane"));
+            profilButton.addActionListener(a -> showProfilWindow.run());
             profilButton.setStyleName("ConnectZone");
             add(profilButton);
         }

@@ -183,7 +183,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             connectCE = new ContainerEx();
             connectCE.setStyleName("ConnectCE");
             add(connectCE);
-
+            
             contextButtonsCE = new ContainerEx();
             contextButtonsCE.setStyleName("ContextButtonsCE");
             Row r = new Row();
@@ -229,7 +229,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             // header
             headerCE = new ContainerEx();
             headerCE.setStyleName("HeaderCE");
-            headerCE.add(new LabelEx("TODO header CE"));
+            headerCE.add(new LabelEx(app.getBaseString("app.title")));
             add(headerCE);
 
             // Vertical menu (main menu)
@@ -260,7 +260,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             mainCE.setStyleName("MainCE");
             mainCE.setScrollBarPolicy(ContainerEx.CLIPHIDE);
             add(mainCE);
-
+            
             homeWindow = app.newHomeWindow();
             addWindow(homeWindow, null);
         } catch (Throwable t) {
@@ -309,13 +309,15 @@ public abstract class BaseMainPaneV6 extends MainPane {
             }
             if (menu2visible) {
                 titleCE.setStyleName("TitleCE");
-                mainCE.setStyleName("MainCE");menu2CE.setStyleName("Menu2CE");
+                mainCE.setStyleName("MainCE");
+                menu2CE.setStyleName("Menu2CE");
             } else {
                 titleCE.setStyleName("TitleCEN2");
-                mainCE.setStyleName("MainCEN2");menu2CE.setStyleName("Menu2CEN2");
+                mainCE.setStyleName("MainCEN2");
+                menu2CE.setStyleName("Menu2CEN2");
             }
         }
-
+        
     }
 
     /**
@@ -328,11 +330,11 @@ public abstract class BaseMainPaneV6 extends MainPane {
         updateLayout(activeWindow);
         menu2CE.setVisible(visible);
     }
-
+    
     private String getDefaultTitle() {
         return app.getString("app.accueil");
     }
-
+    
     @Override
     public void windowsUpdated() {
     }
@@ -344,16 +346,16 @@ public abstract class BaseMainPaneV6 extends MainPane {
      */
     @Override
     public void removeWindow(WindowPane w) {
-
+        
     }
-
+    
     public void modalClosing() {
         if (modalWindow != null) {
             remove(modalWindow);
             modalWindow = null;
         }
     }
-
+    
     @Override
     public synchronized void addWindow(WindowPane w, WindowPane parent) {
         if (w != null && w.isModal()) {
@@ -370,7 +372,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             activeWindow.dispose();
             activeWindow = null;
         }
-
+        
         if (w == null) {
             title.setText(getDefaultTitle());
             titleCE.setVisible(true);
@@ -394,7 +396,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 activeWindow = bw;
                 activeCE = bw.getContentPane();
                 mainCE.add(activeCE);
-
+                
                 bw.setParent(this);
                 bw.init();
                 if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
@@ -405,7 +407,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             }
         }
     }
-
+    
     @Override
     public void clearWindows() {
         mainCE.removeAll();
@@ -477,14 +479,14 @@ public abstract class BaseMainPaneV6 extends MainPane {
             toastTimer.schedule(endToastError, 5000);
         }
     }
-
+    
     @Override
     public void dispose() {
     }
-
+    
     public enum Layout {
         NORMAL, // mise en page normale avec le titre dans le contenu
         FULLSCREEN // mise en page plein écran avec le titre et les boutons supplementaires dans le header
     }
-
+    
 }

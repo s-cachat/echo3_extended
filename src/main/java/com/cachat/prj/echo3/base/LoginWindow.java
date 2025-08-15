@@ -1,8 +1,9 @@
 package com.cachat.prj.echo3.base;
 
 import com.cachat.prj.echo3.interfaces.User;
+import com.cachat.prj.echo3.ng.ContainerEx;
 import nextapp.echo.app.Button;
-import nextapp.echo.app.Column;
+import nextapp.echo.app.Color;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Grid;
 import nextapp.echo.app.Label;
@@ -13,6 +14,9 @@ import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
+/**
+ * Fenêtre de connexion
+ */
 public class LoginWindow extends BasicWindow implements ActionListener {
 
     /**
@@ -57,59 +61,64 @@ public class LoginWindow extends BasicWindow implements ActionListener {
 
     public LoginWindow(BaseApp app) {
         super(app, "app.login", "login", new Extent(300), new Extent(200));
-        Column windowColumn = new Column();
-        add(windowColumn);
-
+        setStyleName("LoginWindow");
+        ContainerEx windowCE = new ContainerEx();
+        windowCE.setStyleName("WindowCE");
+        add(windowCE);
         errorMsg = new Label();
         errorMsg.setStyleName("ErrorMsg");
-        windowColumn.add(errorMsg);
+        windowCE.add(new ContainerEx(0, 0, 0, null, null, 32, errorMsg));
 
-        Column form = new Column();
-        Grid g = new Grid();
+        Grid grid = new Grid();
+        grid.setStyleName("Grid");
         nomLabel = new Label(getString("nom"));
         nomLabel.setStyleName("Grid");
-        g.add(nomLabel);
+        grid.add(nomLabel);
 
         identifiant = new TextField();
         identifiant.setStyleName("Grid");
-        g.add(identifiant);
+        grid.add(identifiant);
 
         passLabel = new Label(getString("pass"));
         passLabel.setStyleName("Grid");
-        g.add(passLabel);
+        grid.add(passLabel);
 
         motDePasse = new PasswordField();
         motDePasse.setStyleName("Grid");
-        g.add(motDePasse);
-
-        form.add(g);
+        grid.add(motDePasse);
+        windowCE.add(new ContainerEx(0, 32, 0, 32, null, null, grid));
         ok = new Button(getBaseString("ok"));
         ok.setStyleName("GridButton");
         Row buttonRow = new Row();
         buttonRow.setStyleName("Buttons");
-        form.add(buttonRow);
         buttonRow.add(ok);
-        windowColumn.add(form);
+        ContainerEx buttonRowCE = new ContainerEx(buttonRow);
+        buttonRowCE.setStyleName("ButtonsCE");
+        windowCE.add(buttonRowCE);
         ActionListener al = (ActionEvent e) -> loginAction();
         ok.addActionListener(al);
         motDePasse.addActionListener(al);
         identifiant.addActionListener(al);
 
-        langLabel = new Label(getString("langue"));
-        langLabel.setStyleName("Grid");
-        g.add(langLabel);
+        if (BaseApp.AVAILABLE_LANGUAGES.length > 1) {
+            langLabel = new Label(getString("langue"));
+            langLabel.setStyleName("Grid");
+            grid.add(langLabel);
 
-        String[] langlab = new String[BaseApp.AVAILABLE_LANGUAGES.length];
-        for (int i = 0; i < langlab.length; i++) {
-            langlab[i] = BaseApp.AVAILABLE_LANGUAGES[i].getDisplayLanguage(BaseApp.AVAILABLE_LANGUAGES[i]);
+            String[] langlab = new String[BaseApp.AVAILABLE_LANGUAGES.length];
+            for (int i = 0; i < langlab.length; i++) {
+                langlab[i] = BaseApp.AVAILABLE_LANGUAGES[i].getDisplayLanguage(BaseApp.AVAILABLE_LANGUAGES[i]);
+            }
+            lang = new SelectField(langlab);
+            lang.setStyleName("Grid");
+            lang.setSelectedIndex(search(BaseApp.AVAILABLE_LANGUAGE_CODES, app.getLocale().getLanguage()));
+            grid.add(lang);
+
+            lang.addActionListener(this);
+        } else {
+            langLabel = null;
+            lang = null;
         }
-        lang = new SelectField(langlab);
-        lang.setStyleName("Grid");
-        lang.setSelectedIndex(search(BaseApp.AVAILABLE_LANGUAGE_CODES, app.getLocale().getLanguage()));
-        g.add(lang);
-
-        lang.addActionListener(this);
-
         if (app.getLoginName() != null && app.getLoginName().length() > 0) {
             identifiant.setText(app.getLoginName());
         }
@@ -128,9 +137,11 @@ public class LoginWindow extends BasicWindow implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        int ilang = lang.getSelectedIndex();
-        if (ilang >= 0) {
-            app.setLocale(BaseApp.AVAILABLE_LANGUAGES[ilang]);
+        if (lang != null) {
+            int ilang = lang.getSelectedIndex();
+            if (ilang >= 0) {
+                app.setLocale(BaseApp.AVAILABLE_LANGUAGES[ilang]);
+            }
         }
         ((BaseApp) app).setLoginName(identifiant.getText());
         ((BaseApp) app).doLogin();//on relance avec la nouvelle langue

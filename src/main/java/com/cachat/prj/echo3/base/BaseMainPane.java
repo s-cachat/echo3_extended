@@ -25,7 +25,9 @@ import nextapp.echo.app.event.WindowPaneListener;
 
 /**
  * l'ecran principal
+ * @deprecated use BaseMainPaneV6
  */
+@Deprecated(forRemoval = true)
 public abstract class BaseMainPane extends MainPane {
 
     /**
