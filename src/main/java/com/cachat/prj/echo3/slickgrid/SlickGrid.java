@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.Position;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
@@ -123,8 +124,8 @@ public class SlickGrid extends Component implements Positionable, Sizeable {
     }
 
     @Override
-    public int getPosition() {
-        return (Integer) get(PROPERTY_POSITION);
+    public Position getPosition() {
+        return (Position) get(PROPERTY_POSITION);
     }
 
     @Override
@@ -144,11 +145,11 @@ public class SlickGrid extends Component implements Positionable, Sizeable {
 
     @Override
     public boolean isPositioned() {
-        return getPosition() != Positionable.STATIC;
+        return getPosition() != Position.STATIC;
     }
 
     @Override
-    public void setPosition(int newValue) {
+    public void setPosition(Position newValue) {
         set(PROPERTY_POSITION, newValue);
     }
 

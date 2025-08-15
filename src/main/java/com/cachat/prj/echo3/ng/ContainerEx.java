@@ -16,6 +16,9 @@ import nextapp.echo.app.FillImageBorder;
 import nextapp.echo.app.Insets;
 import static nextapp.echo.app.Label.PROPERTY_TEXT_ALIGNMENT;
 import nextapp.echo.app.PaneContainer;
+import nextapp.echo.app.Position;
+import static nextapp.echo.app.Position.ABSOLUTE;
+import static nextapp.echo.app.Position.STATIC;
 
 /**
  *
@@ -117,7 +120,7 @@ public class ContainerEx extends BorderedComponent implements PaneContainer, Pos
      * @param height extent en pixel, ou null si indéfini
      */
     public void setBounds(Integer left, Integer top, Integer right, Integer bottom, Integer width, Integer height) {
-        setPosition(Positionable.ABSOLUTE);
+        setPosition(ABSOLUTE);
         if (top != null) {
             setTop(new Extent(top));
         }
@@ -156,9 +159,8 @@ public class ContainerEx extends BorderedComponent implements PaneContainer, Pos
     }
 
     @Override
-    public int getPosition() {
-        Integer v = (Integer) get(PROPERTY_POSITION);
-        return v == null ? 0 : v;
+    public Position getPosition() {
+        return (Position) get(PROPERTY_POSITION);
     }
 
     @Override
@@ -178,11 +180,11 @@ public class ContainerEx extends BorderedComponent implements PaneContainer, Pos
 
     @Override
     public boolean isPositioned() {
-        return getPosition() != Positionable.STATIC;
+        return getPosition() != STATIC;
     }
 
     @Override
-    public void setPosition(int newValue) {
+    public void setPosition(Position newValue) {
         set(PROPERTY_POSITION, newValue);
     }
 

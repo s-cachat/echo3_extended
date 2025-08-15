@@ -27,6 +27,7 @@ import nextapp.echo.app.Extent;
 import nextapp.echo.app.Grid;
 import nextapp.echo.app.Insets;
 import nextapp.echo.app.Panel;
+import static nextapp.echo.app.Position.STATIC;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.layout.GridLayoutData;
 
@@ -193,7 +194,7 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
         public BlockButton() {
             if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
                 butContainer = new ContainerEx(0, null, 0, 0, null, null);
-                butContainer.setPosition(ContainerEx.STATIC);
+                butContainer.setPosition(STATIC);
                 butContainer.setStyleName("GridButton");
 
                 butGrid = new Grid(3);

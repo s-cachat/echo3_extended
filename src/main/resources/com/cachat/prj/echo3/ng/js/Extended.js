@@ -33,15 +33,28 @@ Extended = {
             switch (v) {
                 case 1:
                     element.style.position = "static";
+                    console.log("WARNING Obsolete value for position : ",v);
                     break;
                 case 2:
                     element.style.position = "absolute";
+                    console.log("WARNING Obsolete value for position : ",v);
                     break;
                 case 4:
                     element.style.position = "relative";
+                    console.log("WARNING Obsolete value for position : ",v);
                     break;
                 case 8:
                     element.style.position = "fixed";
+                    console.log("WARNING Obsolete value for position : ",v);
+                    break;
+                case "static":
+                case "absolute":
+                case "relative":
+                case "fixed":
+                    element.style.position = v;
+                    break;
+                default:
+                    console.log("WARNING Invalid value for position : ",v);
                     break;
             }
 

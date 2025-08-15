@@ -16,7 +16,6 @@ import com.cachat.prj.echo3.interfaces.Activable;
 import com.cachat.prj.echo3.interfaces.Editable;
 import com.cachat.prj.echo3.models.ListTableModel;
 import com.cachat.prj.echo3.ng.*;
-import com.cachat.prj.echo3.ng.able.Positionable;
 import com.cachat.prj.echo3.ng.able.Scrollable;
 import com.cachat.prj.echo3.ng.table.*;
 import com.cachat.util.ACEntityManager;
@@ -37,6 +36,7 @@ import java.util.regex.Pattern;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.exception.DRException;
 import nextapp.echo.app.*;
+import static nextapp.echo.app.Position.RELATIVE;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.GridLayoutData;
@@ -1484,7 +1484,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         @Override
         public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
             ContainerEx ce = new ContainerEx(0, 0, 0, 0, new LabelEx(String.valueOf(value)));
-            ce.setPosition(Positionable.RELATIVE);
+            ce.setPosition(RELATIVE);
             ce.setStyleName("TableHeader");
             return ce;
         }

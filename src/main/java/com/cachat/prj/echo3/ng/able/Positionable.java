@@ -1,6 +1,7 @@
 package com.cachat.prj.echo3.ng.able;
 
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.Position;
 
 /**
  * A
@@ -47,38 +48,13 @@ import nextapp.echo.app.Extent;
  *
  * A
  * <code>Positionable</code> also supports a z-idex, which controls how it is
- * layered over other components, especially other
- * <code>Positionable</code> 's.
+ * layered over other components, especially other <code>Positionable</code> 's.
  * <p>
  * If no zIndex is to apply then the Integer.MIN_VALUE can be used in which case
  * no zIndex will be set.
  */
 public interface Positionable extends Delegateable {
 
-    /**
-     * The Positionable is a normal Positionable, laid out according to the
-     * normal flow.
-     */
-    public static final int STATIC = 1;
-    /**
-     * The Positionable's position (and possibly size) is specified with the
-     * 'top', 'right', 'bottom', and 'left' properties. These properties specify
-     * offsets with respect to the Positionable's containing Positionable.
-     * Absolutely positioned Positionables are taken out of the normal flow.
-     * This means they have no impact on the layout of later siblings.
-     */
-    public static final int ABSOLUTE = 2;
-    /**
-     * The Positionable's position is calculated according to the normal flow.
-     * Then the Positionable is offset relative to its normal position.
-     */
-    public static final int RELATIVE = 4;
-    /**
-     * The Positionable's position is calculated according to the 'absolute'
-     * model, but in addition, the Positionable is fixed with respect to the
-     * viewport and doesn't move when scrolled.
-     */
-    public static final int FIXED = 8;
     public static final String PROPERTY_BOTTOM = "bottom";
     public static final String PROPERTY_LEFT = "left";
     public static final String PROPERTY_POSITION = "position";
@@ -103,15 +79,11 @@ public interface Positionable extends Delegateable {
     public Extent getLeft();
 
     /**
-     * This can be one of :
-     * <ul>
-     * <li>POSITIONING_STATIC</li>
-     * <li>POSITIONING_RELATIVE</li>
-     * <li>POSITIONING_ABSOLUTE</li>
-     * <li>POSITIONING_FIXED</li>
-     * </ul>
+     * The positionning mode
+     *
+     * @return the mode
      */
-    public int getPosition();
+    public Position getPosition();
 
     /**
      * Returns the right X position of the component
@@ -147,16 +119,8 @@ public interface Positionable extends Delegateable {
 
     /**
      * Sets the position of the component
-     *
-     * This can be one of :
-     * <ul>
-     * <li>POSITIONING_STATIC</li>
-     * <li>POSITIONING_RELATIVE</li>
-     * <li>POSITIONING_ABSOLUTE</li>
-     * <li>POSITIONING_FIXED</li>
-     * </ul>
      */
-    public void setPosition(int newPositioning);
+    public void setPosition(Position newPositioning);
 
     /**
      * Sets the right X position of the component

@@ -8,6 +8,7 @@ import jakarta.validation.Validator;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Grid;
+import static nextapp.echo.app.Position.FIXED;
 
 /**
  * un bloc d'information
@@ -66,7 +67,7 @@ public class BlockInfo implements BlockBase<Component>, BlockInterface {
         this.content = content;
         this.isHtml = isHtml;
         butContainer = new ContainerEx(0, null, 0, 0, null, null);
-        butContainer.setPosition(ContainerEx.FIXED);
+        butContainer.setPosition(FIXED);
         butContainer.setStyleName("GridButton");
         grid = new Grid(1);
         grid.setStyleName("GridButton");

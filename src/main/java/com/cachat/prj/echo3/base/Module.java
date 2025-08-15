@@ -3,15 +3,14 @@ package com.cachat.prj.echo3.base;
 import com.cachat.prj.echo3.ng.ButtonEx;
 import com.cachat.prj.echo3.ng.ContainerEx;
 import com.cachat.prj.echo3.ng.LabelEx;
-import com.cachat.prj.echo3.ng.able.Positionable;
 import com.cachat.prj.echo3.ng.able.Scrollable;
 import java.util.ArrayList;
 import java.util.List;
-import nextapp.echo.app.Border;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.Insets;
+import static nextapp.echo.app.Position.ABSOLUTE;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
@@ -32,7 +31,7 @@ public class Module extends ContainerEx {
 
     public Module(BaseApp app, String title, boolean closeButton) {
         this.app = app;
-        setPosition(Positionable.ABSOLUTE);
+        setPosition(ABSOLUTE);
         backgroundPane = new ContainerEx();
         backgroundPane.setStyleName("ModuleBackground");
 
@@ -40,13 +39,13 @@ public class Module extends ContainerEx {
         backgroundPane.setRight(new Extent(0));
         backgroundPane.setBottom(new Extent(0));
         backgroundPane.setLeft(new Extent(0));
-        backgroundPane.setPosition(Positionable.ABSOLUTE);
+        backgroundPane.setPosition(ABSOLUTE);
         add(backgroundPane);
         contentPane = new ContainerEx();
         contentPane.setRight(new Extent(13));
         contentPane.setBottom(new Extent(11));
         contentPane.setLeft(new Extent(13));
-        contentPane.setPosition(Positionable.ABSOLUTE);
+        contentPane.setPosition(ABSOLUTE);
         contentPane.setScrollBarPolicy(Scrollable.AUTO);
         if (title != null && title.length() > 0) {
             ContainerEx titleCont = new ContainerEx();
@@ -55,7 +54,7 @@ public class Module extends ContainerEx {
             titleCont.setRight(new Extent(13));
             titleCont.setHeight(new Extent(29));
             titleCont.setLeft(new Extent(12));
-            titleCont.setPosition(Positionable.ABSOLUTE);
+            titleCont.setPosition(ABSOLUTE);
 
             titleLabel = new LabelEx(title);
             if (!closeButton) {
@@ -67,7 +66,7 @@ public class Module extends ContainerEx {
                 c1.setRight(new Extent(0));
                 c1.setInsets(new Insets(4));
                 c1.add(titleLabel);
-                c1.setPosition(Positionable.ABSOLUTE);
+                c1.setPosition(ABSOLUTE);
                 titleCont.add(c1);
 
                 ContainerEx c2 = new ContainerEx();
@@ -81,7 +80,7 @@ public class Module extends ContainerEx {
                 button.setBorder(null);
                 c2.setBackground(Color.TRANSPARENT);
                 c2.add(button);
-                c2.setPosition(Positionable.ABSOLUTE);
+                c2.setPosition(ABSOLUTE);
                 titleCont.add(c2);
                 button.addActionListener(this::dispatchCloseAction);
             }

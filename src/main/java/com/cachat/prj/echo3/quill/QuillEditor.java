@@ -13,6 +13,7 @@ import static com.cachat.prj.echo3.ng.able.Widthable.PROPERTY_WIDTH;
 import java.util.logging.Logger;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.Position;
 
 /**
  * un éditeur de texte riche
@@ -54,8 +55,8 @@ public class QuillEditor extends Component implements Positionable, Sizeable {
     }
 
     @Override
-    public int getPosition() {
-        return (Integer) get(PROPERTY_POSITION);
+    public Position getPosition() {
+        return (Position) get(PROPERTY_POSITION);
     }
 
     @Override
@@ -75,11 +76,11 @@ public class QuillEditor extends Component implements Positionable, Sizeable {
 
     @Override
     public boolean isPositioned() {
-        return getPosition() != Positionable.STATIC;
+        return getPosition() != Position.STATIC;
     }
 
     @Override
-    public void setPosition(int newValue) {
+    public void setPosition(Position newValue) {
         set(PROPERTY_POSITION, newValue);
     }
 

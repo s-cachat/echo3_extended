@@ -12,6 +12,8 @@ import com.cachat.prj.echo3.ng.able.Sizeable;
 import static com.cachat.prj.echo3.ng.able.Widthable.PROPERTY_WIDTH;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.Position;
+import static nextapp.echo.app.Position.STATIC;
 
 /**
  * insère un tag permettant de voir de la vidéo, selon les paramètres et le type
@@ -130,8 +132,8 @@ public class Video extends Component implements Positionable, Sizeable {
     }
 
     @Override
-    public int getPosition() {
-        return (Integer) get(PROPERTY_POSITION);
+    public Position getPosition() {
+        return (Position) get(PROPERTY_POSITION);
     }
 
     @Override
@@ -151,11 +153,11 @@ public class Video extends Component implements Positionable, Sizeable {
 
     @Override
     public boolean isPositioned() {
-        return getPosition() != Positionable.STATIC;
+        return getPosition() != STATIC;
     }
 
     @Override
-    public void setPosition(int newValue) {
+    public void setPosition(Position newValue) {
         set(PROPERTY_POSITION, newValue);
     }
 
@@ -244,7 +246,7 @@ public class Video extends Component implements Positionable, Sizeable {
      * @param height extent en pixel, ou null si indéfini
      */
     public void setBounds(Integer left, Integer top, Integer right, Integer bottom, Integer width, Integer height) {
-        setPosition(Positionable.ABSOLUTE);
+        setPosition(Position.ABSOLUTE);
         if (top != null) {
             setTop(new Extent(top));
         }
