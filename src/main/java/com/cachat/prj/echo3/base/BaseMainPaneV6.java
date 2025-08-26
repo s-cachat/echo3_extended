@@ -223,7 +223,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
             titleCE.setStyleName("TitleCE");
             titleCE.add(title);
             titleCE.setZIndex(9999);
-            titleCE.setVisible(false);
             add(titleCE);
 
             // header
@@ -374,7 +373,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
 
         if (w == null) {
             title.setText(getDefaultTitle());
-            titleCE.setVisible(true);
             if (app.getUser() != null && homeWindow != null) {
                 activeCE = homeWindow.getContentPane();
                 mainCE.add(activeCE);
@@ -390,8 +388,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 }
                 BasicWindow bw = (BasicWindow) w;
                 title.setText(bw.getTitre2());
-                titleCE.setVisible(true);
-                titleCE.setHeight(21);
                 activeWindow = bw;
                 activeCE = bw.getContentPane();
                 mainCE.add(activeCE);
