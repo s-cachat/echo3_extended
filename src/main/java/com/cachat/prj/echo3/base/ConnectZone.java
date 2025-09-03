@@ -72,7 +72,7 @@ public class ConnectZone extends Row {
 
         add(new Strut(6, 5));
 
-        logoutButton = new Button(app.getStyles().getIcon("dec"));
+        logoutButton = new Button(app.getStyles().getIcon("logout"));
         logoutButton.addActionListener(a -> app.logout());
         logoutButton.setStyleName("ConnectZone");
         add(logoutButton);

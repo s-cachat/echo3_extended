@@ -119,6 +119,7 @@ public interface Positionable extends Delegateable {
 
     /**
      * Sets the position of the component
+     * @param newPositioning the new position
      */
     public void setPosition(Position newPositioning);
 
