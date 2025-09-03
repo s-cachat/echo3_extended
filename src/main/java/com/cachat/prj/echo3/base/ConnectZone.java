@@ -3,9 +3,7 @@
  */
 package com.cachat.prj.echo3.base;
 
-import com.cachat.prj.echo3.ng.Strut;
 import nextapp.echo.app.Button;
-import nextapp.echo.app.Insets;
 import nextapp.echo.app.Row;
 
 /**
@@ -55,7 +53,6 @@ public class ConnectZone extends Row {
      */
     public ConnectZone(BaseApp app, Runnable showProfilWindow) {
         this.app = app;
-        setInsets(new Insets(6));
         if (showProfilWindow != null) {
             profilButton = new Button("Anonymous");
             profilButton.setLineWrap(false);
@@ -69,8 +66,6 @@ public class ConnectZone extends Row {
         loginButton.addActionListener(a -> app.doLogin());
         loginButton.setStyleName("ConnectZone");
         add(loginButton);
-
-        add(new Strut(6, 5));
 
         logoutButton = new Button(app.getStyles().getIcon("logout"));
         logoutButton.addActionListener(a -> app.logout());

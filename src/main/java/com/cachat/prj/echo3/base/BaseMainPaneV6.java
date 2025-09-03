@@ -1,9 +1,15 @@
 package com.cachat.prj.echo3.base;
 
 import com.cachat.prj.echo3.components.ButtonEx2;
+import com.cachat.prj.echo3.ng.ButtonEx;
 import com.cachat.prj.echo3.ng.ContainerEx;
 import com.cachat.prj.echo3.ng.LabelEx;
 import com.cachat.prj.echo3.ng.Strut;
+import com.cachat.prj.echo3.ng.able.Scrollable;
+import com.cachat.prj.echo3.ng.menu.MenuElement;
+import com.cachat.prj.echo3.ng.menu.MenuItem;
+import com.cachat.prj.echo3.ng.menu.MenuPane;
+import com.cachat.prj.echo3.ng.menu.SubMenu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -11,6 +17,9 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nextapp.echo.app.Alignment;
+import nextapp.echo.app.Button;
+import nextapp.echo.app.Color;
+import nextapp.echo.app.Column;
 import nextapp.echo.app.Command;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Extent;
@@ -18,6 +27,7 @@ import nextapp.echo.app.Insets;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.WindowPane;
+import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.WindowPaneEvent;
 import nextapp.echo.webcontainer.command.BrowserOpenWindowCommand;
@@ -26,7 +36,15 @@ import nextapp.echo.webcontainer.command.BrowserOpenWindowCommand;
  * l'écran principal
  */
 public abstract class BaseMainPaneV6 extends MainPane {
+    /**
+     * la liste de boutons pour le menu vérticale
+     */
+    protected final List<Button> menu1Items = new ArrayList<>();
 
+    /**
+     * la liste de boutons pour le menu horizontale
+     */
+    protected final List<Button> menu2Items = new ArrayList<>();
     /**
      * le logger
      */
@@ -109,7 +127,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
     /**
      * bouton pour fermer une fenêtre plein écran
      */
-    protected ButtonEx2 backBtn;
+    protected Button backBtn;
 
     /**
      * action listener sur le bouton close
@@ -119,7 +137,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
     /**
      * bouton pour ouvrir la fenêtre d'aide
      */
-    protected ButtonEx2 helpBtn;
+    protected Button helpBtn;
 
     /**
      * timer pour les toast
@@ -186,20 +204,21 @@ public abstract class BaseMainPaneV6 extends MainPane {
 
             contextButtonsCE = new ContainerEx();
             contextButtonsCE.setStyleName("ContextButtonsCE");
+            add(contextButtonsCE);
             Row r = new Row();
+            contextButtonsCE.add(r);
             String url = app.getHelpUrl();
             if (url != null) {
-                helpBtn = new ButtonEx2("?");
+                helpBtn = new Button(app.getStyles().getIcon("help"));
                 helpBtn.setStyleName("ContextButton");
                 helpBtn.addActionListener(e -> {
                     Command command = new BrowserOpenWindowCommand(url, "extra", new Extent(800), new Extent(600), BrowserOpenWindowCommand.FLAG_REPLACE | BrowserOpenWindowCommand.FLAG_RESIZABLE);
                     app.enqueueCommand(command);
                 });
                 r.add(helpBtn);
-                r.add(new Strut(6, 6));
             }
-            backBtn = new ButtonEx2("⇦");
-            backBtn.setStyleName("ContextButton");
+            backBtn = new Button(app.getStyles().getIcon("arrowLeft"));
+            backBtn.setStyleName("TopRightButton");
             backBtn.setVisible(false);
             r.add(backBtn);
             backBtn.addActionListener(closeBtnListener = e -> {
@@ -211,8 +230,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
                     }
                 }
             });
-            contextButtonsCE.add(r);
-            add(contextButtonsCE);
+
             // Title label
             title = new LabelEx();
             title.setStyleName("Title");
@@ -292,7 +310,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             logoCE.setVisible(false);
             menu1CE.setVisible(false);
             menu2CE.setVisible(false);
-            connectCE.setVisible(false);
+            connectCE.setVisible(true);
             footerCE.setVisible(false);
         } else {
             headerCE.setVisible(true);
@@ -477,6 +495,163 @@ public abstract class BaseMainPaneV6 extends MainPane {
 
     @Override
     public void dispose() {
+    }
+
+    /**
+     * Méttre à jour le style des boutons sur le menu vérticale
+     *
+     * @param button le bouton actuellement séléctionné
+     */
+    private void setMenu1Selected(Button button) {
+        menu1Items.forEach(m -> {
+            m.setStyleName("Menu1Unselected");
+        });
+        if (button == null) {
+            return;
+        }
+        button.setStyleName("Menu1Selected");
+    }
+
+    /**
+     * Méttre à jour le style des boutons sur le menu horizontal
+     *
+     * @param button le bouton actuellement séléctionné
+     */
+    private void setMenu2Selected(Button button) {
+        menu2Items.forEach(m -> {
+            m.setStyleName("Menu2Unselected");
+        });
+        if (button == null) {
+            return;
+        }
+        button.setStyleName("Menu2Selected");
+    }
+
+    /**
+     * Méttre à jour le contenu du mainCE à partir d'un MenuItem
+     *
+     * @param mi le MenuItem
+     */
+    private void updateMainCE(MenuItem mi) {
+        if (mi.getNewPane() != null) {
+            if (!app.addOrActivatePane(mi.getNewPane())) {
+                new MessagePane(app, app.getString("license.invalide.titre"), "outils", app.getString("license.invalide.message"), MessagePane.Icon.ERROR, new Extent(500), new Extent(200));
+            }
+        } else if (mi.getNewWindow() != null) {
+            mainCE.removeAll();
+            title.setText("");
+            Command command = new BrowserOpenWindowCommand(mi.getNewWindow(), "extra", new Extent(800), new Extent(600), BrowserOpenWindowCommand.FLAG_REPLACE | BrowserOpenWindowCommand.FLAG_RESIZABLE);
+            app.enqueueCommand(command);
+        } else {
+            if ("logout".equals(mi.getId())) {
+                app.logout();
+            } else {
+                logger.log(Level.SEVERE, "No action for menu item {0}", mi.getId());
+            }
+        }
+    }
+
+    /**
+     * construit le menu
+     *
+     * @param root la racine de la reference
+     */
+    protected void buildMainMenu(SubMenu root) {
+        if (app.getUser() == null) {
+            return;
+        }
+        Column col = new Column();
+        for (MenuElement mel : root.getChilds()) {
+            final ButtonEx button = new ButtonEx(app.getString(mel.getLabel()), app.getStyles().getIcon(mel.getIcon()));
+            button.setStyleName("Menu1Unselected");
+            col.add(button);
+            menu1Items.add(button);
+            button.addActionListener(e -> {
+                activateMenu(mel, e, button);
+            });
+        }
+
+        menu1CE.setScrollBarPolicy(Scrollable.CLIPHIDE);
+        menu1CE.add(new ContainerEx(0, 0, 0, null, null, null, col));
+    }
+
+    /**
+     * active un menu
+     *
+     * @param button le bouton qui a été utilisé
+     * @param e l'évènement
+     * @param mel le menu
+     */
+    public void activateMenu(MenuElement mel, ActionEvent e, final ButtonEx button) {
+        if (mel instanceof MenuItem menuItem) {
+            logger.log(Level.FINE, "menu : {0}", e.getActionCommand());
+            setSubMenuVisible(false);
+            setMenu1Selected(button);
+            updateMainCE(menuItem);
+        } else if (mel instanceof SubMenu sm) {
+            setSubMenuVisible(false);
+            setMenu1Selected(button);
+            logger.log(Level.FINE, "menu : {0}", e.getActionCommand());
+            if (sm.getChilds() != null && !sm.getChilds().isEmpty()) {
+                menu2Items.clear();
+                menu2CE.removeAll();
+                BasicWindow mp = buildSubMenu(sm);
+
+                setSubMenuVisible(true);
+                if (mp != null) {
+                    app.addWindow(mp, null);
+                }
+            } else {
+                logger.log(Level.SEVERE, "No action for menu item {0}", app.getString(sm.getLabel()));
+            }
+
+        }
+    }
+
+    /**
+     * Construit un sous menu
+     *
+     * @param root la racine du sous menu
+     */
+    protected BasicWindow buildSubMenu(SubMenu root) {
+        if (app.getUser() == null) {
+            return null;
+        }
+        List<ActionListener> actionsPossibles = new ArrayList<>();
+        MenuPane mp = new MenuPane(app);
+        Row row = new Row();
+        for (MenuElement mel : root.getChilds()) {
+            ButtonEx button = new ButtonEx(app.getString(mel.getLabel()), app.getStyles().getIcon(mel.getIcon()));
+            button.setStyleName("Menu2Unselected");
+            row.add(button);
+            menu2Items.add(button);
+            if (mel instanceof MenuItem menuItem) {
+                button.setVisible(menuItem.getMenu());
+                final ActionListener al = e -> {
+                    logger.log(Level.FINE, "menu : {0}", e.getActionCommand());
+                    setMenu2Selected(button);
+                    updateMainCE(menuItem);
+                };
+                actionsPossibles.add(al);
+                button.addActionListener(al);
+                mp.addMenuItem2(button);
+            } else if (mel instanceof SubMenu) {
+                final ActionListener al = e -> {
+                    setMenu2Selected(button);
+                    mainCE.removeAll();
+                    title.setText("");
+                    app.toast("Sous menus à deux niveaux non implementés");
+                };
+                button.addActionListener(al);
+                mp.addMenuItem2(button);
+            }
+        }
+        menu2CE.add(row);
+        if (actionsPossibles.size() == 1) {
+            actionsPossibles.get(0).actionPerformed(new ActionEvent(this, null));
+            return null;
+        }
+        return mp;
     }
 
     public enum Layout {
