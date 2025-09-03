@@ -906,15 +906,6 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
         return minVersion;
     }
 
-    /**
-     * rassembler les actions pour une liste dans un menu drop down par ligne
-     *
-     * @return true si il faut utiliser un drop down
-     */
-    public boolean useDropDownForList() {
-        return true;
-    }
-
     //</editor-fold>
     //<editor-fold desc="Classes/Enums" defaultstate="collapsed">
     /**

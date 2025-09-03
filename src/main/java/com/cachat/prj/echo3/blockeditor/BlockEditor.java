@@ -37,7 +37,7 @@ import nextapp.echo.app.layout.GridLayoutData;
  * @author scachat
  * @param <T> le type d'objet à modifier
  */
-public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
+public abstract class BlockEditor<T> extends BasicWindow  {
 
     /**
      * La fenêtre à prévenir des modifications (typiquemement la liste qui devra
@@ -85,6 +85,16 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
      *
      * @param app l'application
      * @param prefixe le prefixe de la fenetre
+     */
+    public BlockEditor(BaseApp app, String prefixe) {
+        this(app, prefixe, "generique", new Extent(800), new Extent(600));
+    }
+
+    /**
+     * Constructeur. Taille fixe sauf si non modale
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
      * @param domaine le domaine de la fenetre
      */
     public BlockEditor(BaseApp app, String prefixe, String domaine) {
@@ -118,7 +128,9 @@ public abstract class BlockEditor<T> extends BasicWindow implements FullScreen {
         cform = new Column();
         errorMsg = new DirectHtml("");
         errorMsg.setStyleName("ErrorMsg");
-        add(new ContainerEx(0, 0, 0, 0, cform));
+        ContainerEx cf;
+        add(cf=new ContainerEx(null, 0, null, 0, cform));
+        cf.setJustifyContent("center");
         reinitForm();
         if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
             cform.setInsets(new Insets(6, 6, 12, 6));

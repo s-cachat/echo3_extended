@@ -249,6 +249,18 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      *
      * @param app l'application
      * @param prefixe le prefixe de la fenetre
+     * @param types les types geres par cet editeur
+     * @param pageable si true, pagine al table
+     */
+    public BasicList(BaseApp app, String prefixe, boolean pageable, Class... types) {
+        this(app, prefixe, "generique", new Extent(800), new Extent(600), pageable, false, types);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
      * @param domaine le code domaine de la fenetre (pour affichage du visuel
      * associ?)
      * @param w la largeur de la fenetre
@@ -495,16 +507,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
                 r.setInsets(new Insets(8));
                 if (value != null) {
                     TypeObjet obj = (TypeObjet) value;
-                    if (app.useDropDownForList()) {
-                        DropDownMenuEx ddMenu = new DropDownMenuEx();
-                        r.add(ddMenu);
-                        if (canEdit(obj)) {
-                            ddMenu.add(new ActivableMenu(ddMenu, obj, true));
-                            ddMenu.add(new EditMenu(obj, true));
-                        } else if (canView(obj)) {
-                            ddMenu.add(new ViewMenu(obj));
-                        }
-                    } else if (canEdit(obj)) {
+                    if (canEdit(obj)) {
                         r.add(new ActivableButton(obj, false));
                         r.add(new EditButton(obj, false));
                     } else if (canView(obj)) {
@@ -518,19 +521,13 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
                 Row r = new Row();
+                r.setStyleName("BasicListItemButton");
                 r.setInsets(new Insets(8));
                 if (value != null) {
                     TypeObjet obj = (TypeObjet) value;
                     if (canEdit(obj)) {
+                        r.add(new DeleteButton(obj));
                         r.add(new EditButton(obj, false));
-                        DropDownMenuEx ddMenu = new DropDownMenuEx();
-                        DeleteButton btn = new DeleteButton(obj);
-                        MenuItem mi = new MenuItem();
-                        mi.setIcon(btn.getIcon());
-                        mi.setText(btn.getText());
-                        mi.addActionListener(e -> btn.fireActionPerformed(new ActionEvent("", "")));
-                        ddMenu.add(mi);
-                        r.add(ddMenu);
                     } else if (canView(obj)) {
                         r.add(new ViewButton(obj));
                     }
@@ -1405,10 +1402,23 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
          * @param o l'objet a effacer
          */
         public DeleteButton(TypeObjet o) {
+            this(o, false);
+        }
+
+        /**
+         * Constructeur
+         *
+         * @param showText si true, affiche le texte du bouton
+         * @param o l'objet a effacer
+         */
+        public DeleteButton(TypeObjet o, boolean showText) {
             super();
+            setStyleName("BasicListItemButton");
             this.app = BasicList.this.app;
             this.iconImage = app.getStyles().getIcon("cross");
-            this.label = app.getBaseString("delete");
+            if (showText) {
+                this.label = app.getBaseString("delete");
+            }
             this.addAction(e -> {
                 efface(o);
                 return true;
