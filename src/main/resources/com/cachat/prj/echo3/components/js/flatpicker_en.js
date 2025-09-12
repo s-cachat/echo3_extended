@@ -1,66 +1,92 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.uk = {}));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+            typeof define === 'function' && define.amd ? define(['exports'], factory) :
+            (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.en = {}));
+}(this, (function (exports) {
+    'use strict';
 
-  var fp = typeof window !== "undefined" && window.flatpickr !== undefined
-      ? window.flatpickr
-      : {
-          l10ns: {},
-      };
-  var Ukrainian = {
-      firstDayOfWeek: 1,
-      weekdays: {
-          shorthand: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-          longhand: [
-              "Неділя",
-              "Понеділок",
-              "Вівторок",
-              "Середа",
-              "Четвер",
-              "П'ятниця",
-              "Субота",
-          ],
-      },
-      months: {
-          shorthand: [
-              "Січ",
-              "Лют",
-              "Бер",
-              "Кві",
-              "Тра",
-              "Чер",
-              "Лип",
-              "Сер",
-              "Вер",
-              "Жов",
-              "Лис",
-              "Гру",
-          ],
-          longhand: [
-              "Січень",
-              "Лютий",
-              "Березень",
-              "Квітень",
-              "Травень",
-              "Червень",
-              "Липень",
-              "Серпень",
-              "Вересень",
-              "Жовтень",
-              "Листопад",
-              "Грудень",
-          ],
-      },
-      time_24hr: true,
-  };
-  fp.l10ns.uk = Ukrainian;
-  var uk = fp.l10ns;
+    var fp = typeof window !== "undefined" && window.flatpickr !== undefined
+            ? window.flatpickr
+            : {
+                l10ns: {}
+            };
+    var English = {
+        weekdays: {
+            shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            longhand: [
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday"
+            ]
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+            ],
+            longhand: [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            ]
+        },
+        daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        firstDayOfWeek: 0,
+        ordinal: (nth) => {
+            const s = nth % 100;
+            if (s > 3 && s < 21)
+                return "th";
+            switch (s % 10) {
+                case 1:
+                    return "st";
+                case 2:
+                    return "nd";
+                case 3:
+                    return "rd";
+                default:
+                    return "th";
+            }
+        },
+        rangeSeparator: " to ",
+        weekAbbreviation: "Wk",
+        scrollTitle: "Scroll to increment",
+        toggleTitle: "Click to toggle",
+        amPM: ["AM", "PM"],
+        yearAriaLabel: "Year",
+        monthAriaLabel: "Month",
+        hourAriaLabel: "Hour",
+        minuteAriaLabel: "Minute",
+        time_24hr: false
+    };
+    
+    fp.l10ns.en = English;
+    var en = fp.l10ns;
 
-  exports.Ukrainian = Ukrainian;
-  exports.default = uk;
+    exports.English = English;
+    exports.default = en;
 
-  Object.defineProperty(exports, '__esModule', { value: true });
-
+    Object.defineProperty(exports, '__esModule', {value: true});
 })));
