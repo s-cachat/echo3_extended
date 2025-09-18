@@ -500,6 +500,10 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         list.setInsets(new Insets(8, 0, 8, 0));
 
         list.setStyleName("DefaultT");
+        list.setBorder(new Border(5, Color.ORANGE, Border.STYLE_DASHED));
+        list.setHeaderBackground(Color.MAGENTA);
+        list.setRadius(new Insets(10));
+        
         list.setDefaultRenderer(Activable.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
