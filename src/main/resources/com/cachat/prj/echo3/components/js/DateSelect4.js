@@ -72,15 +72,27 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
     fireEvent: function () {
         console.log(this._dateField._flatpickr.selectedDates);
         var dt = this._dateField._flatpickr.selectedDates[0];
-        var value = new Intl.DateTimeFormat("fr-FR").format(dt);
+        var value;
+        if (!dt) {
+            // aucune date séléctionnée (i.e. modif de l'horaire uniquement)
+            value = this._dateField.value;
+        } else {
+            value = new Intl.DateTimeFormat("fr-FR").format(dt);
+        }
         if (this.withTime) {
             value = value + " " + this._timeField.value;
         }
         console.log("fireEvent date=", value);
         this.component.set("value", value);
         if (this.range) {
-            dt = this._dateField._flatpickr.selectedDates[0];
-            var value2 = new Intl.DateTimeFormat("fr-FR").format(dt);
+            dt = this._date2Field._flatpickr.selectedDates[0];
+            var value2;
+            if (!dt) {
+                // aucune date séléctionnée (i.e. modif de l'horaire uniquement)
+                value2 = this._date2Field.value;
+            } else {
+                value2 = new Intl.DateTimeFormat("fr-FR").format(dt);
+            }
             this.component.set("value2", value2);
         }
         this.component.fireEvent({type: 'change', source: this.component, v: value});
