@@ -189,6 +189,9 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * la ligne contenant le bouton de filtrage
      */
     protected Row critRow;
+    /**
+     * le libllé des critères
+     */
     private LabelEx critLabel;
     /**
      * in V6 interface, make the criteria always visible (default behavior in
@@ -323,6 +326,8 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * @param types les types geres par cet editeur
      * @param extensible si true, la page est extensible
      * @param pageable si true, pagine la table
+     * @param criteriaAlwaysVisible si true, la zone de critère est toujours
+     * visible
      */
     public BasicList(BaseApp app, boolean lateInit, String prefixe, String domaine, Extent w, Extent h, boolean pageable, boolean extensible, boolean criteriaAlwaysVisible,
             Class... types) {
@@ -338,6 +343,9 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * Cette méthode initialise la liste. Elle est appellée à la fin du
      * constructeur de BasicList sauf si lateInit est true. Dans ce dernier cas,
      * elle doit être appelée depuis le constructeur de la classe fille.
+     *
+     * @param pageable si true, pagine la table
+     * @param extensible si true, la page est extensible
      */
     protected final void initBasicList(boolean pageable, boolean extensible) {
         beginInit(pageable, extensible);
@@ -498,12 +506,17 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             critArea.setStyleName("CritFixed");
         }
         list.setInsets(new Insets(8, 0, 8, 0));
+        list.setStyleName("Fuck");
+        //list.setBorder(new Border(5, Color.PINK, Border.STYLE_DASHED));
+        list.setHeaderBackground(Color.RED);
+//        list.setBackground(Color.MAGENTA);
+//        list.setForeground(Color.BLUE);
+//        list.setHeaderVisible(true);
+//        list.setRolloverBackground(Color.YELLOW);
+//        list.setRolloverEnabled(true);
+//        list.setSelectionBackground(Color.LIGHTGRAY);        
+//        list.setRadius(new Insets(10));
 
-        list.setStyleName("DefaultT");
-        list.setBorder(new Border(5, Color.ORANGE, Border.STYLE_DASHED));
-        list.setHeaderBackground(Color.MAGENTA);
-        list.setRadius(new Insets(10));
-        
         list.setDefaultRenderer(Activable.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
