@@ -89,6 +89,16 @@ public abstract class BlockEditor<T> extends BasicWindow {
     public BlockEditor(BaseApp app, String prefixe) {
         this(app, prefixe, "generique", new Extent(800), new Extent(600));
     }
+    /**
+     * Constructeur. Taille fixe sauf si non modale
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param list la liste (a mettre a jour en fin d'edition)
+     */
+    public BlockEditor(BaseApp app, String prefixe, EntityModifiedListener list) {
+        this(app, prefixe, "generique", new Extent(800), new Extent(600),list);
+    }
 
     /**
      * Constructeur. Taille fixe sauf si non modale
