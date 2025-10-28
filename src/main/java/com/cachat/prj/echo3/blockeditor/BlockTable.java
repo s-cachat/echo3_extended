@@ -154,7 +154,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
      * @param canAdd si true, l'ajout de lignes est possible
      * @param canRemove si true, la suppression de lignes est possibles
      */
-    public BlockTable(LocalisedItem li, String property, List<T> current, boolean canAdd, boolean canRemove, Class<T>... clazz) {
+    public BlockTable(LocalisedItem li, String property, List<T> current, boolean canAdd, boolean canRemove, Class<? extends T>... clazz) {
         this(li, property, current, canAdd, canRemove ? DeleteMode.DELETE : DeleteMode.NONE, clazz);
     }
 
@@ -169,7 +169,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
      * @param canAdd si true, l'ajout de lignes est possible
      * @param deleteMode si true, la suppression de lignes est possibles
      */
-    public BlockTable(LocalisedItem li, String property, List<T> current, boolean canAdd, DeleteMode deleteMode, Class<T>... clazz) {
+    public BlockTable(LocalisedItem li, String property, List<T> current, boolean canAdd, DeleteMode deleteMode, Class<? extends T>... clazz) {
         this.clazz = clazz;
         this.deleteMode = deleteMode;
         this.canAdd = canAdd;
