@@ -169,7 +169,7 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
     protected final void buildEditor() {
         editor = new Row();
         rwField = new SuggestField();
-        rwField.setStyleName("Grid");
+        rwField.setStyleName("BlockEditor");
         rwField.addSuggestItemSelectListener(this);
         rwField.addServerFilterListener((e) -> {
             String str = e.getInputData();

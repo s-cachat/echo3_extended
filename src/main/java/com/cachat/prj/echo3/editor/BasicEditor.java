@@ -999,7 +999,7 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
         }
         if (ok == null) {
             ok = new ButtonEx2(getBaseString("ok"), app.getStyles().getButtonIcon());
-            ok.setStyleName("GridButton");
+            ok.setStyleName("Button");
             ok.addActionListener((ActionEvent e) -> ok());
         }
 
@@ -1007,7 +1007,7 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
 
         if (cancel == null) {
             cancel = new ButtonEx2(getBaseString("cancel"), app.getStyles().getButtonIcon());
-            cancel.setStyleName("GridButton");
+            cancel.setStyleName("Button");
             cancel.addActionListener((ActionEvent e) -> cancel());
         }
 
@@ -1319,7 +1319,7 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
             if (canAdd) {
                 Row row = new Row();
                 ButtonEx2 badd = new ButtonEx2(getBaseString("add"));
-                badd.setStyleName("GridButton");
+                badd.setStyleName("Button");
                 row.add(badd);
                 add(row);
                 badd.addActionListener(new ActionListener() {

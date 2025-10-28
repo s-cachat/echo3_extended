@@ -78,10 +78,10 @@ public abstract class AbstractStyles implements Styles {
                 public Style getStyle(String styleName, Class componentClass, boolean searchSuperClasses) {
                     Class styleClass = componentClass;
                     Style style = defaultStyleSheet.getStyle(styleName, styleClass, false);
-                    while (style == null && styleClass != Component.class) {
-                        styleClass = styleClass.getSuperclass();
-                        style = defaultStyleSheet.getStyle(styleName, styleClass, false);
-                    }
+//                    while (style == null && styleClass != Component.class) {
+//                        styleClass = styleClass.getSuperclass();
+//                        style = defaultStyleSheet.getStyle(styleName, styleClass, false);
+//                    }
                     if (style == null) {
                         logger.log(Level.SEVERE, "MISSING style \"{0}\" for \"{1}\"", new Object[]{styleName, componentClass.getName()});
                     }

@@ -175,11 +175,11 @@ public class Alert extends WindowPane implements ActionListener {
         c.add(r);
         ok = new Button(app.getString("ok"), app.getStyles().getIcon("accept"));
         ok.addActionListener(this);
-        ok.setStyleName("GridButton");
+        ok.setStyleName("Button");
         r.add(ok);
         detail = new Button(app.getString("detail"));
         detail.addActionListener(this);
-        detail.setStyleName("GridButton");
+        detail.setStyleName("Button");
         r.add(detail);
         this.parent = parent;
         app.addWindow(this, parent);

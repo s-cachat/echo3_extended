@@ -37,7 +37,7 @@ import nextapp.echo.app.layout.GridLayoutData;
  * @author scachat
  * @param <T> le type d'objet à modifier
  */
-public abstract class BlockEditor<T> extends BasicWindow  {
+public abstract class BlockEditor<T> extends BasicWindow {
 
     /**
      * La fenêtre à prévenir des modifications (typiquemement la liste qui devra
@@ -126,10 +126,11 @@ public abstract class BlockEditor<T> extends BasicWindow  {
     public BlockEditor(BaseApp app, String prefixe, String domaine, Extent w, Extent h) {
         super(app, prefixe, domaine, w, h);
         cform = new Column();
+        cform.setStyleName("BlockEditorColumn");
         errorMsg = new DirectHtml("");
         errorMsg.setStyleName("ErrorMsg");
         ContainerEx cf;
-        add(cf=new ContainerEx(null, 0, null, 0, cform));
+        add(cf = new ContainerEx(null, 0, null, 0, cform));
         cf.setJustifyContent("center");
         reinitForm();
         if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
@@ -157,9 +158,12 @@ public abstract class BlockEditor<T> extends BasicWindow  {
         cform.add(p);
         p.add(errorMsg);
         form = initForm();
+        if (form.getComponent().getStyleName() == null) {
+            form.getComponent().setStyleName("BlockEditorForm");
+        }
         cform.add(form.getComponent());
     }
-
+    
     protected class BlockButton implements BlockBase<Component>, BlockInterface {
 
         /**
@@ -204,73 +208,50 @@ public abstract class BlockEditor<T> extends BasicWindow  {
          * ajoute une zone de bouton
          */
         public BlockButton() {
-            if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
-                butContainer = new ContainerEx(0, null, 0, 0, null, null);
-                butContainer.setPosition(STATIC);
-                butContainer.setStyleName("GridButton");
+            butContainer = new ContainerEx(0, null, 0, 0, null, null);
+            butContainer.setPosition(STATIC);
+            butContainer.setStyleName("BlockEditorButtons");
+            
+            butGrid = new Grid(3);
+            butGrid.setStyleName("BlockEditorButtons");
+            GridLayoutData gld = new GridLayoutData(1, 1);
+            
+            leftRow = new Row();
+            leftRow.setAlignment(Alignment.ALIGN_LEFT);
+            leftRow.setLayoutData(gld);
+            butGrid.add(leftRow);
+            
+            centerRow = new Row();
+            centerRow.setAlignment(Alignment.ALIGN_CENTER);
+            centerRow.setLayoutData(gld);
+            butGrid.add(centerRow);
+            
+            rightRow = new Row();
+            rightRow.setAlignment(Alignment.ALIGN_RIGHT);
+            rightRow.setLayoutData(gld);
+            butGrid.add(rightRow);
+            
+            butContainer.add(butGrid);
+            butGrid.setColumnWidth(0, new Extent(20, Extent.PERCENT));
+            butGrid.setColumnWidth(1, new Extent(60, Extent.PERCENT));
+            butGrid.setColumnWidth(2, new Extent(20, Extent.PERCENT));
+            
+            ok = new ButtonEx2(getBaseString("ok"));
+            ok.setStyleName("BlockEditorButtons");
+            ok.addActionListener((e) -> ok());
+            addButtonRight(ok);
+            
+            cancel = new ButtonEx2(getBaseString("cancel"));
+            cancel.setStyleName("BlockEditorButtons");
+            cancel.addActionListener((e) -> cancel());
+            addButtonLeft(cancel);
 
-                butGrid = new Grid(3);
-                butGrid.setStyleName("GridButton");
-                GridLayoutData gld = new GridLayoutData(1, 1);
-
-                leftRow = new Row();
-                leftRow.setAlignment(Alignment.ALIGN_LEFT);
-                leftRow.setLayoutData(gld);
-                butGrid.add(leftRow);
-
-                centerRow = new Row();
-                centerRow.setAlignment(Alignment.ALIGN_CENTER);
-                centerRow.setLayoutData(gld);
-                butGrid.add(centerRow);
-
-                rightRow = new Row();
-                rightRow.setAlignment(Alignment.ALIGN_RIGHT);
-                rightRow.setLayoutData(gld);
-                butGrid.add(rightRow);
-
-                butContainer.add(butGrid);
-                butGrid.setColumnWidth(0, new Extent(20, Extent.PERCENT));
-                butGrid.setColumnWidth(1, new Extent(60, Extent.PERCENT));
-                butGrid.setColumnWidth(2, new Extent(20, Extent.PERCENT));
-
-                ok = new ButtonEx2(getBaseString("ok"));
-                ok.setStyleName("GridButton");
-                ok.addActionListener((e) -> ok());
-                addButtonRight(ok);
-
-                cancel = new ButtonEx2(getBaseString("cancel"));
-                cancel.setStyleName("GridButton");
-                cancel.addActionListener((e) -> cancel());
-                addButtonLeft(cancel);
-
-                // Variables < V6
-                butRow = leftRow;
-                butCol = null;
-            } else {
-                // Initialisation pour versions inferieur à V6
-                butCol = new Column();
-                butRow = new Row();
-                butCol.add(new Strut(5, 5));
-                butCol.add(butRow);
-                butRow.setStyleName("Buttons");
-                ok = new ButtonEx2(getBaseString("ok"), app.getStyles().getButtonIcon());
-                ok.setStyleName("GridButton");
-                ok.addActionListener((e) -> ok());
-                butRow.add(ok);
-                cancel = new ButtonEx2(getBaseString("cancel"), app.getStyles().getButtonIcon());
-                cancel.setStyleName("GridButton");
-                cancel.addActionListener((e) -> cancel());
-                addButton(cancel);
-
-                // Variables V6
-                butContainer = null;
-                butGrid = null;
-                leftRow = null;
-                centerRow = null;
-                rightRow = null;
-            }
+            // Variables < V6
+            butRow = leftRow;
+            butCol = null;
+            
         }
-
+        
         @Override
         public Component getComponent() {
             if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
@@ -279,12 +260,12 @@ public abstract class BlockEditor<T> extends BasicWindow  {
                 return butCol;
             }
         }
-
+        
         @Override
         public void copyObjectToUi() {
             //nop
         }
-
+        
         @Override
         public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
             //nop
@@ -302,17 +283,17 @@ public abstract class BlockEditor<T> extends BasicWindow  {
         public boolean appendError(String pp, String msg) {
             return false;
         }
-
+        
         @Override
         public void setParent(BlockContainer parent) {
             //nop
         }
-
+        
         @Override
         public void setVisible(boolean visible) {
             butRow.setVisible(visible);
         }
-
+        
         @Override
         public void setEnabled(boolean enabled) {
             ok.setEnabled(enabled);
@@ -325,7 +306,7 @@ public abstract class BlockEditor<T> extends BasicWindow  {
         public void setOkEnabled(boolean enabled) {
             ok.setEnabled(enabled);
         }
-
+        
         @Override
         public Object clone() {
             return new BlockButton();
@@ -377,7 +358,7 @@ public abstract class BlockEditor<T> extends BasicWindow  {
                 rightRow.add(b);
             }
         }
-
+        
     }
 
     /**
@@ -415,11 +396,11 @@ public abstract class BlockEditor<T> extends BasicWindow  {
                 } else {
                     logger.info(String.format("OK : refresh of %s gave %s", o, current));
                 }
-
+                
             } else {
                 current = o;
             }
-
+            
             reinitForm();
             form.copyObjectToUi();
         }
@@ -465,7 +446,7 @@ public abstract class BlockEditor<T> extends BasicWindow  {
         logger.fine(String.format("save(%s)", current));
         errorMsg.setText("");
         List<String> genericErrors = new ArrayList<>();
-
+        
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         boolean gotError = form.copyUiToObject(validator, genericErrors);
@@ -490,18 +471,18 @@ public abstract class BlockEditor<T> extends BasicWindow  {
                     genericErrors.add(msg);
                 } else {
                     String pp = cv.getPropertyPath().toString();
-
+                    
                     String m = cv.getMessage();
                     if (m == null || m.isBlank()) {
                         genericErrors.add(String.format("Erreur \"%s\"", cv.getPropertyPath()));
                     } else {
-
+                        
                         if (!form.appendError(pp, m)) {
                             genericErrors.add(m);
                         }
                         logger.info("Form error : " + pp + " => " + m);
                     }
-
+                    
                 }
             });
             if (genericErrors.isEmpty()) {
@@ -514,9 +495,9 @@ public abstract class BlockEditor<T> extends BasicWindow  {
                 errorMsg.setText(sb.toString());
                 contentPane.setVerticalScroll(new Extent(0));
             }
-
+            
         }
-
+        
         logger.fine(String.format("ok(%s) done", current));
         return localOk;
     }

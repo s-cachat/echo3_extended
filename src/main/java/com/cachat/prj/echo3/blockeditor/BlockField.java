@@ -65,7 +65,7 @@ public abstract class BlockField<T extends Component> implements BlockInterface 
             this.label = new LabelEx(li.getString(property));
             this.property = property;
         }
-        label.setStyleName("Grid");
+        label.setStyleName("BlockEditor");
         label.setTextAlignment(Alignment.ALIGN_RIGHT);
         error = new LabelEx();
         error.setStyleName("ErrorMsg");

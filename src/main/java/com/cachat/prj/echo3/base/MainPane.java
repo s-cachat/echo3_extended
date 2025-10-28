@@ -34,8 +34,9 @@ public abstract class MainPane extends ContentPaneEx {
     public abstract void toast(String message);
 
     /**
-     * affiche un message d'erreur fugitif en bas de page. peut ne pas être implémenté
-     * (dans ce cas ne fait rien)
+     * affiche un message d'erreur fugitif en bas de page. peut ne pas être
+     * implémenté (dans ce cas ne fait rien)
+     *
      * @param message le message
      */
     public void toastError(String message) {

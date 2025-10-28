@@ -328,6 +328,7 @@ public class BlockSelect<T> extends BlockField<SelectFieldEx> implements ActionL
             model = new MyModel();
         }
         editor = new SelectFieldEx(model);
+        editor.setStyleName("BlockEditor");        
     }
 
     /**

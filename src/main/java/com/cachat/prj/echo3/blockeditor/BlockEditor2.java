@@ -80,7 +80,7 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
         public BlockButton() {
             if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
                 save = new ButtonEx2(getBaseString("save"));
-                save.setStyleName("GridButtonV6");
+                save.setStyleName("Button");
                 save.addActionListener(e -> {
                     T current = (T) getCurrent();
                     if (save(false)) {
@@ -96,7 +96,7 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
                 ok.setIcon(null);
             } else {
                 save = new ButtonEx2(getBaseString("save"));
-                save.setStyleName("GridButton");
+                save.setStyleName("Button");
                 save.addActionListener(e -> {
                     T current = (T) getCurrent();
                     if (save(false)) {

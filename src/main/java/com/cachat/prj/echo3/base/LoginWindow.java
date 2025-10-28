@@ -88,7 +88,7 @@ public class LoginWindow extends BasicWindow implements ActionListener {
         grid.add(motDePasse);
         windowCE.add(new ContainerEx(0, 32, 0, 32, null, null, grid));
         ok = new Button(getBaseString("ok"));
-        ok.setStyleName("GridButton");
+        ok.setStyleName("Button");
         Row buttonRow = new Row();
         buttonRow.setStyleName("Buttons");
         buttonRow.add(ok);

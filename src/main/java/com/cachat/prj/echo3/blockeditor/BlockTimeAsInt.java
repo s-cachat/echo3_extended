@@ -1,12 +1,8 @@
 package com.cachat.prj.echo3.blockeditor;
 
 import com.cachat.prj.echo3.base.LocalisedItem;
-import static com.cachat.prj.echo3.blockeditor.BlockField.logger;
 import com.cachat.util.BeanTools;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jakarta.validation.Validator;

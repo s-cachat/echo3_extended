@@ -197,14 +197,14 @@ public class BlockMultiBiList extends BlockField<Grid> {
         editor.add(unselectCount = new LabelEx());
 
         none = new ButtonEx(li.getBaseString("none"));
-        none.setStyleName("GridButton");
+        none.setStyleName("BlockEditorButtons");
         editor.add(none);
         none.addActionListener((e) -> uncheckAll());
 
         // Si maxSelectedCount n'est pas défini on n'affiche pas le boutton fill, donc le design est différent
         if (maxSelectedCount > 0) {
             fill = new ButtonEx(li.getBaseString("fill"));
-            fill.setStyleName("GridButton");
+            fill.setStyleName("BlockEditorButtons");
             editor.add(fill);
             fill.addActionListener((e) -> fill());
         } else {
@@ -213,7 +213,7 @@ public class BlockMultiBiList extends BlockField<Grid> {
         }
 
         all = new ButtonEx(li.getBaseString("all"));
-        all.setStyleName("GridButton");
+        all.setStyleName("BlockEditorButtons");
         all.addActionListener((e) -> checkAll());
         editor.add(all);
 

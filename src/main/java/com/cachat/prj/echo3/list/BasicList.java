@@ -349,11 +349,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      */
     protected final void initBasicList(boolean pageable, boolean extensible) {
         beginInit(pageable, extensible);
-        if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
-            initV6();
-        } else {
-            initV5();
-        }
+        initV6();
         finishInit();
     }
 
@@ -417,58 +413,8 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
                 list = new MySortableTable(new DefaultSortableTableModel(listModel));
             }
         }
+        list.setStyleName("BasicList");
         list.setWidth(new Extent(100, Extent.PERCENT));
-    }
-
-    /**
-     * Définit les objets et styles pour les versions d'interface inférieur à V6
-     */
-    protected void initV5() {
-        list.setStyleName("DefaultT");
-        list.setDefaultRenderer(Activable.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
-                Row r = new Row();
-                if (value != null) {
-                    TypeObjet obj = (TypeObjet) value;
-                    if (canEdit(obj)) {
-                        r.add(new ActivableButton(obj));
-                        r.add(new EditButton(obj));
-                    } else if (canView(obj)) {
-                        r.add(new ViewButton(obj));
-                    }
-                }
-                return r;
-            }
-        });
-        list.setDefaultRenderer(Editable.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
-                Row r = new Row();
-                if (value != null) {
-                    TypeObjet obj = (TypeObjet) value;
-                    if (canEdit(obj)) {
-                        r.add(new DeleteButton(obj));
-                        r.add(new EditButton(obj));
-                    } else if (canView(obj)) {
-                        r.add(new ViewButton(obj));
-                    }
-                }
-                return r;
-            }
-        });
-        list.setDefaultRenderer(Date.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(Table table, java.lang.Object value, int column, int row) {
-                return new Label(value == null ? "-" : DateTimeUtil.getDescriptionDate((Date) value, getBaseResource()));
-            }
-        });
-        list.setDefaultRenderer(Component.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(Table table, java.lang.Object value, int column, int row) {
-                return (Component) value;
-            }
-        });
     }
 
     /**
@@ -505,18 +451,18 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         } else {
             critArea.setStyleName("CritFixed");
         }
+        /*
         list.setInsets(new Insets(8, 0, 8, 0));
-        list.setStyleName("Fuck");
-        //list.setBorder(new Border(5, Color.PINK, Border.STYLE_DASHED));
+        list.setBorder(new Border(5, Color.PINK, Border.STYLE_DASHED));
         list.setHeaderBackground(Color.RED);
-//        list.setBackground(Color.MAGENTA);
-//        list.setForeground(Color.BLUE);
-//        list.setHeaderVisible(true);
-//        list.setRolloverBackground(Color.YELLOW);
-//        list.setRolloverEnabled(true);
-//        list.setSelectionBackground(Color.LIGHTGRAY);        
-//        list.setRadius(new Insets(10));
-
+        list.setBackground(Color.MAGENTA);
+        list.setForeground(Color.BLUE);
+        list.setHeaderVisible(true);
+        list.setRolloverBackground(Color.YELLOW);
+        list.setRolloverEnabled(true);
+        list.setSelectionBackground(Color.LIGHTGRAY);        
+        list.setRadius(new Insets(10));
+         */
         list.setDefaultRenderer(Activable.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
@@ -615,7 +561,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             } else if (types.length > 0) {
                 for (Class type : types) {
                     nouvButton = new ButtonEx(getString("new." + type.getSimpleName()));
-                    nouvButton.setStyleName("GridButton");
+                    nouvButton.setStyleName("Button");
                     nouvButton.addActionListener(new NouvListener(type));
                     buts.add(nouvButton);
                 }

@@ -68,9 +68,9 @@ public class BlockInfo implements BlockBase<Component>, BlockInterface {
         this.isHtml = isHtml;
         butContainer = new ContainerEx(0, null, 0, 0, null, null);
         butContainer.setPosition(FIXED);
-        butContainer.setStyleName("GridButton");
+        butContainer.setStyleName("BlockEditorButtons");
         grid = new Grid(1);
-        grid.setStyleName("GridButton");
+        grid.setStyleName("BlockEditorButtons");
         butContainer.add(grid);
         if (isHtml) {
             grid.add(html = new DirectHtml(content));

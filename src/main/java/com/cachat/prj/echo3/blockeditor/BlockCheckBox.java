@@ -16,11 +16,13 @@ public class BlockCheckBox extends BlockField<CheckBoxEx> {
     public BlockCheckBox(BlockField x) {
         super(x);
         editor = new CheckBoxEx();
+        editor.setStyleName("BlockEditor");
     }
 
     public BlockCheckBox(LocalisedItem li, String property) {
         super(li, property);
         editor = new CheckBoxEx();
+        editor.setStyleName("BlockEditor");
     }
 
     @Override

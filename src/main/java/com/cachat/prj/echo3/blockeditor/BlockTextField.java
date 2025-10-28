@@ -25,14 +25,13 @@ public class BlockTextField extends BlockField<TextFieldEx> implements DocumentL
     public BlockTextField(BlockField x) {
         super(x);
         editor = new MyTextfield();
-
-        editor.setWidth(new Extent(100, Extent.PERCENT));
+        editor.setStyleName("BlockEditor");
     }
 
     public BlockTextField(LocalisedItem li, String property) {
         super(li, property);
         editor = new MyTextfield();
-        editor.setWidth(new Extent(100, Extent.PERCENT));
+        editor.setStyleName("BlockEditor");
     }
 
     @Override

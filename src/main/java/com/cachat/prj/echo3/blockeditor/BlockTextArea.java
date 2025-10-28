@@ -17,13 +17,13 @@ public class BlockTextArea extends BlockField<TextArea> {
     public BlockTextArea(BlockField x) {
         super(x);
         editor = new TextArea();
-        editor.setWidth(new Extent(100, Extent.PERCENT));
+        editor.setStyleName("BlockEditor");
     }
 
     public BlockTextArea(LocalisedItem li, String property) {
         super(li, property);
         editor = new TextArea();
-        editor.setWidth(new Extent(100, Extent.PERCENT));
+        editor.setStyleName("BlockEditor");
     }
 
     public void setHeight(Extent height) {

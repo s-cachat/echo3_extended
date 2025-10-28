@@ -153,11 +153,11 @@ public class BlockMultiCheckBox<TypeObjet> extends BlockField<Grid> {
         buttons.setLayoutData(gld);
         editor.add(buttons);
         all = new ButtonEx(li.getBaseString("all"));
-        all.setStyleName("GridButton");
+        all.setStyleName("BlockEditorButtons");
         buttons.add(all);
         all.addActionListener((e) -> items.entrySet().forEach((x) -> x.getKey().setSelected(true)));
         none = new ButtonEx(li.getBaseString("none"));
-        none.setStyleName("GridButton");
+        none.setStyleName("BlockEditorButtons");
         buttons.add(none);
         none.addActionListener((e) -> items.entrySet().forEach((x) -> x.getKey().setSelected(false)));
     }

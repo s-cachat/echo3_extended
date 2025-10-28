@@ -164,11 +164,11 @@ public class QuestionTexte extends WindowPane {
         c.add(r);
         ok = new Button(app.getString("ok"), app.getStyles().getIcon("accept"));
         ok.addActionListener(e -> reponse(tf.getText()));
-        ok.setStyleName("GridButton");
+        ok.setStyleName("Button");
         r.add(ok);
         cancel = new Button(app.getString("cancel"), app.getStyles().getIcon("cross"));
         cancel.addActionListener(e -> reponse(null));
-        cancel.setStyleName("GridButton");
+        cancel.setStyleName("Button");
         r.add(cancel);
         this.resp = resp;
         this.parent = parent;
