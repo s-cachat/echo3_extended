@@ -73,9 +73,9 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
         super(bf.getLocalisedItem(), bf.getProperty());
         this.requester = ((BlockSuggest) bf).requester;
         this.requester2 = ((BlockSuggest) bf).requester2;
-        if (bf instanceof BlockSuggest) {
-            this.propertyLabel = ((BlockSuggest) bf).getPropertyLabel();
-            this.propertyDescription = ((BlockSuggest) bf).getPropertyDescription();
+        if (bf instanceof BlockSuggest blockSuggest) {
+            this.propertyLabel = blockSuggest.getPropertyLabel();
+            this.propertyDescription = blockSuggest.getPropertyDescription();
         } else {
             this.propertyLabel = bf.getProperty();
             this.propertyDescription = bf.getProperty();
@@ -183,7 +183,7 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
 
         });
         rwField.setDoServerFilter(true);
-        rwField.setShowDescription(true);
+        rwField.setShowDescription(propertyDescription!=null && !propertyDescription.equals(propertyLabel));
         if (propertyDescription != null) {
             rwField.setDescriptionFont(new Font(Font.ARIAL, Font.ITALIC, new Extent(8, Extent.PT)));
         }
