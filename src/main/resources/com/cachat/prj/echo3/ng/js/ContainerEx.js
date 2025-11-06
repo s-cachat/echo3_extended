@@ -131,6 +131,12 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
         if (shadow) {
             this._div.style.boxShadow = shadow;
         }
+        if (this._div !== this._outerdiv) {
+            var transition = this.component.render("transition");
+            if (transition) {//transition apply to div (default) and outerdiv !
+                this._outerdiv.style.transition = transition;
+            }
+        }
 
         if (!background && !backgroundImage) {
             Echo.Sync.FillImage.render(this.client.getResourceUrl("Echo", "resource/Transparent.gif"), this._outerdiv);
@@ -143,7 +149,11 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
             var child = this.component.getComponent(i);
             this._renderAddChild(update, child);
         }
-        parentElement.appendChild(this._outerdiv);
+        console.log("me ", this._outerdiv.id, " old parent ", this.parentId, " parent", parentElement.id);
+        if (this.parentId !== parentElement.id) {
+            parentElement.appendChild(this._outerdiv);
+        }
+        this.parentId = parentElement.id;
     },
     _renderAddChild: function (update, child) {
 //        if (console) console.log("CE " + this.component.renderId + " renderAddChild(update=" + update + ", child=" + child + ")");
@@ -172,10 +182,10 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
             console.log(update);
         var element = this._div;
         var containerElement = element.parentNode;
-        for (var i = 0; i < this.component.children.length; ++i) {
-            Echo.Render.renderComponentDispose(update, this.component.children[i]);
-        }
-        containerElement.removeChild(element);
+//        for (var i = 0; i < this.component.children.length; ++i) {
+//            Echo.Render.renderComponentDispose(update, this.component.children[i]);
+//        }
+//        containerElement.removeChild(element);
         this.renderAdd(update, containerElement);
         return true;
     }

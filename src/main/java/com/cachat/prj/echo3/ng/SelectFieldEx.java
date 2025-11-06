@@ -16,7 +16,7 @@ public class SelectFieldEx extends SelectField {
         super(model);
     }
 
-    public SelectFieldEx(Object[] items) {
+    public SelectFieldEx(Object... items) {
         super(items);
     }
 }
