@@ -13,34 +13,7 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
     },
     _div: null,
     _outerdiv: null,
-    renderAdd: function (update, parentElement) {
-        if (this.component.renderId === parentElement.id) {
-            var e = new Error('dummy');
-            var stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
-                    .replace(/^\s+at\s+/gm, '')
-                    .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
-                    .split('\n');
-            if (console)
-                console.log(stack);
-        }
-//        if (console) console.log("CE " + this.component.renderId + " renderAdd(update=" + update + ", parent=" + parentElement.id + ")");
-        var borderImage = this.component.render("borderImage");
-        if (borderImage) {
-            this._div = document.createElement("div");
-            this._div.style.top = "0px";
-            this._div.style.bottom = "0px";
-            this._div.style.left = "0px";
-            this._div.style.right = "0px";
-            this._div.style.position = "absolute";
-            this._div.style.verticalAlign = "middle";
-            this._div.id = this.component.renderId + "_inner";
-            this._outerdiv = Echo.Sync.FillImageBorder.renderContainer(borderImage, {absolute: true, child: this._div});
-        } else {
-            this._div = document.createElement("div");
-            this._outerdiv = this._div;
-        }
-        this._outerdiv.id = this.component.renderId;
-
+    renderUpdateProperties: function () {
         Echo.Sync.renderComponentDefaults(this.component, this._div);
         Extended.renderPositionnable(this.component, this._outerdiv);
         var background = this.component.render("background");
@@ -141,6 +114,35 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
         if (!background && !backgroundImage) {
             Echo.Sync.FillImage.render(this.client.getResourceUrl("Echo", "resource/Transparent.gif"), this._outerdiv);
         }
+    },
+    renderAdd: function (update, parentElement) {
+        if (this.component.renderId === parentElement.id) {
+            var e = new Error('dummy');
+            var stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
+                    .replace(/^\s+at\s+/gm, '')
+                    .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
+                    .split('\n');
+            if (console)
+                console.log(stack);
+        }
+//        if (console) console.log("CE " + this.component.renderId + " renderAdd(update=" + update + ", parent=" + parentElement.id + ")");
+        var borderImage = this.component.render("borderImage");
+        if (borderImage) {
+            this._div = document.createElement("div");
+            this._div.style.top = "0px";
+            this._div.style.bottom = "0px";
+            this._div.style.left = "0px";
+            this._div.style.right = "0px";
+            this._div.style.position = "absolute";
+            this._div.style.verticalAlign = "middle";
+            this._div.id = this.component.renderId + "_inner";
+            this._outerdiv = Echo.Sync.FillImageBorder.renderContainer(borderImage, {absolute: true, child: this._div});
+        } else {
+            this._div = document.createElement("div");
+            this._outerdiv = this._div;
+        }
+        this._outerdiv.id = this.component.renderId;
+        this.renderUpdateProperties();
         this._childIdToElementMap = {};
 
         var componentCount = this.component.getComponentCount();
@@ -149,10 +151,7 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
             var child = this.component.getComponent(i);
             this._renderAddChild(update, child);
         }
-        console.log("me ", this._outerdiv.id, " old parent ", this.parentId, " parent", parentElement.id);
-        if (this.parentId !== parentElement.id) {
-            parentElement.appendChild(this._outerdiv);
-        }
+        parentElement.appendChild(this._outerdiv);
         this.parentId = parentElement.id;
     },
     _renderAddChild: function (update, child) {
@@ -176,17 +175,18 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
         Echo.Render.renderComponentDispose(update, child);
     },
     renderUpdate: function (update) {
-        if (console)
-            console.log("CE " + this.component.renderId + " renderUpdate : ");
-        if (console)
-            console.log(update);
         var element = this._div;
         var containerElement = element.parentNode;
-//        for (var i = 0; i < this.component.children.length; ++i) {
-//            Echo.Render.renderComponentDispose(update, this.component.children[i]);
-//        }
-//        containerElement.removeChild(element);
-        this.renderAdd(update, containerElement);
+        if ((update._addedChildIds && update._addedChildIds.length > 0) ||
+                (update._removedChildIds && update._removedChildIds.length > 0)) {
+            for (var i = 0; i < this.component.children.length; ++i) {
+                Echo.Render.renderComponentDispose(update, this.component.children[i]);
+            }
+            containerElement.removeChild(element);
+            this.renderAdd(update, containerElement);
+        } else {
+            this.renderUpdateProperties();
+        }
         return true;
     }
 });
