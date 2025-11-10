@@ -3,6 +3,7 @@ package com.cachat.prj.echo3.outils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.logging.Logger;
 import nextapp.echo.webcontainer.service.JavaScriptService;
 
@@ -11,10 +12,11 @@ import nextapp.echo.webcontainer.service.JavaScriptService;
  * echo3 resource, but using a base class to find file in J11
  */
 public class LocalResource {
+
     /**
      * notre logger
      */
-    private static Logger logger=Logger.getLogger(LocalResource.class.getSimpleName()); 
+    private static Logger logger = Logger.getLogger(LocalResource.class.getSimpleName());
 
     /**
      * Buffer size for use in streaming an <code>InputStream</code> to an
@@ -83,14 +85,14 @@ public class LocalResource {
 
         try {
             final Module module = ref.getModule();
-            logger.info("Will try to load "+resourceName+" from module "+module.getName());
+            logger.info("Will try to load " + resourceName + " from module " + module.getName());
             in = module.getResourceAsStream(resourceName);
             if (in == null && resourceName.startsWith("/")) {
                 logger.info("Resource does not exist: \"" + resourceName + "\" trying to remove /");
                 in = module.getResourceAsStream(resourceName.substring(1));
             }
             if (in == null) {
-                throw new ResourceException("Resource does not exist: \"" + resourceName + "\" when loaded with classloader from "+ref.getName()+" .", null);
+                throw new ResourceException("Resource does not exist: \"" + resourceName + "\" when loaded with classloader from " + ref.getName() + " .", null);
             }
             out = new ByteArrayOutputStream();
             do {
@@ -116,7 +118,8 @@ public class LocalResource {
     /**
      * Creates a new <code>JavaScript</code> service from the specified resource
      * in the <code>CLASSPATH</code>.
-     *@param ref la classe de référence
+     *
+     * @param ref la classe de référence
      * @param id the <code>Service</code> id
      * @param resourceName the <code>CLASSPATH</code> resource name containing
      * the JavaScript content
@@ -124,7 +127,7 @@ public class LocalResource {
      */
     public static JavaScriptService forJsResource(Class ref, String id, String resourceName) {
         String content = getResourceAsString(ref, resourceName);
-        return new JavaScriptService(id, content);
+        return new JavaScriptService(id, content, resourceName);
     }
 
     public static JavaScriptService forJsResources(Class ref, String id, String[] resourceNames) {
@@ -133,7 +136,7 @@ public class LocalResource {
             out.append(getResourceAsString(ref, resourceNames[i]));
             out.append("\n\n");
         }
-        return new JavaScriptService(id, out.toString());
+        return new JavaScriptService(id, out.toString(), Arrays.toString(resourceNames));
     }
 
     /**
