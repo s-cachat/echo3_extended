@@ -85,6 +85,7 @@ public abstract class Crit {
         Label l = new Label(label);
         l.setToolTipText(tooltip);
         l.setLineWrap(false);
+        l.setStyleName("CritLabel");
         return l;
     }
 }

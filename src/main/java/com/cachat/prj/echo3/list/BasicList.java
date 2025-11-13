@@ -190,7 +190,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      */
     protected Row critRow;
     /**
-     * le libllé des critères
+     * le libellé des critères
      */
     private LabelEx critLabel;
     /**
@@ -405,7 +405,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
                 list = new TableEx(tm);
                 list.setDefaultHeaderRenderer(new MyHeaderRenderer());
             }
-            navArea.add(new MyPageableTableNavigation(list));
+            navArea.add(newMyPageableTableNavigation(list));
         } else {
             if (listModel instanceof SortableTableModel) {
                 list = new MySortableTable((SortableTableModel) listModel);
@@ -1033,6 +1033,16 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         } catch (DRException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Donne une nouvelle instance de PageableTableNavigation
+     *
+     * @param list La table associée
+     * @return la nouvelle instance
+     */
+    protected MyPageableTableNavigation newMyPageableTableNavigation(TableEx list) {
+        return new MyPageableTableNavigation(list);
     }
 
     //</editor-fold>
