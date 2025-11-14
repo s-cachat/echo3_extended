@@ -189,6 +189,9 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * la ligne contenant le bouton de filtrage
      */
     protected Row critRow;
+    /**
+     * le libellé des critères
+     */
     private LabelEx critLabel;
     /**
      * in V6 interface, make the criteria always visible (default behavior in
@@ -242,6 +245,18 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      */
     public BasicList(BaseApp app, String prefixe, Extent w, Extent h, boolean pageable, Class... types) {
         this(app, prefixe, "generique", w, h, pageable, false, types);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param types les types geres par cet editeur
+     * @param pageable si true, pagine al table
+     */
+    public BasicList(BaseApp app, String prefixe, boolean pageable, Class... types) {
+        this(app, prefixe, "generique", new Extent(800), new Extent(600), pageable, false, types);
     }
 
     /**
@@ -311,6 +326,8 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * @param types les types geres par cet editeur
      * @param extensible si true, la page est extensible
      * @param pageable si true, pagine la table
+     * @param criteriaAlwaysVisible si true, la zone de critère est toujours
+     * visible
      */
     public BasicList(BaseApp app, boolean lateInit, String prefixe, String domaine, Extent w, Extent h, boolean pageable, boolean extensible, boolean criteriaAlwaysVisible,
             Class... types) {
@@ -326,6 +343,9 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * Cette méthode initialise la liste. Elle est appellée à la fin du
      * constructeur de BasicList sauf si lateInit est true. Dans ce dernier cas,
      * elle doit être appelée depuis le constructeur de la classe fille.
+     *
+     * @param pageable si true, pagine la table
+     * @param extensible si true, la page est extensible
      */
     protected final void initBasicList(boolean pageable, boolean extensible) {
         beginInit(pageable, extensible);
@@ -397,6 +417,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
                 list = new MySortableTable(new DefaultSortableTableModel(listModel));
             }
         }
+        list.setStyleName("BasicList");
         list.setWidth(new Extent(100, Extent.PERCENT));
     }
 
