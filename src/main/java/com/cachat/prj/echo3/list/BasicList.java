@@ -129,9 +129,13 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      */
     private ButtonEx critClose;
     /**
-     * hauter la zone de critère réduite critRow (V6)
+     * hauteur d'une ligne de critère
      */
     private int critRowHeight = 32;
+    /**
+     * hauteur la zone de critère réduite critRow (V6)
+     */
+    private int reducedCritRowHeight = 32;
     /**
      * libellé pour la résumé des critères actives (V6)
      */
@@ -228,9 +232,27 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * @param w la largeur de la fenetre
      * @param h la hauteur de la fenetre
      * @param types les types geres par cet editeur
+     * @deprecated
      */
     public BasicList(BaseApp app, boolean lateInit, String prefixe, String domaine, Extent w, Extent h, Class... types) {
         this(app, lateInit, prefixe, domaine, w, h, false, false, app.getInterfaceVersion() != BaseApp.IfaceVersion.WEB_V6, types);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param beforeInit Une fonction a appeler après le constructeur, mais
+     * avant init
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le code domaine de la fenetre (pour affichage du visuel
+     * associé)
+     * @param w la largeur de la fenetre
+     * @param h la hauteur de la fenetre
+     * @param types les types geres par cet editeur
+     */
+    public BasicList(BaseApp app, Runnable beforeInit, String prefixe, String domaine, Extent w, Extent h, Class... types) {
+        this(app, beforeInit, prefixe, domaine, w, h, false, false, app.getInterfaceVersion() != BaseApp.IfaceVersion.WEB_V6, types);
     }
 
     /**
@@ -328,6 +350,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * @param pageable si true, pagine la table
      * @param criteriaAlwaysVisible si true, la zone de critère est toujours
      * visible
+     * @Deprecated
      */
     public BasicList(BaseApp app, boolean lateInit, String prefixe, String domaine, Extent w, Extent h, boolean pageable, boolean extensible, boolean criteriaAlwaysVisible,
             Class... types) {
@@ -337,6 +360,32 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         if (!lateInit) {
             initBasicList(pageable, extensible);
         }
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param beforeInit Une fonction a appeler après le constructeur, mais
+     * avant init
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le code domaine de la fenetre (pour affichage du visuel
+     * associé)
+     * @param w la largeur de la fenetre
+     * @param h la hauteur de la fenetre
+     * @param types les types geres par cet editeur
+     * @param extensible si true, la page est extensible
+     * @param pageable si true, pagine la table
+     * @param criteriaAlwaysVisible si true, la zone de critère est toujours
+     * visible
+     */
+    public BasicList(BaseApp app, Runnable beforeInit, String prefixe, String domaine, Extent w, Extent h, boolean pageable, boolean extensible, boolean criteriaAlwaysVisible,
+            Class... types) {
+        super(app, prefixe, domaine, w, h);
+        this.types = types;
+        this.criteriaAlwaysVisible = criteriaAlwaysVisible;
+        beforeInit.run();
+        initBasicList(pageable, extensible);
     }
 
     /**
@@ -422,7 +471,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      */
     protected void initV6() {
         if (!criteriaAlwaysVisible) {
-            critContainer = new ContainerEx(0, 0, 12, null, null, critRowHeight);
+            critContainer = new ContainerEx(0, 0, 12, null, null, reducedCritRowHeight);
             critSummary = new Row();
             critRow = new Row();
             ButtonEx filters = new ButtonEx(getBaseString("filters"));
@@ -440,7 +489,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             critClose.setWidth(new Extent(48, Extent.PX));
             critClose.addActionListener(e -> hideCrit());
             critArea.setStyleName("Crit");
-            critAreaHeight += 32;
+            critAreaHeight += critRowHeight;
             critArea.setHeight(critAreaHeight);
             critArea.remove(critf);
             Column col = new Column();
@@ -451,18 +500,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         } else {
             critArea.setStyleName("CritFixed");
         }
-        /*
-        list.setInsets(new Insets(8, 0, 8, 0));
-        list.setBorder(new Border(5, Color.PINK, Border.STYLE_DASHED));
-        list.setHeaderBackground(Color.RED);
-        list.setBackground(Color.MAGENTA);
-        list.setForeground(Color.BLUE);
-        list.setHeaderVisible(true);
-        list.setRolloverBackground(Color.YELLOW);
-        list.setRolloverEnabled(true);
-        list.setSelectionBackground(Color.LIGHTGRAY);        
-        list.setRadius(new Insets(10));
-         */
+
         list.setDefaultRenderer(Activable.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
@@ -588,7 +626,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
                     if (!crits.isEmpty()) {
                         mainContainer.add(critContainer);
                     } else {
-                        critRowHeight = 0;
+                        reducedCritRowHeight = 0;
                     }
                 } else {
                     mainContainer.add(critArea);
@@ -618,7 +656,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
 
         int height = critAreaHeight;
         if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6 && !criteriaAlwaysVisible) {
-            height = critRowHeight;
+            height = reducedCritRowHeight;
         }
 
         butArea.setBounds(null, height, extensionWidth, null, null, butAreaHeight);
@@ -916,7 +954,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         if (critContainer != null) {
             critContainer.removeAll();
             critContainer.add(critRow);
-            critContainer.setHeight(critRowHeight);
+            critContainer.setHeight(reducedCritRowHeight);
         }
     }
 
@@ -926,6 +964,25 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
 
     public void setLegendAreaHeight(int legendAreaHeight) {
         this.legendAreaHeight = legendAreaHeight;
+    }
+
+    /**
+     * donne la hauteur d'une ligne de critère
+     *
+     * @return la hauteur
+     */
+    public int getCritRowHeight() {
+        return critRowHeight;
+    }
+
+    /**
+     * fixe la hauteur d'une ligne de critère. Doit être appelé dans le
+     * beforeInit.
+     *
+     * @param critRowHeight la hauteur
+     */
+    public void setCritRowHeight(int critRowHeight) {
+        this.critRowHeight = critRowHeight;
     }
 
     //<editor-fold desc="Rapport" defaultstate="collapsed">
