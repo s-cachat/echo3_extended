@@ -1,6 +1,5 @@
 package com.cachat.prj.echo3.blockeditor;
 
-import com.cachat.prj.echo3.base.LocalisedItem;
 import com.cachat.prj.echo3.ng.ContainerEx;
 import com.cachat.prj.echo3.ng.able.Scrollable;
 import java.lang.reflect.InvocationTargetException;
@@ -20,42 +19,75 @@ import nextapp.echo.app.Row;
  */
 public class BlockFlexPanel<T> implements BlockContainer, BlockBase<Component> {
 
+    /**
+     * Logger
+     */
     protected static final transient Logger logger = Logger.getLogger("BlockEditor");
-    protected final LocalisedItem li;
+    
+    /**
+     * L'instance de BlockEditor pour la generation des label, et l'ajustement
+     * de ses paramètres aux besoins du flex
+     */
+    protected final BlockEditor editor;
+    
     protected T current;
+    
     protected List<BlockFlexGroup> childs = new ArrayList<>();
+    
     /**
      * div principal
      */
     protected ContainerEx base;
+    
     /**
      * div pour les boutons
      */
     protected ContainerEx butContainer;
+    
     /**
      * row pour les boutons
      */
     protected Row butRow;
+    
     /**
      * div pour les éléments flex
      */
     protected ContainerEx flexContainer;
+    
     private BlockContainer parent;
 
+    /**
+     * Constructeur par recopie
+     *
+     * @param bp la référence
+     * @throws CloneNotSupportedException
+     */
     protected BlockFlexPanel(BlockFlexPanel<T> bp) throws CloneNotSupportedException {
-        this(bp.li, bp.current);
+        this(bp.editor, bp.current);
         for (BlockFlexGroup bi : childs) {
             add((BlockFlexGroup) bi.clone());
         }
     }
 
     /**
+     * Construit un panel pour contenir l'editeur de property
+     *
+     * @param editor pour la generation des label, et l'ajustement de ses
+     * paramètres aux besoins du flex
+     */
+    public BlockFlexPanel(BlockEditor editor) {
+        this(editor, null);
+    }
+
+    /**
      * Construit un panel pour contenir l'editeur de current
      *
-     * @param li pour la generation des label
+     * @param editor pour la generation des label, et l'ajustement de ses
+     * paramètres aux besoins du flex
      * @param current l'objet a editer
      */
-    public BlockFlexPanel(LocalisedItem li, T current) {
+    public BlockFlexPanel(BlockEditor editor, T current) {
+        editor.setFullWidth(true);
         base = new ContainerEx(0, 0, 0, 0, null, null);
         butContainer = new ContainerEx(0, null, 0, 0, null, 64);
         flexContainer = new ContainerEx(0, 0, 0, 64, null, null);
@@ -69,17 +101,8 @@ public class BlockFlexPanel<T> implements BlockContainer, BlockBase<Component> {
         flexContainer.setScrollBarPolicy(Scrollable.AUTO);
         base.add(flexContainer);
         base.add(butContainer);
-        this.li = li;
+        this.editor = editor;
         this.current = null;
-    }
-
-    /**
-     * Construit un panel pour contenir l'editeur de property
-     *
-     * @param li pour la generation des label
-     */
-    public BlockFlexPanel(LocalisedItem li) {
-        this(li, null);
     }
 
     @Override

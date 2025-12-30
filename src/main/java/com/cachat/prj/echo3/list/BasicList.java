@@ -413,6 +413,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         listModel = newTableModel();
         critArea = new ContainerEx();
         mainArea = new ContainerEx();
+        mainArea.setStyleName("BasicListMainArea");
 
         mainArea.add(mainCol = new Column());
         if (extensible) {
@@ -421,6 +422,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
 
         critArea.add(critf = newCritForm());
         buts = new Row();
+        buts.setStyleName("BasicListButtons");
         addCrits();
         if (this instanceof BasicListReportExtension) {
             exportRow = new Row();
@@ -505,7 +507,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
                 Row r = new Row();
-                r.setInsets(new Insets(8));
+                r.setStyleName("TableCell");
                 if (value != null) {
                     TypeObjet obj = (TypeObjet) value;
                     if (canEdit(obj)) {
@@ -522,8 +524,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
                 Row r = new Row();
-                r.setStyleName("BasicListItemButton");
-                r.setInsets(new Insets(8));
+                r.setStyleName("TableCell");
                 if (value != null) {
                     TypeObjet obj = (TypeObjet) value;
                     if (canEdit(obj)) {
@@ -541,7 +542,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             @Override
             public Component getTableCellRendererComponent(Table table, java.lang.Object value, int column, int row) {
                 Row r = new Row();
-                r.setInsets(new Insets(8));
+                r.setStyleName("TableCell");
                 r.add(new Label(String.valueOf(value)));
                 return r;
             }
@@ -550,7 +551,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             @Override
             public Component getTableCellRendererComponent(Table table, java.lang.Object value, int column, int row) {
                 Row r = new Row();
-                r.setInsets(new Insets(8));
+                r.setStyleName("TableCell");
                 r.add(new Label(value == null ? "-" : DateTimeUtil.getDescriptionDate((Date) value, getBaseResource())));
                 return r;
             }
@@ -559,7 +560,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             @Override
             public Component getTableCellRendererComponent(Table table, java.lang.Object value, int column, int row) {
                 Row r = new Row();
-                r.setInsets(new Insets(8));
+                r.setStyleName("TableCell");
                 r.add((Component) value);
                 return r;
             }

@@ -1,10 +1,8 @@
 package com.cachat.prj.echo3.base;
 
-import com.cachat.prj.echo3.components.ButtonEx2;
 import com.cachat.prj.echo3.ng.ButtonEx;
 import com.cachat.prj.echo3.ng.ContainerEx;
 import com.cachat.prj.echo3.ng.LabelEx;
-import com.cachat.prj.echo3.ng.Strut;
 import com.cachat.prj.echo3.ng.able.Scrollable;
 import com.cachat.prj.echo3.ng.menu.MenuElement;
 import com.cachat.prj.echo3.ng.menu.MenuItem;
@@ -18,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Button;
-import nextapp.echo.app.Color;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Command;
 import nextapp.echo.app.Component;
@@ -197,6 +194,24 @@ public abstract class BaseMainPaneV6 extends MainPane {
             logoCE.setStyleName("LogoCE");
             add(logoCE);
 
+            // Title label
+            title = new LabelEx();
+            title.setStyleName("Title");
+            title.setLineWrap(false);
+
+            // Title container
+            titleCE = new ContainerEx();
+            titleCE.setStyleName("TitleCE");
+            titleCE.add(title);
+            titleCE.setZIndex(9999);
+            add(titleCE);
+
+            // header
+            headerCE = new ContainerEx();
+            headerCE.setStyleName("HeaderCE");
+            headerCE.add(new LabelEx(app.getBaseString("app.title")));
+            add(headerCE);
+            
             // Container for connection buttons
             connectCE = new ContainerEx();
             connectCE.setStyleName("ConnectCE");
@@ -230,24 +245,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
                     }
                 }
             });
-
-            // Title label
-            title = new LabelEx();
-            title.setStyleName("Title");
-            title.setLineWrap(false);
-
-            // Title container
-            titleCE = new ContainerEx();
-            titleCE.setStyleName("TitleCE");
-            titleCE.add(title);
-            titleCE.setZIndex(9999);
-            add(titleCE);
-
-            // header
-            headerCE = new ContainerEx();
-            headerCE.setStyleName("HeaderCE");
-            headerCE.add(new LabelEx(app.getBaseString("app.title")));
-            add(headerCE);
 
             // Vertical menu (main menu)
             menu1CE = new ContainerEx();

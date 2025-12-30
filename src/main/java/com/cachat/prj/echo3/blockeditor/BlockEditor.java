@@ -64,6 +64,10 @@ public abstract class BlockEditor<T> extends BasicWindow {
      * L'objet courant
      */
     public T current;
+    /**
+     * le container principal
+     */
+    private final ContainerEx cf;
 
     /**
      * Constructeur
@@ -89,6 +93,7 @@ public abstract class BlockEditor<T> extends BasicWindow {
     public BlockEditor(BaseApp app, String prefixe) {
         this(app, prefixe, "generique", new Extent(800), new Extent(600));
     }
+
     /**
      * Constructeur. Taille fixe sauf si non modale
      *
@@ -139,7 +144,6 @@ public abstract class BlockEditor<T> extends BasicWindow {
         cform.setStyleName("BlockEditorColumn");
         errorMsg = new DirectHtml("");
         errorMsg.setStyleName("ErrorMsg");
-        ContainerEx cf;
         add(cf = new ContainerEx(null, 0, null, 0, cform));
         cf.setJustifyContent("center");
         reinitForm();
@@ -149,6 +153,16 @@ public abstract class BlockEditor<T> extends BasicWindow {
         } else {
             contentPane.setInsets(new Insets(5, 5));
         }
+    }
+
+    /**
+     * force le formulaire à utiliser toutes la largeur disponible
+     *
+     * @param state true si il faut utiliser toute la largeur
+     */
+    public void setFullWidth(boolean state) {
+        cf.setLeft(state ? new Extent(0) : null);
+        cf.setRight(state ? new Extent(0) : null);
     }
 
     /**

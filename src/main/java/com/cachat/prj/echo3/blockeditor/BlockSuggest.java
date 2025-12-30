@@ -163,11 +163,14 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
         super.setEnabled(enabled);
         this.canWrite = enabled;
         rwField.setVisible(enabled);
+        rwField.setStyleName(enabled ? "BlockEditor" : "BlockEditorRO");
         roField.setVisible(!enabled);
+        roField.setStyleName(enabled ? "BlockEditor" : "BlockEditorRO");
     }
 
     protected final void buildEditor() {
         editor = new Row();
+        editor.setStyleName("BlockEditor");
         rwField = new SuggestField();
         rwField.setStyleName("BlockEditor");
         rwField.addSuggestItemSelectListener(this);
@@ -189,6 +192,7 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
         }
         editor.add(rwField);
         roField = new LabelEx();
+        roField.setStyleName("BlockEditor");
         editor.add(roField);
         rwField.setVisible(canWrite);
         roField.setVisible(!canWrite);

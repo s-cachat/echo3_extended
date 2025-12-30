@@ -18,6 +18,10 @@ Extended = {
         if (v) {
             element.style.bottom = v;
         }
+        v = component.render("zIndex");
+        if (v) {
+            element.style.zIndex = v;
+        }
         v = component.render("height");
         if (v) {
             element.style.height = v;
