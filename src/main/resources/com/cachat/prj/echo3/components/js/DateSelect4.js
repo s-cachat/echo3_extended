@@ -12,12 +12,13 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
         componentType : "DateSelect4";
         document.head.innerHTML = document.head.innerHTML
                 + '<link rel="stylesheet" type="text/css" href="echo3extended/css/flatpicker.min.css" />';
-        ;
     },
     _dateField: null,
     _date2Field: null,
     _timeField: null,
+    _deleteButton: null,
     withTime: false,
+    withNull: false,
     parseDate: function (date) {
         var dt;
         console.log("in1 ", date);
@@ -56,16 +57,23 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
             } catch (e) {
                 console.log("Bad date ", dt, " : ", e);
             }
+        } else if (this.withNull) {
+            this._dateField.value = null;
+            if (this.withTime) {
+                this._timeField.value = null;
+            }
         }
         if (this.range) {
             if (date2) {
                 var dt = this.parseDate(date2);
                 try {
                     var varDate = new Intl.DateTimeFormat("fr-FR", {dateStyle: "short"}).format(dt);
-                    //this._dateField.value = varDate;
+                    //this._dateField2.value = varDate;
                 } catch (e) {
                     console.log("Bad date2 ", dt, " : ", e);
                 }
+            } else if (this.withNull) {
+                //this._dateField2.value = null;
             }
         }
     },
@@ -103,7 +111,7 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
         var date = this.component.render("value");
         var date2 = this.component.render("value2");
         this.withTime = this.component.render("withTime");
-        var withNull = this.component.render("withNull");
+        this.withNull = this.component.render("withNull");
         var locale = this.component.render("locale");
         this.range = this.component.render("range");
 
@@ -125,7 +133,27 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
         }
         conf.dateFormat = "d/m/Y";
 
-        if (this._timeField !== null) {
+        if (this.withNull) {
+            this._deleteButton = document.createElement("button");
+            this._deleteButton.id = this.component.renderId + "d";
+            this._deleteButton.textContent = "X";
+            this._deleteButton.style.color = "red";
+            this._deleteButton.style.background = "transparent";
+            this._deleteButton.style.border = "none";
+            this._deleteButton.style.padding = "0";
+            this._deleteButton.style.cursor = "pointer";
+            this._deleteButton.style.fontWeight = "bold";
+            this._deleteButton.style.textAlign = "center";
+            const t = this;
+            this._deleteButton.addEventListener("click", () => {
+                t.setDate(null, null);
+                t.fireEvent();
+            }, false);
+        }
+
+        this.setWidth(this.component.render("width"));
+
+        if (this._timeField != null) {
             var t = document.createElement("table");
             parentElement.appendChild(t);
             var tr = document.createElement("tr");
@@ -133,15 +161,18 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
             var td = document.createElement("td");
             tr.appendChild(td);
             td.appendChild(this._dateField);
-            td.style.width = "60%";
-            var th = document.createElement("th");
-            tr.appendChild(th);
-            th.appendChild(this._timeField);
-            td.style.width = "40%";
+            td = document.createElement("td");
+            tr.appendChild(td);
+            td.appendChild(this._timeField);
             $(this._timeField).clockTimePicker({
                 minimum: 0,
                 alwaysSelectHoursFirst: true
             });
+            if (this._deleteButton != null) {
+                td = document.createElement("td");
+                tr.appendChild(td);
+                td.appendChild(this._deleteButton);
+            }
         } else {
             parentElement.appendChild(this._dateField);
         }
@@ -172,19 +203,50 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
         console.log("renderUpdate", update);
         if (update.hasUpdatedProperties()) {
             const properties = update.getUpdatedPropertyNames();
-            var date=undefined;
-            var date2=undefined;
+            var date = undefined;
+            var date2 = undefined;
             for (var property of properties) {
-                if ("value"===property){
-                date = this.component.get(property);
-            }else     if ("value2"===property){
-                date2 = this.component.get(property);
+                if ("value" === property) {
+                    date = this.component.get(property);
+                } else if ("value2" === property) {
+                    date2 = this.component.get(property);
+                }
             }
-            }
-            if (date!==undefined || date2!==undefined){
-                this.setDate(date,date2);
+            if (date !== undefined || date2 !== undefined) {
+                this.setDate(date, date2);
             }
         }
         return true;
+    },
+    setWidth: function (width) {
+        console.log("DATE SELECT", "SET WIDTH", width);
+        if (width == null) {
+            this._dateField.style.width = "";
+            if (this._timeField !== null) {
+                this._timeField.style.width = "";
+            }
+            return;
+        }
+        if (this._timeField !== null) {
+            if (typeof (width) === "number") {
+                this._dateField.style.width = Echo.Sync.Extent.toCssValue(width * 0.5, true, true);
+                this._timeField.style.width = Echo.Sync.Extent.toCssValue(width * 0.5, true, true);
+            } else {
+                if (Echo.Sync.Extent.isPercent(width)) {
+                    this._dateField.style.width = Echo.Sync.Extent.toCssValue(width, true, true);
+                    this._timeField.style.width = Echo.Sync.Extent.toCssValue(width, true, true);
+                } else {
+                    var pixels = Echo.Sync.Extent.toPixels(width, true);
+                    if (pixels != null) {
+                        this._dateField.style.width = Echo.Sync.Extent.toCssValue(pixels * 0.5, true, true);
+                        this._timeField.style.width = Echo.Sync.Extent.toCssValue(pixels * 0.5, true, true);
+                    } else {
+                        console.log("DATE SELECT", "SET WIDTH", "Unable to parse width");
+                    }
+                }
+            }
+        } else {
+            this._dateField.style.width = Echo.Sync.Extent.toCssValue(width, true, true);
+        }
     }
 });

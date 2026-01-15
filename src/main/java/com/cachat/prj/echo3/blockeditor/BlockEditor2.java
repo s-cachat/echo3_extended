@@ -80,7 +80,7 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
         public BlockButton() {
             if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
                 save = new ButtonEx2(getBaseString("save"));
-                save.setStyleName("Button");
+                save.setStyleName("BlockEditorButtons");
                 save.addActionListener(e -> {
                     T current = (T) getCurrent();
                     if (save(false)) {

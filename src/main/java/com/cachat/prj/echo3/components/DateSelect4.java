@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nextapp.echo.app.Component;
+import nextapp.echo.app.Extent;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
@@ -20,30 +21,36 @@ import nextapp.echo.app.event.ActionListener;
  * @author scachat
  */
 public class DateSelect4 extends Component {
-    // OUTPUT PROPERTIES ///////////////////////////////////////////////////////
 
+    // OUTPUT PROPERTIES ///////////////////////////////////////////////////////
     public static final String PROPERTY_DATE_VALUE = "value";
     public static final String PROPERTY_DATE2_VALUE = "value2";
     public static final String PROPERTY_WITH_TIME = "withTime";
     public static final String PROPERTY_WITH_NULL = "withNull";
     public static final String PROPERTY_RANGE = "range";
     public static final String PROPERTY_LOCALE = "locale";
+    public static final String PROPERTY_WIDTH = "width";
+
     /**
-     * si true, permet la sélection de l'heure
+     * Si true, permet la sélection de l'heure
      */
     private final boolean withTime;
+
     /**
-     * si true, permet la sélection d'une valeur nulle
+     * Si true, permet la sélection d'une valeur nulle
      */
     private boolean withNull;
+
     /**
-     * range si true, passe en mode range (2 dates)
+     * Range si true, passe en mode range (2 dates)
      */
     private boolean range;
+
     /**
      * Date en cours
      */
     private Date date;
+
     /**
      * Seconde date en cours (mode range)
      */
@@ -66,7 +73,8 @@ public class DateSelect4 extends Component {
             PROPERTY_WITH_TIME,
             PROPERTY_WITH_NULL,
             PROPERTY_RANGE,
-            PROPERTY_LOCALE
+            PROPERTY_LOCALE,
+            PROPERTY_WIDTH
         };
     }
 
@@ -92,7 +100,28 @@ public class DateSelect4 extends Component {
      * @param withTime si true, permet la sélection de l'heure
      */
     public DateSelect4(boolean withTime) {
-        this(new Date(), withTime);
+        this(withTime, false);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param withTime si true, permet la sélection de l'heure
+     * @param withNull si true, permet la sélection d'une valeur nulle
+     */
+    public DateSelect4(boolean withTime, boolean withNull) {
+        this(withTime, withNull, null);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param locale change la langue
+     * @param withTime si true, permet la sélection de l'heure
+     * @param withNull si true, permet la sélection d'une valeur nulle
+     */
+    public DateSelect4(boolean withTime, boolean withNull, Locale locale) {
+        this(new Date(), withTime, withNull, locale);
     }
 
     /**
@@ -276,17 +305,52 @@ public class DateSelect4 extends Component {
         return withTime;
     }
 
+    /**
+     * Est-ce qu'on est en mode range (sélèctionne de deux dates) ?
+     *
+     * @return True si on est en mode range
+     */
     public boolean isRange() {
         return range;
     }
 
+    /**
+     * Peut-on avoir une valeur null ?
+     *
+     * @return True si on permet une valeur null
+     */
     public boolean isWithNull() {
         return withNull;
     }
 
+    /**
+     * Fixe la propriété withNull
+     *
+     * @param withNull True si on permet le saisi d'une valeur null
+     */
     public void setWithNull(boolean withNull) {
         this.withNull = withNull;
         set(PROPERTY_WITH_NULL, withNull);
+    }
+
+    /**
+     * Returns the width of the component. This property supports
+     * <code>Extent</code>s with fixed or percentile units.
+     *
+     * @return the width
+     */
+    public Extent getWidth() {
+        return (Extent) get(PROPERTY_WIDTH);
+    }
+
+    /**
+     * Sets the width of the component. This property supports
+     * <code>Extent</code>s with fixed or percentile units.
+     *
+     * @param newValue the new width
+     */
+    public void setWidth(Extent newValue) {
+        set(PROPERTY_WIDTH, newValue);
     }
 
     @Override
@@ -295,6 +359,9 @@ public class DateSelect4 extends Component {
         switch (inputName) {
             case PROPERTY_DATE_VALUE -> {
                 try {
+                    if (withNull && (inputValue == null || (inputValue instanceof String str && str.isBlank()))) {
+                        setSelectedDate((Date) null, false);
+                    }
                     if (withTime) {
                         setSelectedDate(DateTimeUtil.parse((String) inputValue), false);
                     } else {
@@ -305,7 +372,6 @@ public class DateSelect4 extends Component {
                 }
                 fireAction();
             }
-
         }
     }
 

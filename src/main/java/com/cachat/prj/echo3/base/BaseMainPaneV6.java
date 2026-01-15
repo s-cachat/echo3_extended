@@ -203,7 +203,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
             titleCE = new ContainerEx();
             titleCE.setStyleName("TitleCE");
             titleCE.add(title);
-            titleCE.setZIndex(9999);
             add(titleCE);
 
             // header

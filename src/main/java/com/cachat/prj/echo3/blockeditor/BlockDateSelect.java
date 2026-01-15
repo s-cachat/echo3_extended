@@ -8,13 +8,12 @@ import java.util.List;
 import jakarta.validation.Validator;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Locale;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.ChangeEvent;
 import nextapp.echo.app.event.ChangeListener;
 
 /**
- * champs date
+ * Champs date
  *
  * @author scachat
  */
@@ -22,26 +21,24 @@ public class BlockDateSelect extends BlockField<DateSelect4> {
 
     public BlockDateSelect(BlockField bf) {
         super(bf);
-        if (bf.editor instanceof DateSelect4) {
-            DateSelect4 x = (DateSelect4) bf.editor;
-
-            editor = new DateSelect4(x);
+        if (bf.editor instanceof DateSelect4 dateSelect4) {
+            editor = new DateSelect4(dateSelect4);
+            editor.setStyleName("BlockEditor");
         }
+    }
+
+    public BlockDateSelect(LocalisedItem li, String property) {
+        this(li, property, false);
+    }
+
+    public BlockDateSelect(LocalisedItem li, String property, boolean withTime) {
+        this(li, property, false, false);
     }
 
     public BlockDateSelect(LocalisedItem li, String property, boolean withTime, boolean withNull) {
         super(li, property);
-        editor = new DateSelect4(withTime);
-    }
-
-    public BlockDateSelect(LocalisedItem li, String property, boolean withTime) {
-        super(li, property);
-        editor = new DateSelect4(withTime);
-    }
-
-    public BlockDateSelect(LocalisedItem li, String property) {
-        super(li, property);
-        editor = new DateSelect4();
+        editor = new DateSelect4(withTime, withNull, li == null ? null : li.getLocale());
+        editor.setStyleName("BlockEditor");
     }
 
     @Override
