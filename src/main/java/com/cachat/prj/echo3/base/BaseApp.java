@@ -285,6 +285,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
             clearWindows();
             this.user = null;
             this.initialUser = null;
+            BaseAppServlet.logout();
             app.enqueueCommand(new BrowserRedirectCommand("logout"));
         }
     }

@@ -339,8 +339,15 @@ public abstract class BaseAppServlet extends WebContainerServlet {
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                cookie.setMaxAge(0);
-                res.addCookie(cookie);
+                switch (cookie.getName()) {
+                    case "loginIface", "loginName", "persistentLogin" -> {/*nop*/
+                    }
+                    default -> {
+                        cookie.setMaxAge(0);
+                        cookie.setValue("");
+                        res.addCookie(cookie);
+                    }
+                }
             }
         }
     }
