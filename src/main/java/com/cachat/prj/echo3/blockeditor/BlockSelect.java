@@ -335,8 +335,9 @@ public class BlockSelect<T> extends BlockField<SelectFieldEx> implements ActionL
      *
      * @param l la liste d'origine
      * @return la copie avec le null
+     * @param T le type d'élément
      */
-    public static final List addNull(List l) {
+    public static final <T> List<T> addNull(List<T> l) {
         List d = new ArrayList();
         d.add(null);
         d.addAll(l);
