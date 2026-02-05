@@ -32,7 +32,7 @@ public class BlockDateSelect extends BlockField<DateSelect4> {
     }
 
     public BlockDateSelect(LocalisedItem li, String property, boolean withTime) {
-        this(li, property, false, false);
+        this(li, property, withTime, false);
     }
 
     public BlockDateSelect(LocalisedItem li, String property, boolean withTime, boolean withNull) {
