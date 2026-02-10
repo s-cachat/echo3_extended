@@ -12,6 +12,8 @@ import java.util.Base64;
 import java.util.Timer;
 import java.util.TimerTask;
 import jakarta.servlet.http.Cookie;
+import java.util.Collections;
+import java.util.List;
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Extent;
@@ -506,6 +508,16 @@ public class BaseLoginWindowV6 extends MainPane {
     @Override
     public void clearWindows() {
         // nop
+    }
+    
+    /**
+     * donne la liste de toutes les fenetres ouvertes
+     *
+     * @return la liste
+     */
+    @Override
+    public List<WindowPane> getWindows() {
+        return Collections.EMPTY_LIST;
     }
     //</editor-fold>
 

@@ -1,6 +1,7 @@
 package com.cachat.prj.echo3.base;
 
 import com.cachat.prj.echo3.ng.ContentPaneEx;
+import java.util.List;
 import nextapp.echo.app.WindowPane;
 
 /**
@@ -42,5 +43,12 @@ public abstract class MainPane extends ContentPaneEx {
     public void toastError(String message) {
         toast(message);
     }
+
+    /**
+     * donne la liste de toutes les fenetres ouvertes
+     *
+     * @return la liste
+     */
+    public abstract List<WindowPane> getWindows();
 
 }

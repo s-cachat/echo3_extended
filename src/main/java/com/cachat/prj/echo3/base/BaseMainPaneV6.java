@@ -9,6 +9,7 @@ import com.cachat.prj.echo3.ng.menu.MenuItem;
 import com.cachat.prj.echo3.ng.menu.MenuPane;
 import com.cachat.prj.echo3.ng.menu.SubMenu;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +34,7 @@ import nextapp.echo.webcontainer.command.BrowserOpenWindowCommand;
  * l'écran principal
  */
 public abstract class BaseMainPaneV6 extends MainPane {
+
     /**
      * la liste de boutons pour le menu vérticale
      */
@@ -210,7 +212,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             headerCE.setStyleName("HeaderCE");
             headerCE.add(new LabelEx(app.getBaseString("app.title")));
             add(headerCE);
-            
+
             // Container for connection buttons
             connectCE = new ContainerEx();
             connectCE.setStyleName("ConnectCE");
@@ -655,4 +657,13 @@ public abstract class BaseMainPaneV6 extends MainPane {
         FULLSCREEN // mise en page plein écran avec le titre et les boutons supplementaires dans le header
     }
 
+    /**
+     * donne la liste de toutes les fenetres ouvertes
+     *
+     * @return la liste
+     */
+    @Override
+    public List<WindowPane> getWindows() {
+        return Collections.unmodifiableList(windows);
+    }
 }

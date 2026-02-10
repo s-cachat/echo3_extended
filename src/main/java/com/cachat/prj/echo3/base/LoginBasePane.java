@@ -5,11 +5,14 @@
  */
 package com.cachat.prj.echo3.base;
 
+import java.util.Collections;
+import java.util.List;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.FillImage;
 import nextapp.echo.app.FillImageBorder;
 import nextapp.echo.app.Insets;
+import nextapp.echo.app.WindowPane;
 
 /**
  * la fenetre de connexion
@@ -49,5 +52,15 @@ public class LoginBasePane extends BaseMainPane implements WithErrorStatusField 
     @Override
     public void setErrorMsg(String msg) {
         window.setErrorMsg(msg);
+    }
+
+    /**
+     * donne la liste de toutes les fenetres ouvertes
+     *
+     * @return la liste
+     */
+    @Override
+    public List<WindowPane> getWindows() {
+        return Collections.singletonList(window);
     }
 }
