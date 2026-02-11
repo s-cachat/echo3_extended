@@ -5,7 +5,6 @@ import com.cachat.prj.echo3.base.EntityModifiedListener;
 import com.cachat.prj.echo3.components.ButtonEx2;
 import com.cachat.prj.echo3.ng.ButtonEx;
 import java.util.function.Consumer;
-import nextapp.echo.app.Color;
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.ImageReference;
 import nextapp.echo.app.event.ActionEvent;
@@ -44,6 +43,7 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
     public BlockEditor2(BaseApp app, String prefixe, String domaine, Extent w, Extent h) {
         super(app, prefixe, domaine, w, h);
     }
+
     /**
      * Constructeur
      *
@@ -56,6 +56,7 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
     public BlockEditor2(BaseApp app, String prefixe, String domaine, int w, int h) {
         super(app, prefixe, domaine, w, h);
     }
+
     /**
      * Constructeur
      *
@@ -78,41 +79,21 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
          * ajoute une zone de bouton
          */
         public BlockButton() {
-            if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
-                save = new ButtonEx2(getBaseString("save"));
-                save.setStyleName("BlockEditorButtons");
-                save.addActionListener(e -> {
-                    T current = (T) getCurrent();
-                    if (save(false)) {
-                        edite(current);
-                        if (list != null) {
-                            list.update(current);
-                        }
-                        app.toast(getBaseString("saveOkMessage"));
+            save = new ButtonEx2(getBaseString("save"));
+            save.setStyleName("BlockEditorButtons");
+            save.addActionListener(e -> {
+                T current = (T) getCurrent();
+                if (save(false)) {
+                    edite(current);
+                    if (list != null) {
+                        list.update(current);
                     }
-                });
-                addButtonRight(save);
-                cancel.setIcon(null);
-                ok.setIcon(null);
-            } else {
-                save = new ButtonEx2(getBaseString("save"));
-                save.setStyleName("Button");
-                save.addActionListener(e -> {
-                    T current = (T) getCurrent();
-                    if (save(false)) {
-                        edite(current);
-                        if (list != null) {
-                            list.update(current);
-                        }
-                        app.toast(getBaseString("saveOkMessage"));
-                    }
-                });
-                butRow.remove(cancel);
-                addButton(save);
-                addButton(cancel);
-                cancel.setIcon(null);
-                ok.setIcon(null);
-            }
+                    app.toast(getBaseString("saveOkMessage"));
+                }
+            });
+            addButtonRight(save);
+            cancel.setIcon(null);
+            ok.setIcon(null);
         }
 
         @Override

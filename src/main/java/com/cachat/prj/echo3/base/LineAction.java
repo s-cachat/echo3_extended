@@ -71,18 +71,8 @@ public class LineAction extends Button {
 
     protected void checkVersion() {
         if (iconImage != null) {
-            switch (app.getInterfaceVersion()) {
-                case TAB_V4:
-                case WEB_V5:
-
-                    setText(null);
-                    setIcon(iconImage);
-                    break;
-                case WEB_V6:
-                    setText(label);
-                    setIcon(iconImage);
-                    break;
-            }
+            setText(label);
+            setIcon(iconImage);
         } else {
             setText(label);
         }

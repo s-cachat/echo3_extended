@@ -235,7 +235,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * @deprecated
      */
     public BasicList(BaseApp app, boolean lateInit, String prefixe, String domaine, Extent w, Extent h, Class... types) {
-        this(app, lateInit, prefixe, domaine, w, h, false, false, app.getInterfaceVersion() != BaseApp.IfaceVersion.WEB_V6, types);
+        this(app, lateInit, prefixe, domaine, w, h, false, false, false, types);
     }
 
     /**
@@ -252,7 +252,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      * @param types les types geres par cet editeur
      */
     public BasicList(BaseApp app, Runnable beforeInit, String prefixe, String domaine, Extent w, Extent h, Class... types) {
-        this(app, beforeInit, prefixe, domaine, w, h, false, false, app.getInterfaceVersion() != BaseApp.IfaceVersion.WEB_V6, types);
+        this(app, beforeInit, prefixe, domaine, w, h, false, false, false, types);
     }
 
     /**
@@ -312,7 +312,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
      */
     public BasicList(BaseApp app, String prefixe, String domaine, Extent w, Extent h, boolean pageable, boolean extensible,
             Class... types) {
-        this(app, prefixe, domaine, w, h, pageable, extensible, app.getInterfaceVersion() != BaseApp.IfaceVersion.WEB_V6, types);
+        this(app, prefixe, domaine, w, h, pageable, extensible, false, types);
     }
 
     /**
@@ -620,21 +620,18 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             mainContainer.setBounds(0, 0, 0, 0, null, null);
             mainContainer.setScrollBarPolicy(Scrollable.NEVER);
 
-            if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
-                mainContainer.setRight(12);
-                mainContainer.setBottom(6);
-                if (!criteriaAlwaysVisible) {
-                    if (!crits.isEmpty()) {
-                        mainContainer.add(critContainer);
-                    } else {
-                        reducedCritRowHeight = 0;
-                    }
+            mainContainer.setRight(12);//TODO stylesheet
+            mainContainer.setBottom(6);//TODO stylesheet
+            if (!criteriaAlwaysVisible) {
+                if (!crits.isEmpty()) {
+                    mainContainer.add(critContainer);
                 } else {
-                    mainContainer.add(critArea);
+                    reducedCritRowHeight = 0;
                 }
             } else {
                 mainContainer.add(critArea);
             }
+
             if (navArea != null) {
                 mainContainer.add(navArea);
             }
@@ -656,7 +653,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         critArea.setBounds(0, 0, extensionWidth, null, null, critAreaHeight);
 
         int height = critAreaHeight;
-        if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6 && !criteriaAlwaysVisible) {
+        if (!criteriaAlwaysVisible) {
             height = reducedCritRowHeight;
         }
 
@@ -795,7 +792,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
     @Override
     public void actionPerformed(ActionEvent e) {
         update(null);
-        if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6 && !criteriaAlwaysVisible) {
+        if (!criteriaAlwaysVisible) {
             hideCrit();
         }
     }

@@ -107,11 +107,6 @@ public class BaseLoginWindowV6 extends MainPane {
     protected LabelEx interfaceLabel;
 
     /**
-     * Champ de sélection d'interface UI
-     */
-    protected SelectFieldEx interfaceSelect;
-
-    /**
      * Bouton pour valider le login
      */
     protected final ButtonEx okButton;
@@ -159,8 +154,18 @@ public class BaseLoginWindowV6 extends MainPane {
      * Constructeur
      *
      * @param app l'application
+     * @param showLanguageSelect afficher le choix de la langue
+     */
+    public BaseLoginWindowV6(BaseApp app, boolean showLanguageSelect) {
+        this(app, false, showLanguageSelect, false);
+    }
+    /**
+     * Constructeur
+     *
+     * @param app l'application
      * @param showIfaceVersionSelect afficher le choix de l'interface
      * @param showLanguageSelect afficher le choix de la langue
+     * @deprecated showIfaceVersionSelect is not used anymore
      */
     public BaseLoginWindowV6(BaseApp app, boolean showIfaceVersionSelect, boolean showLanguageSelect) {
         this(app, showIfaceVersionSelect, showLanguageSelect, false);
@@ -173,6 +178,7 @@ public class BaseLoginWindowV6 extends MainPane {
      * @param showIfaceVersionSelect afficher le choix de l'interface
      * @param showLanguageSelect afficher le choix de la langue
      * @param showStayConnected afficher le choix "rester connecté"
+     * @deprecated showIfaceVersionSelect is not used anymore
      */
     public BaseLoginWindowV6(BaseApp app, boolean showIfaceVersionSelect, boolean showLanguageSelect, boolean showStayConnected) {
         super();
@@ -249,11 +255,6 @@ public class BaseLoginWindowV6 extends MainPane {
             interfaceLabel = new LabelEx(app.getString("app.login.iface"));
             interfaceLabel.setStyleName("LoginV6");
             mainCol.add(interfaceLabel);
-            int min = app.getMinVersion().ordinal();
-            interfaceSelect = new SelectFieldEx(getInterfaceLabels(min));
-            interfaceSelect.setStyleName("LoginV6");
-            interfaceSelect.setSelectedIndex(search(BaseApp.IfaceVersion.values(), app.getInterfaceVersion()) - min);
-            mainCol.add(interfaceSelect);
         }
         mainCol.add(new Strut(1, lineSpacing));
 
@@ -286,9 +287,6 @@ public class BaseLoginWindowV6 extends MainPane {
         ActionListener updatedParameter = taskUpdatedParameter();
         if (showLanguageSelect) {
             languageSelect.addActionListener(updatedParameter);
-        }
-        if (showIfaceVersionSelect) {
-            interfaceSelect.addActionListener(updatedParameter);
         }
 
         // Toast container
@@ -380,10 +378,6 @@ public class BaseLoginWindowV6 extends MainPane {
             if (ilang >= 0) {
                 app.setLocale(BaseApp.AVAILABLE_LANGUAGES[ilang]);
             }
-            int iiface = interfaceSelect.getSelectedIndex();
-            if (iiface >= 0) {
-                app.setInterfaceVersion(BaseApp.IfaceVersion.values()[app.getMinVersion().ordinal() + iiface]);
-            }
             app.setLoginName(usernameField.getText());
             app.doLogin();
         };
@@ -404,20 +398,6 @@ public class BaseLoginWindowV6 extends MainPane {
             }
         }
         return labels;
-    }
-
-    /**
-     * Donne les libellés des versions UI supportées
-     *
-     * @param min l'index de la version minimum supportée
-     * @return les libellés
-     */
-    private String[] getInterfaceLabels(int min) {
-        String[] interfaceLabels = new String[BaseApp.IfaceVersion.values().length - min];
-        for (int i = 0; min + i < BaseApp.IfaceVersion.values().length; i++) {
-            interfaceLabels[i] = BaseApp.IfaceVersion.values()[min + i].getLabel();
-        }
-        return interfaceLabels;
     }
 
     /**

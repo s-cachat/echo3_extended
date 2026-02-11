@@ -394,15 +394,13 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 mainCE.add(activeCE);
                 homeWindow.setParent(this);
             }
-            if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
-                updateLayout(null);
-            }
+            updateLayout(null);
         } else {
-            if (w instanceof BasicWindow) {
+            if (w instanceof BasicWindow basicWindow) {
                 if (!windows.contains(w)) {
                     windows.add(0, w);
                 }
-                BasicWindow bw = (BasicWindow) w;
+                BasicWindow bw = basicWindow;
                 title.setText(bw.getTitre2());
                 activeWindow = bw;
                 activeCE = bw.getContentPane();
@@ -410,9 +408,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
 
                 bw.setParent(this);
                 bw.init();
-                if (app.getInterfaceVersion() == BaseApp.IfaceVersion.WEB_V6) {
-                    updateLayout(bw);
-                }
+                updateLayout(bw);
             } else {
                 throw new RuntimeException("Fenêtre incompatible : " + w);
             }

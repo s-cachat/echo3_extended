@@ -74,17 +74,8 @@ public class LineMenu extends MenuItem {
         if (app == null) {
             return;
         }
-        switch (app.getInterfaceVersion()) {
-            case TAB_V4:
-            case WEB_V5:
-                setText(null);
-                setIcon(iconImage);
-                break;
-            case WEB_V6:
-                setText(label);
-                setIcon(iconImage);
-                break;
-        }
+        setText(label);
+        setIcon(iconImage);
     }
 
     public BaseApp getApp() {

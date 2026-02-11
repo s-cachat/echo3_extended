@@ -54,16 +54,6 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
     protected Window window;
 
     /**
-     * la version d'interface minimum supportée
-     */
-    protected IfaceVersion minVersion = IfaceVersion.WEB_V5;
-
-    /**
-     * version de l'interface
-     */
-    protected IfaceVersion ifaceVersion = IfaceVersion.WEB_V5;
-
-    /**
      * l'instance de fenêtre de connexion (null en dehors des phases de
      * connexion)
      */
@@ -879,34 +869,6 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
         return imageViewers.get(id);
     }
 
-    /**
-     * Donne la version de l'interface UI
-     *
-     * @return la version de l'interface
-     */
-    public IfaceVersion getInterfaceVersion() {
-        return ifaceVersion;
-    }
-
-    /**
-     * change la version de l'interface
-     *
-     * @param ifaceVersion la version de l'interface
-     */
-    public void setInterfaceVersion(IfaceVersion ifaceVersion) {
-        this.ifaceVersion = ifaceVersion;
-        setStyleSheet(getStyles().getDefaultStyleSheet());
-    }
-
-    /**
-     * Donne la version de l'interface UI minimum
-     *
-     * @return la version minimum supportée
-     */
-    public IfaceVersion getMinVersion() {
-        return minVersion;
-    }
-
     //</editor-fold>
     //<editor-fold desc="Classes/Enums" defaultstate="collapsed">
     /**
@@ -1061,24 +1023,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
 
     }
 
-    /**
-     * Version d'interface graphique
-     */
-    public static enum IfaceVersion {
-        TAB_V4("V4"),
-        WEB_V5("V5"),
-        WEB_V6("V6");
 
-        private final String label;
-
-        private IfaceVersion(String label) {
-            this.label = label;
-        }
-
-        public String getLabel() {
-            return label;
-        }
-    }
     //</editor-fold>
 
     /**
