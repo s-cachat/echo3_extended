@@ -45,10 +45,11 @@ public class MenuItem extends MenuElement {
         this.id = id;
     }
     /**
-     * si false, le menu n'est pas généré (par exemple pour la page d'accueil d'un sous menu)
+     * si false, le menu n'est pas généré (par exemple pour la page d'accueil
+     * d'un sous menu)
      */
     @XmlAttribute
-    private boolean menu=true;
+    private boolean menu = true;
     /**
      * class name of the new WindowPane to display
      */
@@ -103,5 +104,50 @@ public class MenuItem extends MenuElement {
     public void setMenu(boolean menu) {
         this.menu = menu;
     }
+    /**
+     * url of the new Document to open in the same window
+     */
+    @XmlAttribute
+    protected String redirect;
 
+    /**
+     * Get the value of redirect
+     *
+     * @return the value of redirect
+     */
+    public String getRedirect() {
+        return redirect;
+    }
+
+    /**
+     * Set the value of redirect
+     *
+     * @param redirect new value of redirect
+     */
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+    /**
+     * Si true, affiche cet item par défaut
+     */
+    @XmlAttribute
+    private Boolean defaultItem = false;
+
+    /**
+     * Get the value of defaultItem
+     *
+     * @return the value of defaultItem
+     */
+    public Boolean getDefaultItem() {
+        return defaultItem == null ? false : defaultItem;
+    }
+
+    /**
+     * Set the value of defaultItem
+     *
+     * @param defaultItem new value of defaultItem
+     */
+    public void setDefaultItem(Boolean defaultItem) {
+        this.defaultItem = defaultItem;
+    }
 }

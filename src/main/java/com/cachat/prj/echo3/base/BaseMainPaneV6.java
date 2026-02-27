@@ -4,13 +4,16 @@ import com.cachat.prj.echo3.ng.ButtonEx;
 import com.cachat.prj.echo3.ng.ContainerEx;
 import com.cachat.prj.echo3.ng.LabelEx;
 import com.cachat.prj.echo3.ng.able.Scrollable;
+import com.cachat.prj.echo3.ng.menu.BaseMenuManager;
 import com.cachat.prj.echo3.ng.menu.MenuElement;
 import com.cachat.prj.echo3.ng.menu.MenuItem;
 import com.cachat.prj.echo3.ng.menu.MenuPane;
 import com.cachat.prj.echo3.ng.menu.SubMenu;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -36,14 +39,22 @@ import nextapp.echo.webcontainer.command.BrowserOpenWindowCommand;
 public abstract class BaseMainPaneV6 extends MainPane {
 
     /**
-     * la liste de boutons pour le menu vérticale
+     * la liste de boutons pour le menu 1 dans l'ordre
      */
-    protected final List<Button> menu1Items = new ArrayList<>();
+    private final List<Button> menu1Items = new ArrayList<>();
+    /**
+     * la map menu vers boutons pour le menu 1
+     */
+    private final Map<MenuElement, Button> menu1Map = new HashMap<>();
 
     /**
-     * la liste de boutons pour le menu horizontale
+     * la liste de boutons pour le menu 2
      */
-    protected final List<Button> menu2Items = new ArrayList<>();
+    private final List<Button> menu2Items = new ArrayList<>();
+    /**
+     * la map menu vers boutons pour le menu 2
+     */
+    private final Map<MenuElement, Button> menu2Map = new HashMap<>();
     /**
      * le logger
      */
@@ -180,14 +191,20 @@ public abstract class BaseMainPaneV6 extends MainPane {
      * fenêtre modale
      */
     protected WindowPane modalWindow = null;
+    /**
+     * le gestionnaire de menu
+     */
+    protected BaseMenuManager menuManager;
 
     /**
      * Constructeur
      *
      * @param app l'application
+     * @param menuManager le singleton menuManager de l'application
      */
-    public BaseMainPaneV6(BaseApp app) {
+    public BaseMainPaneV6(BaseApp app, BaseMenuManager menuManager) {
         this.app = app;
+        this.menuManager = menuManager;
         logger.severe("Constructeur BaseMainPaneV6");
         try {
             // Logo container
@@ -409,6 +426,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 bw.setParent(this);
                 bw.init();
                 updateLayout(bw);
+                setMenuSelected(bw);
             } else {
                 throw new RuntimeException("Fenêtre incompatible : " + w);
             }
@@ -492,14 +510,82 @@ public abstract class BaseMainPaneV6 extends MainPane {
     }
 
     /**
+     * ajoute un bouton dans le cache menu 1
+     *
+     * @param mel le menu correspondant
+     * @param button le bouton
+     */
+    protected void addMenu1Button(MenuElement mel, ButtonEx button) {
+        menu1Items.add(button);
+        menu1Map.put(mel, button);
+    }
+
+    /**
+     * ajoute un bouton dans le cache menu 2
+     *
+     * @param mel le menu correspondant
+     * @param button le bouton
+     */
+    protected void addMenu2Button(MenuElement mel, ButtonEx button) {
+        menu2Items.add(button);
+        menu2Map.put(mel, button);
+    }
+
+    /**
+     * vite le cache menu 1
+     */
+    public void menu1Clear() {
+        menu1Items.clear();
+    }
+
+    /**
+     * vite le cache menu 1
+     */
+    public void menu2Clear() {
+        menu2Items.clear();
+    }
+
+    /**
+     * Met à jour le style des boutons sur les menus. si la fenetre ne
+     * correspond à aucun menu, ne fait rien
+     *
+     * @param window la fenetre affichée
+     */
+    protected void setMenuSelected(BasicWindow window) {
+        MenuElement mi2 = menuManager.getMenu(window);
+        if (mi2 != null) {
+            MenuElement mi1 = mi2.getParent();
+            if (mi1 != null) {
+                MenuElement mi0 = mi1.getParent();
+                if (mi0 != null) {
+                    while (mi0.getParent() != null) {
+                        mi2 = mi2.getParent();
+                        mi1 = mi1.getParent();
+                        mi0 = mi0.getParent();
+                    }
+                } else {
+                    mi1 = mi2;
+                    mi2 = null;
+                }
+                Button but1 = menu1Map.get(mi1);
+                if (but1 != null) {
+                    activateMenu(mi1, new ActionEvent(window, ""), but1, false);
+                }
+                Button but2 = menu2Map.get(mi2);
+                if (but2 != null) {
+                    setMenu2Selected(but2);
+                }
+            }
+        }
+    }
+
+    /**
      * Méttre à jour le style des boutons sur le menu vérticale
      *
      * @param button le bouton actuellement séléctionné
      */
-    private void setMenu1Selected(Button button) {
-        menu1Items.forEach(m -> {
-            m.setStyleName("Menu1Unselected");
-        });
+    protected void setMenu1Selected(Button button) {
+        menu1Items.forEach(m -> m.setStyleName("Menu1"));
         if (button == null) {
             return;
         }
@@ -507,14 +593,12 @@ public abstract class BaseMainPaneV6 extends MainPane {
     }
 
     /**
-     * Méttre à jour le style des boutons sur le menu horizontal
+     * Méttre à jour le style des boutons sur le menu horizontale
      *
      * @param button le bouton actuellement séléctionné
      */
-    private void setMenu2Selected(Button button) {
-        menu2Items.forEach(m -> {
-            m.setStyleName("Menu2Unselected");
-        });
+    protected void setMenu2Selected(Button button) {
+        menu2Items.forEach(m -> m.setStyleName("Menu2"));
         if (button == null) {
             return;
         }
@@ -576,7 +660,20 @@ public abstract class BaseMainPaneV6 extends MainPane {
      * @param e l'évènement
      * @param mel le menu
      */
-    public void activateMenu(MenuElement mel, ActionEvent e, final ButtonEx button) {
+    public void activateMenu(MenuElement mel, ActionEvent e, final Button button) {
+        activateMenu(mel, e, button, true);
+    }
+
+    /**
+     * active un menu
+     *
+     * @param openDefaultWindow si true, ouvre la fenetre associée au premier
+     * élément du menu 2
+     * @param button le bouton qui a été utilisé
+     * @param e l'évènement
+     * @param mel le menu
+     */
+    public void activateMenu(MenuElement mel, ActionEvent e, final Button button, boolean openDefaultWindow) {
         if (mel instanceof MenuItem menuItem) {
             logger.log(Level.FINE, "menu : {0}", e.getActionCommand());
             setSubMenuVisible(false);
@@ -592,7 +689,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 BasicWindow mp = buildSubMenu(sm);
 
                 setSubMenuVisible(true);
-                if (mp != null) {
+                if (openDefaultWindow && mp != null) {
                     app.addWindow(mp, null);
                 }
             } else {
@@ -611,40 +708,36 @@ public abstract class BaseMainPaneV6 extends MainPane {
         if (app.getUser() == null) {
             return null;
         }
-        List<ActionListener> actionsPossibles = new ArrayList<>();
         MenuPane mp = new MenuPane(app);
         Row row = new Row();
         for (MenuElement mel : root.getChilds()) {
-            ButtonEx button = new ButtonEx(app.getString(mel.getLabel()), app.getStyles().getIcon(mel.getIcon()));
-            button.setStyleName("Menu2Unselected");
-            row.add(button);
-            menu2Items.add(button);
-            if (mel instanceof MenuItem menuItem) {
-                button.setVisible(menuItem.getMenu());
-                final ActionListener al = e -> {
-                    logger.log(Level.FINE, "menu : {0}", e.getActionCommand());
-                    setMenu2Selected(button);
-                    updateMainCE(menuItem);
-                };
-                actionsPossibles.add(al);
-                button.addActionListener(al);
-                mp.addMenuItem2(button);
-            } else if (mel instanceof SubMenu) {
-                final ActionListener al = e -> {
-                    setMenu2Selected(button);
-                    mainCE.removeAll();
-                    title.setText("");
-                    app.toast("Sous menus à deux niveaux non implementés");
-                };
-                button.addActionListener(al);
-                mp.addMenuItem2(button);
+            if (menuManager != null && menuManager.canUse(mel, app.getUser(), app.isSuperAdmin())) {
+                ButtonEx button = new ButtonEx(app.getString(mel.getLabel()), mel.getIcon() != null ? app.getStyles().getIcon(mel.getIcon()) : null);
+                button.setStyleName("SubMenu");
+                row.add(button);
+                addMenu2Button(mel, button);
+                if (mel instanceof MenuItem menuItem) {
+                    button.setVisible(menuItem.getMenu());
+                    final ActionListener al = e -> {
+                        logger.log(Level.FINE, "menu : {0}", e.getActionCommand());
+                        setMenu2Selected(button);
+                        updateMainCE(menuItem);
+                    };
+                    button.addActionListener(al);
+                    mp.addMenuItem2(button);
+                } else if (mel instanceof SubMenu) {
+                    final ActionListener al = e -> {
+                        setMenu2Selected(button);
+                        mainCE.removeAll();
+                        title.setText("");
+                        app.toast("Sous menus à deux niveaux non implementés");
+                    };
+                    button.addActionListener(al);
+                    mp.addMenuItem2(button);
+                }
             }
         }
         menu2CE.add(row);
-        if (actionsPossibles.size() == 1) {
-            actionsPossibles.get(0).actionPerformed(new ActionEvent(this, null));
-            return null;
-        }
         return mp;
     }
 
@@ -662,4 +755,5 @@ public abstract class BaseMainPaneV6 extends MainPane {
     public List<WindowPane> getWindows() {
         return Collections.unmodifiableList(windows);
     }
+
 }

@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -146,6 +147,17 @@ public class MenuElement {
     public void setLicense(String license) {
         this.license = license;
     }
+    /**
+     * le parent (null pour root, mis a jour lors de l'indexation)
+     */
+    @XmlTransient
+    private SubMenu parent;
 
-    
+    public SubMenu getParent() {
+        return parent;
+    }
+
+    public void setParent(SubMenu parent) {
+        this.parent = parent;
+    }
 }
