@@ -7,29 +7,29 @@ import nextapp.echo.app.Button;
 import nextapp.echo.app.Row;
 
 /**
- * un composant avec les informations de connexion / de l'utilisateur connecté
+ * Un composant avec les informations de connexion / de l'utilisateur connecté
  *
  * @author scachat
- */
-/**
- * zone d'info sur l'utilisateur connecté
  */
 public class ConnectZone extends Row {
 
     /**
-     * bouton pour l'accès au profil
+     * Bouton pour l'accès au profil
      */
     private Button profilButton;
+    
     /**
-     * bouton pour se connecter
+     * Bouton pour se connecter
      */
     private Button loginButton;
+    
     /**
-     * bouton pour se déconnecter
+     * Bouton pour se déconnecter
      */
     private Button logoutButton;
+    
     /**
-     * l'application
+     * L'application
      */
     private final BaseApp app;
 
@@ -52,7 +52,10 @@ public class ConnectZone extends Row {
      * logout
      */
     public ConnectZone(BaseApp app, Runnable showProfilWindow) {
+        super();
         this.app = app;
+        setStyleName("ConnectZone");
+
         if (showProfilWindow != null) {
             profilButton = new Button("Anonymous");
             profilButton.setLineWrap(false);
@@ -73,6 +76,9 @@ public class ConnectZone extends Row {
         add(logoutButton);
     }
 
+    /**
+     * Mettre à jour le contenu
+     */
     public void update() {
         final boolean someone = app.getUser() != null;
         profilButton.setVisible(someone);

@@ -5,54 +5,61 @@ package com.cachat.prj.echo3.ng.menu;
 
 import com.cachat.prj.echo3.base.BaseApp;
 import com.cachat.prj.echo3.base.BasicWindow;
-import static com.cachat.prj.echo3.base.BasicWindow.FULL_WIDTH;
 import com.cachat.prj.echo3.list.ActionButton;
-import com.cachat.prj.echo3.ng.ButtonEx;
 import com.cachat.prj.echo3.ng.ContainerEx;
-import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Button;
-import nextapp.echo.app.Color;
-import nextapp.echo.app.Extent;
-import nextapp.echo.app.Font;
-import nextapp.echo.app.Insets;
+import nextapp.echo.app.event.ActionListener;
 
 /**
- *
+ * Page intermédiaire pour naviguer un sous menu
+ * 
  * @author scachat
  */
 public class MenuPane extends BasicWindow {
 
-    ContainerEx base;
+    /**
+     * Conteneur principal
+     */
+    private final ContainerEx base;
 
+    /**
+     * Constructeur
+     * 
+     * @param app l'instance de application
+     */
     public MenuPane(BaseApp app) {
         super(app, "Menu", "Menu", 800, 600);
-        add(base = new ContainerEx(0, 0, 0, 0, null, null));
-        base.setFlexWrap(ContainerEx.FLEX_WRAP_WRAP);
-        base.setFlexDirection(ContainerEx.FLEX_DIRECTION_RESPONSIVE);
-        base.setInsets(new Insets(12, 15));
-
         setTitle("");
+        add(base = new ContainerEx());
+        base.setStyleName("MenuPane");
     }
 
-    public void addMenuItem2(ButtonEx b) {
-        Button nb = new ActionButton(b.getText().toUpperCase(), e -> b.fireActionPerformed(e));
-        nb.setStyleName("MenuPaneButton");
+    /**
+     * Ajoute un élément sur le menu à partir d'un composant existant.
+     * 
+     * @param b le bouton de référence
+     */
+    public void addMenuItem(Button b) {
+        addMenuItem(b.getText(), e -> b.fireActionPerformed(e));
+    }
+    
+    /**
+     * Ajoute un élément sur le menu
+     * 
+     * @param text le text
+     * @param actionListener le handler pour l'action
+     */
+    public void addMenuItem(String text, ActionListener actionListener) {
+        Button button = new ActionButton(text, actionListener);
+        button.setStyleName("MenuPaneButton");
 
-        ContainerEx ca = new ContainerEx(nb);
+        ContainerEx flexV = new ContainerEx(button);
+        flexV.setStyleName("MenuPaneFlexCol");
 
-        ContainerEx cb = new ContainerEx(ca);//container flex 
-        cb.setFlexBasis("33%");
-        cb.setFlexGrow(0.0);
-        cb.setFlexShrink(0.0);
-        cb.setInsets(new Insets(16, 16));
+        ContainerEx flexH = new ContainerEx(flexV);
+        flexH.setStyleName("MenuPaneFlexRow");
 
-        ca.setJustifyContent("center");//container pour imposer une marge entre boutons
-        ca.setFlexDirection("column");
-        ca.setWidth(FULL_WIDTH);
-        ca.setHeight(FULL_WIDTH);
-        ca.setRadius(new Insets(4, 4));
-        ca.setShadow("0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)");
-        base.add(cb);
+        base.add(flexH);
     }
 
 }

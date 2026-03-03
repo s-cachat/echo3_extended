@@ -67,7 +67,7 @@ public abstract class BaseMenuManager {
                 JAXBContext ctx = JAXBContext.newInstance(MenuRoot.class.getPackage().getName());
                 MenuRoot x = (MenuRoot) ctx.createUnmarshaller().unmarshal(inSupplier.get());
                 makeIndex(x);
-                return x;
+                root = x;
             } catch (JAXBException ex) {
                 Logger.getLogger(BaseMenuManager.class.getName()).log(Level.SEVERE, null, ex);
             }
