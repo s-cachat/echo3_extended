@@ -30,6 +30,7 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.WindowPaneEvent;
 import nextapp.echo.webcontainer.command.BrowserOpenWindowCommand;
+import nextapp.echo.webcontainer.command.BrowserRedirectCommand;
 
 /**
  * l'écran principal
@@ -620,6 +621,8 @@ public abstract class BaseMainPaneV6 extends MainPane {
             title.setText("");
             Command command = new BrowserOpenWindowCommand(mi.getNewWindow(), "extra", new Extent(800), new Extent(600), BrowserOpenWindowCommand.FLAG_REPLACE | BrowserOpenWindowCommand.FLAG_RESIZABLE);
             app.enqueueCommand(command);
+        } else if (mi.getRedirect() != null) {
+            app.enqueueCommand(new BrowserRedirectCommand(mi.getRedirect()));
         } else {
             if ("logout".equals(mi.getId())) {
                 app.logout();
