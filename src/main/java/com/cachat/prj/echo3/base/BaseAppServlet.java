@@ -291,6 +291,11 @@ public abstract class BaseAppServlet extends WebContainerServlet {
             cookiesTL.set(new Cookies(request, response));
             requestTL.set(request);
             responseTL.set(response);
+            String logout = request.getParameter("logout");
+            if (logout != null) {
+                logout();
+                return;
+            }
             doProcess(request, response);
             requestTL.set(null);
             responseTL.set(null);
