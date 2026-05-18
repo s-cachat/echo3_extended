@@ -17,17 +17,17 @@ public class ConnectZone extends Row {
      * Bouton pour l'accès au profil
      */
     private Button profilButton;
-    
+
     /**
      * Bouton pour se connecter
      */
     private Button loginButton;
-    
+
     /**
      * Bouton pour se déconnecter
      */
     private Button logoutButton;
-    
+
     /**
      * L'application
      */
@@ -81,7 +81,9 @@ public class ConnectZone extends Row {
      */
     public void update() {
         final boolean someone = app.getUser() != null;
-        profilButton.setVisible(someone);
+        if (profilButton != null) {
+            profilButton.setVisible(someone);
+        }
         loginButton.setVisible(!someone);
         logoutButton.setVisible(someone);
     }

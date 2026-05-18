@@ -16,13 +16,11 @@ import java.util.Collections;
 import java.util.List;
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Column;
-import nextapp.echo.app.Extent;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.PasswordField;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.WindowPane;
 import nextapp.echo.app.event.ActionListener;
-import nextapp.echo.app.layout.GridLayoutData;
 import org.jasypt.salt.RandomSaltGenerator;
 
 /**
@@ -185,56 +183,49 @@ public class BaseLoginWindowV6 extends MainPane {
 
         this.app = app;
 
-        setStyleName("LoginV6");
+        setStyleName("LoginWindow");
 
         // Main container
         mainCE = new ContainerEx(null, mainCETop, null, null, mainCEWidth, null);
-        mainCE.setStyleName("LoginV6");
-        mainCE.setLeft(new Extent(33, Extent.PERCENT));
-        mainCE.setRight(new Extent(33, Extent.PERCENT));
+        mainCE.setStyleName("LoginCE");
 
         mainCol = new Column();
-        mainCol.setStyleName("LoginV6");
 
         logo = new LabelEx(app.getStyles().getImage("loginLogo.png"));
         Row r = new Row();
-        r.setLayoutData(new GridLayoutData(1, 1));
         r.add(logo);
         r.setAlignment(Alignment.ALIGN_CENTER);
         mainCol.add(r);
-
         mainCol.add(new Strut(1, lineSpacing));
-
         errorMsg = new LabelEx();
-        errorMsg.setStyleName("LoginErrorV6");
+        errorMsg.setStyleName("ErrorMsg");
         mainCol.add(errorMsg);
-
         mainCol.add(new Strut(1, lineSpacing));
 
         usernameLabel = new LabelEx(app.getString("app.login.nom"));
-        usernameLabel.setStyleName("LoginV6");
+        usernameLabel.setStyleName("BlockEditor");
         mainCol.add(usernameLabel);
         usernameField = new TextFieldEx();
-        usernameField.setStyleName("LoginV6");
+        usernameField.setStyleName("BlockEditor");
         mainCol.add(usernameField);
 
         mainCol.add(new Strut(1, lineSpacing));
 
         passwordLabel = new LabelEx(app.getString("app.login.pass"));
-        passwordLabel.setStyleName("LoginV6");
+        passwordLabel.setStyleName("BlockEditor");
         mainCol.add(passwordLabel);
         passwordField = new PasswordField();
-        passwordField.setStyleName("LoginV6");
+        passwordField.setStyleName("BlockEditor");
         mainCol.add(passwordField);
         if (showStayConnected) {
             mainCol.add(new Strut(1, lineSpacing));
             Row row = new Row();
             mainCol.add(row);
             stayConnected = new CheckBoxEx();
-            stayConnected.setStyleName("LoginV6");
+            stayConnected.setStyleName("BlockEditor");
             row.add(stayConnected);
             stayConnectedLabel = new LabelEx(app.getString("app.login.stayConnected"));
-            stayConnectedLabel.setStyleName("LoginV6");
+            stayConnectedLabel.setStyleName("BlockEditor");
             row.add(stayConnectedLabel);
 
         }
@@ -242,10 +233,10 @@ public class BaseLoginWindowV6 extends MainPane {
             mainCol.add(new Strut(1, lineSpacing));
 
             languageLabel = new LabelEx(app.getString("app.login.langue"));
-            languageLabel.setStyleName("LoginV6");
+            languageLabel.setStyleName("BlockEditor");
             mainCol.add(languageLabel);
             languageSelect = new SelectFieldEx(getLanguageLabels());
-            languageSelect.setStyleName("LoginV6");
+            languageSelect.setStyleName("BlockEditor");
             languageSelect.setSelectedIndex(search(BaseApp.AVAILABLE_LANGUAGE_CODES, app.getLocale().getLanguage()));
             mainCol.add(languageSelect);
         }
@@ -253,7 +244,7 @@ public class BaseLoginWindowV6 extends MainPane {
             mainCol.add(new Strut(1, lineSpacing));
 
             interfaceLabel = new LabelEx(app.getString("app.login.iface"));
-            interfaceLabel.setStyleName("LoginV6");
+            interfaceLabel.setStyleName("BlockEditor");
             mainCol.add(interfaceLabel);
         }
         mainCol.add(new Strut(1, lineSpacing));
@@ -261,7 +252,7 @@ public class BaseLoginWindowV6 extends MainPane {
         buttonRow = new Row();
         buttonRow.setAlignment(Alignment.ALIGN_RIGHT);
         okButton = new ButtonEx(app.getString("ok"));
-        okButton.setStyleName("LoginV6");
+        okButton.setStyleName("Button");
         buttonRow.add(okButton);
         mainCol.add(buttonRow);
 
