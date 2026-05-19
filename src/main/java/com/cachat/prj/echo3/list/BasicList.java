@@ -1147,7 +1147,7 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
         /**
          * si true, affiche le texte du bouton
          */
-        private final boolean showText;
+        protected final boolean showText;
 
         /**
          * Constructeur
