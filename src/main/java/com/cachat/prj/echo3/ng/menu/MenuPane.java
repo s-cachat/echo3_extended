@@ -8,11 +8,12 @@ import com.cachat.prj.echo3.base.BasicWindow;
 import com.cachat.prj.echo3.list.ActionButton;
 import com.cachat.prj.echo3.ng.ContainerEx;
 import nextapp.echo.app.Button;
+import nextapp.echo.app.ImageReference;
 import nextapp.echo.app.event.ActionListener;
 
 /**
  * Page intermédiaire pour naviguer un sous menu
- * 
+ *
  * @author scachat
  */
 public class MenuPane extends BasicWindow {
@@ -24,7 +25,7 @@ public class MenuPane extends BasicWindow {
 
     /**
      * Constructeur
-     * 
+     *
      * @param app l'instance de application
      */
     public MenuPane(BaseApp app) {
@@ -36,21 +37,34 @@ public class MenuPane extends BasicWindow {
 
     /**
      * Ajoute un élément sur le menu à partir d'un composant existant.
-     * 
+     *
      * @param b le bouton de référence
      */
     public void addMenuItem(Button b) {
-        addMenuItem(b.getText(), e -> b.fireActionPerformed(e));
+        addMenuItem(b.getText(), b.getIcon(),e -> b.fireActionPerformed(e));
     }
-    
+
     /**
      * Ajoute un élément sur le menu
-     * 
+     *
      * @param text le text
      * @param actionListener le handler pour l'action
      */
     public void addMenuItem(String text, ActionListener actionListener) {
+        addMenuItem(text, (ImageReference) null, actionListener);
+    }
+
+    /**
+     * Ajoute un élément sur le menu
+     *
+     * @param text le text
+     * @param actionListener le handler pour l'action
+     */
+    public void addMenuItem(String text, ImageReference icon, ActionListener actionListener) {
         Button button = new ActionButton(text, actionListener);
+        if (icon != null) {
+            button.setIcon(icon);
+        }
         button.setStyleName("MenuPaneButton");
 
         ContainerEx flexV = new ContainerEx(button);

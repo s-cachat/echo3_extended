@@ -714,14 +714,13 @@ public abstract class BaseMainPaneV6 extends MainPane {
         if (app.getUser() == null) {
             return null;
         }
-        MenuPane mp = new MenuPane(app);
+        MenuPane mp = newMenuPane();
         Row row = new Row();
         for (MenuElement mel : root.getChilds()) {
             if (menuManager != null && menuManager.canUse(mel, app.getUser(), app.isSuperAdmin())) {
                 ButtonEx button = new ButtonEx(app.getString(mel.getLabel()), mel.getIcon() != null ? app.getStyles().getIcon(mel.getIcon()) : null);
                 button.setStyleName("Menu2");
-                row.add(button);
-                addMenu2Button(mel, button);
+            
 
                 final ActionListener al;
                 if (mel instanceof MenuItem menuItem) {
@@ -739,13 +738,24 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 } else {
                     al = null;
                 }
-
                 button.addActionListener(al);
+                    row.add(button);
                 mp.addMenuItem(button);
+                addMenu2Button(mel, button);
+               
             }
         }
         menu2CE.add(row);
         return mp;
+    }
+
+    /**
+     * donne une page intermédiaire quand on sélectionne un menu 1
+     *
+     * @return la page
+     */
+    protected MenuPane newMenuPane() {
+        return new MenuPane(app);
     }
 
     /**
@@ -758,7 +768,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
             return;
         }
 
-        MenuPane mp = new MenuPane(app);
+        MenuPane mp = newMenuPane();
         for (MenuElement mel : root.getChilds()) {
             if (menuManager.canUse(mel, app.getUser(), app.isSuperAdmin())) {
                 mp.addMenuItem(app.getString(mel.getLabel()), e -> {
