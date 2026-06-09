@@ -178,7 +178,6 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
                 logger.log(Level.SEVERE, "Impossible d'instancier la classe " + newPane, ex);
                 wp = null;
             }
-
         }
         if (wp != null) {
             BaseApp.this.addWindow(wp, null);
