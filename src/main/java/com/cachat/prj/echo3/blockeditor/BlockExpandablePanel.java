@@ -70,19 +70,13 @@ public class BlockExpandablePanel<T> extends BlockPanel<T> {
     private Row buildTitle(String title, ImageReference icon) {
         Row r = new Row();
         r.setStyleName("ExpandTitle");
-        ActionListener al = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                es.setShow(!es.isShow());
-            }
-        };
+        ActionListener al = (ActionEvent e) -> es.setShow(!es.isShow());
         if (icon == null) {
             r.add(main = new Button(title));
         } else {
             r.add(main = new Button(title, icon));
         }
         main.addActionListener(al);
-//TODO HTML5 et enlever ci dessous r.add(new Strut(5, 5));
         r.add(new Label(" "));
         r.add(error = new LabelEx());
         error.setStyleName("ErrorMsg");
