@@ -142,6 +142,7 @@ public class ContainerEx extends BorderedComponent implements PaneContainer, Pos
     }
 
     public static final String PROPERTY_INSETS = "insets";
+    public static final String PROPERTY_MARGINS = "margins";
 
     @Override
     public void clear() {
@@ -293,6 +294,13 @@ public class ContainerEx extends BorderedComponent implements PaneContainer, Pos
 
     public Insets getInsets() {
         return (Insets) get(PROPERTY_INSETS);
+    }
+    public void setMargins(Insets newValue) {
+        set(PROPERTY_MARGINS, newValue);
+    }
+
+    public Insets getMargins() {
+        return (Insets) get(PROPERTY_MARGINS);
     }
 
     public Extent getVerticalScroll() {

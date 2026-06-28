@@ -23,6 +23,7 @@ ContainerEx.Sync = Core.extend(Echo.Render.ComponentSync, {
         Echo.Sync.Font.render(this.component.render("font"), this._div);
         Echo.Sync.FillImage.render(backgroundImage, this._div);
         Echo.Sync.Insets.render(this.component.render("insets"), this._div, "padding");
+        Echo.Sync.Insets.render(this.component.render("margin"), this._div, "margin");
         Echo.Sync.RoundedCorner.render(this.component.render("radius"), this._div);
         Echo.Sync.BoxShadow.render(this.component.render("boxShadow"), this._div);
         var textAlignment = this.component.render("textAlignment");
