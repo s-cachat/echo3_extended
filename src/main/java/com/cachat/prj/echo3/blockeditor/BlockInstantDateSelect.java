@@ -43,8 +43,12 @@ public class BlockInstantDateSelect extends BlockField<InstantSelect4> {
 
     @Override
     public void copyObjectToUi() {
-        Instant d = (Instant) BeanTools.getRaw(getParent().getCurrent(), property);
-        editor.setSelectedInstant(d);
+        Object o = BeanTools.getRaw(getParent().getCurrent(), property);
+        if (o instanceof Instant d) {
+            editor.setSelectedInstant(d);
+        } else {
+            throw new ClassCastException(String.format("%s.%s is not an Instant", getParent().getCurrent().getClass().getSimpleName(), property));
+        }
     }
 
     @Override

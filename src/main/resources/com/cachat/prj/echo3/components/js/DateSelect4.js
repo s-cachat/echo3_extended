@@ -3,6 +3,7 @@ DateSelect4 = {};
 DateSelect4 = Core.extend(Echo.Component, {
     $load: function () {
         Echo.ComponentFactory.registerType("DateSelect4", this);
+        Echo.ComponentFactory.registerType("InstantSelect4", this);
     },
     componentType: "DateSelect4"
 });
