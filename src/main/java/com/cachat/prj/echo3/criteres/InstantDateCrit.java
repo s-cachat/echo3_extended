@@ -1,9 +1,14 @@
 package com.cachat.prj.echo3.criteres;
 
 import com.cachat.prj.echo3.components.DateSelect3;
+import com.cachat.prj.echo3.components.InstantSelect3;
 import com.cachat.util.DateUtil;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import nextapp.echo.app.Label;
 import nextapp.echo.app.Row;
@@ -14,20 +19,28 @@ import nextapp.echo.app.event.ActionListener;
  * un critere de type choix de date
  *
  * @author scachat
- * @deprecated 
+ * @deprecated
  */
 @Deprecated(since = "5.0")
-public class DateCrit extends Crit {
+public class InstantDateCrit extends Crit {
 
+    /**
+     * la timezone
+     */
+    private ZoneId zoneId = ZoneId.systemDefault();
+    /**
+     * la propriete de fin
+     */
+    private String propFin;
     /**
      * le format
      */
-    private static final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+    private DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").withZone(zoneId);
 
     /**
      * la date
      */
-    private DateSelect3 df;
+    private InstantSelect3 df;
     /**
      * les actionListener
      */
@@ -39,7 +52,7 @@ public class DateCrit extends Crit {
      * @param cont le container des critères
      * @param prop le nom de la propriete critere
      */
-    public DateCrit(CritContainer cont, String prop) {
+    public InstantDateCrit(CritContainer cont, String prop) {
         this(cont, prop, prop);
     }
 
@@ -50,13 +63,9 @@ public class DateCrit extends Crit {
      * @param prop le nom de la propriete critere
      * @param libKey la cle pour le libelle
      */
-    public DateCrit(CritContainer cont, String prop, String libKey) {
+    public InstantDateCrit(CritContainer cont, String prop, String libKey) {
         this(cont, prop, prop, libKey);
     }
-    /**
-     * la propriete de fin
-     */
-    private String propFin;
 
     /**
      * constructeur
@@ -66,7 +75,7 @@ public class DateCrit extends Crit {
      * @param propFin le nom de la propriete critere "fin"
      * @param libKey la cle pour le libelle
      */
-    public DateCrit(CritContainer cont, String propDeb, String propFin, String libKey) {
+    public InstantDateCrit(CritContainer cont, String propDeb, String propFin, String libKey) {
         this(cont, propDeb, propFin, libKey, false);
     }
 
@@ -80,7 +89,7 @@ public class DateCrit extends Crit {
      * @param canBeDisabled si true, une case a cocher permet d'inhiber le
      * critere
      */
-    public DateCrit(CritContainer cont, String propDeb, String propFin, String libKey, boolean canBeDisabled) {
+    public InstantDateCrit(CritContainer cont, String propDeb, String propFin, String libKey, boolean canBeDisabled) {
         super(cont, propDeb);
         this.propFin = propFin;
         Label l = newLabel(cont.getString(libKey), cont.getString(prop + ".tt"));
@@ -92,18 +101,27 @@ public class DateCrit extends Crit {
             critf.add(l);
         }
 
-        df = new DateSelect3();
+        df = new InstantSelect3();
         df.setStyleName("Button");
         critf.add(df);
         cont.addCrit(this);
         df.addActionListener(cont);
         cont.extendCritAreaHeight(CritContainer.CRIT_HEIGHT);
         df.addActionListener(e -> {
-            ActionEvent ae = new ActionEvent(DateCrit.this, "DATE");
+            ActionEvent ae = new ActionEvent(InstantDateCrit.this, "DATE");
             for (ActionListener a : listeners) {
                 a.actionPerformed(ae);
             }
         });
+    }
+
+    public ZoneId getZoneId() {
+        return zoneId;
+    }
+
+    public void setZoneId(ZoneId zoneId) {
+        this.zoneId = zoneId;
+        format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").withZone(zoneId);
     }
 
     /**
@@ -132,20 +150,16 @@ public class DateCrit extends Crit {
      */
     @Override
     public String updateWhere(List<Object> arg) {
-            Date date = df.getSelectedDate();
-            if (date == null) {
-                return null;
-            }
-            GregorianCalendar cal = new GregorianCalendar();
-            cal.setTime(date);
-            DateUtil.midnight(cal);
-            java.util.Date min = cal.getTime();
-            cal.add(Calendar.DATE, 1);
-            java.util.Date max = cal.getTime();
-            arg.add(max);
-            arg.add(min);
-            return String.format("%1$s<? and %2$s>=?", prop, propFin);
-
+        Instant date = df.getSelectedInstant();
+        if (date == null) {
+            return null;
+        }
+        
+        Instant min=DateUtil.midnight(date);
+        Instant max=min.plus(Duration.ofHours(24));
+        arg.add(max);
+        arg.add(min);
+        return String.format("%1$s<? and %2$s>=?", prop, propFin);
 
     }
 
@@ -155,23 +169,22 @@ public class DateCrit extends Crit {
      * @return la date sélectionnée
      * @throws java.text.ParseException en cas d'erreur de formatage
      */
-    public Date getDate() throws ParseException {
-        return df.getSelectedDate();
+    public Instant getDate() throws ParseException {
+        return df.getSelectedInstant();
     }
 
     @Override
     public String getSummary() {
-            Date date = df.getSelectedDate();
-            if (date == null) {
-                return null;
-            }
-            GregorianCalendar cal = new GregorianCalendar();
-            cal.setTime(date);
-            DateUtil.midnight(cal);
-            java.util.Date min = cal.getTime();
-            cal.add(Calendar.DATE, 1);
-            java.util.Date max = cal.getTime();
-            return String.format("%1$s < %3$s %5$s %2$s >= %4$s", cont.getString(prop), cont.getString(propFin), format.format(max), format.format(min), cont.getBaseString("and"));
+        Instant date = df.getSelectedInstant();
+        if (date == null) {
+            return null;
+        }
+        Instant min = DateUtil.midnight(date);
+        Instant max = min.plus(Duration.ofHours(24));
+        return String.format("%1$s < %3$s %5$s %2$s >= %4$s", cont.getString(prop), cont.getString(propFin),
+                format.format(max),
+                format.format(min),
+                cont.getBaseString("and"));
 
     }
 }

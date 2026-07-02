@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cachat.prj</groupId>
     <artifactId>echo3_extended</artifactId>
-    <version>4.1</version>
+    <version>5.0</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>sstCommon</artifactId>
-            <version>4.0</version>
+            <version>5.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.servicemix.bundles</groupId>
