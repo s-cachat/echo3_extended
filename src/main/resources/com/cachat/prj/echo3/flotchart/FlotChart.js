@@ -23,7 +23,7 @@ FlotChart.Sync = Core.extend(Echo.Render.ComponentSync, {
             parentElement.appendChild(this._div);
         } catch (e) {
             if (console) {
-                console.log("FlotChart error in renderAdd : " + e);
+                console.log("FlotChart error in renderAdd : " , e);
             }
         }
     },
@@ -34,14 +34,16 @@ FlotChart.Sync = Core.extend(Echo.Render.ComponentSync, {
             }
         } catch (e) {
             if (console) {
-                console.log("FlotChart error in renderDisplay : " + e);
+                console.log("FlotChart error in renderDisplay : " , e);
             }
         }
     },
     _buildChart: function () {
         try {
             var chartModel = JSON.parse(this.component.get("model")).flotModel;
+            console.log("chartModel",chartModel);
             var data = JSON.parse(this.component.get("data")).flotData.series;
+            console.log("data",data);
             chartModel.series = undefined;
             if (chartModel.pie !== undefined) {
                 chartModel.series = new Object();
@@ -50,7 +52,7 @@ FlotChart.Sync = Core.extend(Echo.Render.ComponentSync, {
             var chart = $.plot(this._div, data, chartModel);
             return chart;
         } catch (e) {
-            throw ("FlotChart error in _buildchart : " + e);
+            throw ("FlotChart error in _buildchart : " , e);
             return undefined;
         }
     },
