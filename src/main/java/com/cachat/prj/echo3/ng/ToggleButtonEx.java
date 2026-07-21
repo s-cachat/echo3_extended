@@ -32,7 +32,7 @@ public class ToggleButtonEx extends ButtonEx {
      * Creates a button with no text or icon.
      */
     public ToggleButtonEx() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
     /**
@@ -41,7 +41,7 @@ public class ToggleButtonEx extends ButtonEx {
      * @param text the text to be displayed in the button
      */
     public ToggleButtonEx(String text) {
-        this(text, null, null, null);
+        this(text, null, null, null, null);
     }
 
     /**
@@ -71,7 +71,19 @@ public class ToggleButtonEx extends ButtonEx {
      * @param text the text to be displayed in the button
      */
     public ToggleButtonEx(String text, String unSelectedStyleName, String selectedStyleName) {
-        this(text, null, unSelectedStyleName, selectedStyleName);
+        this(text, (ImageReference) null, unSelectedStyleName, selectedStyleName);
+    }
+
+    /**
+     * Creates a button with text and an icon and a tooltip.
+     *
+     * @param selectedStyleName le style pour le bouton sélectionné
+     * @param unSelectedStyleName le style pour le bouton non sélectionné
+     * @param text the text to be displayed in the button
+     * @param tooltip the text to be displayed in the button
+     */
+    public ToggleButtonEx(String text, String tooltip, String unSelectedStyleName, String selectedStyleName) {
+        this(text, null, tooltip, unSelectedStyleName, selectedStyleName);
     }
 
     /**
@@ -83,6 +95,19 @@ public class ToggleButtonEx extends ButtonEx {
      * @param icon the icon to be displayed in the button
      */
     public ToggleButtonEx(String text, ImageReference icon, String unSelectedStyleName, String selectedStyleName) {
+        this(text, icon, null, unSelectedStyleName, selectedStyleName);
+    }
+
+    /**
+     * Creates a button with text and an icon.
+     *
+     * @param selectedStyleName le style pour le bouton sélectionné
+     * @param unSelectedStyleName le style pour le bouton non sélectionné
+     * @param text the text to be displayed in the button
+     * @param icon the icon to be displayed in the button
+     * @param tooltip the text to be displayed in the button
+     */
+    public ToggleButtonEx(String text, ImageReference icon, String tooltip, String unSelectedStyleName, String selectedStyleName) {
         super();
         setModel(new DefaultToggleButtonModel());
         setIcon(icon);
@@ -97,6 +122,9 @@ public class ToggleButtonEx extends ButtonEx {
             }
         });
         setStyleName(unSelectedStyleName);
+        if (tooltip != null) {
+            setToolTipText(tooltip);
+        }
     }
 
     public String getUnselectedStyleName() {
