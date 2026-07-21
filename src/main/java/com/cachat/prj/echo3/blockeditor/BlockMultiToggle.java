@@ -49,7 +49,7 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
         BlockMultiToggle bmc = (BlockMultiToggle) bf;
         this.unSelectedStyleName = ((BlockMultiToggle< TypeObjet>) bf).unSelectedStyleName;
         this.selectedStyleName = ((BlockMultiToggle< TypeObjet>) bf).selectedStyleName;
-        ((BlockMultiToggle< TypeObjet>) bf).items.entrySet().forEach((x) -> items.put(new ToggleButtonEx(x.getKey().getText(), unSelectedStyleName, selectedStyleName), x.getValue()));
+        ((BlockMultiToggle< TypeObjet>) bf).items.entrySet().forEach((x) -> items.put(new ToggleButtonEx(x.getKey().getText(), x.getKey().getToolTipText(), unSelectedStyleName, selectedStyleName), x.getValue()));
         createGrid(bmc.localisedItem, ((Grid) bmc.editor).getSize());
         items.keySet().forEach(a -> editor.add(a));
     }
@@ -57,7 +57,10 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
     /**
      * Constructeur pour utiliser une liste spécifique de valeurs. Doit appeler
      * createGrid, puis remplir la map items et ajouter les checkboxex a editor
-     *
+     *@param unSelectedStyleName le nom du style de bouton quand il n'est pas
+     * sélectionné
+     * @param selectedStyleName le nom du style de bouton quand il est
+     * sélectionné
      * @param li pour l'I18N
      * @param property la propriété de type liste d'objet
      */
@@ -70,6 +73,10 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
     /**
      * Constructeur
      *
+     * @param unSelectedStyleName le nom du style de bouton quand il n'est pas
+     * sélectionné
+     * @param selectedStyleName le nom du style de bouton quand il est
+     * sélectionné
      * @param li pour l'I18N
      * @param property la propriété de type liste d'objet
      * @param items la liste d'objet a choisir
@@ -77,11 +84,29 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
      * @param cols le nombre de colonnes
      */
     public BlockMultiToggle(LocalisedItem li, String property, Set<TypeObjet> items, String propLib, String unSelectedStyleName, String selectedStyleName, int cols) {
+        this(li, property, items, propLib, null, unSelectedStyleName, selectedStyleName, cols);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param tooltip la propriété a utiliser pour le tooltip du bouton
+     * @param unSelectedStyleName le nom du style de bouton quand il n'est pas
+     * sélectionné
+     * @param selectedStyleName le nom du style de bouton quand il est
+     * sélectionné
+     * @param li pour l'I18N
+     * @param property la propriété de type liste d'objet
+     * @param items la liste d'objet a choisir
+     * @param propLib la propriété des objets a choisir a utiliser comme label
+     * @param cols le nombre de colonnes
+     */
+    public BlockMultiToggle(LocalisedItem li, String property, Set<TypeObjet> items, String propLib, String tooltip, String unSelectedStyleName, String selectedStyleName, int cols) {
         super(li, property);
         this.unSelectedStyleName = unSelectedStyleName;
         this.selectedStyleName = selectedStyleName;
         createGrid(li, cols);
-        setList(items, propLib);
+        setList(items, propLib,tooltip);
     }
 
     /**
@@ -90,7 +115,10 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
      * @param li pour l'I18N
      * @param property la propriété de type liste d'objet
      * @param items la liste d'objet a choisir
-     * @param propLib la propriété des objets a choisir a utiliser comme label
+     * @param unSelectedStyleName le nom du style de bouton quand il n'est pas
+     * sélectionné
+     * @param selectedStyleName le nom du style de bouton quand il est
+     * sélectionné
      * @param cols le nombre de colonnes
      */
     public BlockMultiToggle(LocalisedItem li, String property, Class<TypeObjet> items, String unSelectedStyleName, String selectedStyleName, int cols) {
@@ -104,6 +132,10 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
     /**
      * Constructeur
      *
+     * @param unSelectedStyleName le nom du style de bouton quand il n'est pas
+     * sélectionné
+     * @param selectedStyleName le nom du style de bouton quand il est
+     * sélectionné
      * @param li pour l'I18N
      * @param property la propriété de type liste d'objet
      * @param items la liste d'objet a choisir
@@ -111,16 +143,39 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
      * @param cols le nombre de colonnes
      */
     public BlockMultiToggle(LocalisedItem li, String property, List<TypeObjet> items, String propLib, String unSelectedStyleName, String selectedStyleName, int cols) {
-        super(li, property);
-        this.unSelectedStyleName = unSelectedStyleName;
-        this.selectedStyleName = selectedStyleName;
-        createGrid(li, cols);
-        setList(items, propLib);
+        this(li, property, items, propLib, null, unSelectedStyleName, selectedStyleName, cols);
+
     }
 
     /**
      * Constructeur
      *
+     * @param unSelectedStyleName le nom du style de bouton quand il n'est pas
+     * sélectionné
+     * @param selectedStyleName le nom du style de bouton quand il est
+     * sélectionné
+     * @param tooltip la propriété a utiliser pour le tooltip du bouton
+     * @param li pour l'I18N
+     * @param property la propriété de type liste d'objet
+     * @param items la liste d'objet a choisir
+     * @param propLib la propriété des objets a choisir a utiliser comme label
+     * @param cols le nombre de colonnes
+     */
+    public BlockMultiToggle(LocalisedItem li, String property, List<TypeObjet> items, String propLib, String tooltip, String unSelectedStyleName, String selectedStyleName, int cols) {
+        super(li, property);
+        this.unSelectedStyleName = unSelectedStyleName;
+        this.selectedStyleName = selectedStyleName;
+        createGrid(li, cols);
+        setList(items, propLib,tooltip);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param unSelectedStyleName le nom du style de bouton quand il n'est pas
+     * sélectionné
+     * @param selectedStyleName le nom du style de bouton quand il est
+     * sélectionné
      * @param li pour l'I18N
      * @param property la propriété de type liste d'objet
      * @param items la map d'objet/libelle a choisir
@@ -138,8 +193,7 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
      * change la liste d'objet, déselectionne tout. Appeler copyObjectToUi juste
      * après.
      *
-     * @param items la liste d'objet a sélectionner
-     * @param propLib la propriété a afficher
+     * @param list la map objet vers libellé
      */
     public void setList(Map<TypeObjet, String> list) {
         this.items.clear();
@@ -159,13 +213,15 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
      *
      * @param items la liste d'objet a sélectionner
      * @param propLib la propriété a afficher
+     * @param tooltip la propriété a mettre en tooltip
      */
-    public void setList(Collection<TypeObjet> items, String propLib) {
+    public final void setList(Collection<TypeObjet> items, String propLib,String tooltip) {
         this.items.clear();
         if (editor != null) {
             editor.removeAll();
             items.forEach((o) -> {
                 ToggleButtonEx cb = new ToggleButtonEx(BeanTools.get(o, propLib), unSelectedStyleName, selectedStyleName);
+                if (tooltip!=null)cb.setToolTipText(BeanTools.get(o, tooltip));
                 this.items.put(cb, o);
                 editor.add(cb);
             });
@@ -236,7 +292,7 @@ public class BlockMultiToggle<TypeObjet> extends BlockField<Grid> {
         }
     }
 
-    protected void createGrid(LocalisedItem li, int cols) {
+    protected final void createGrid(LocalisedItem li, int cols) {
         editor = new Grid(cols);
         editor.setInsets(new Insets(4));
         buttons = new Row();
