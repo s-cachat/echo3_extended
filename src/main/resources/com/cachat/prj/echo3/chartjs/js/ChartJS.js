@@ -32,8 +32,10 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
     renderDisplay: function () {
         try {
             if (!this._chartjs) {
-                this._chartModel = JSON.parse(this.component.get("model")).chartModel;
-                this._chartjs = new Chart(this._canvas, chartModel);
+                var model=this.component.get("config");
+                console.log("model",model);
+                this._chartModel = JSON.parse(model).chartModel;
+                this._chartjs = new Chart(this._canvas, this._chartModel);
             }
         } catch (e) {
             if (console) {
@@ -46,7 +48,7 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
     },
     renderDispose: function (update) {
         if (this._chartjs) {
-            this._chartjs.shutdown();
+            this._chartjs.destroy();
             this._chartjs = null;
         }
         this._canvas = null;
@@ -56,8 +58,10 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
         try {
             var _model = this.component.get("model");
             if (_model !== undefined) {
-                var chartModel = JSON.parse(_model).chartModel;
+                var model = JSON.parse(_model).chartModel;
                 console.log("update chart " + this.component.renderId, " new model ", model);
+                this._chartjs.data = model.data;
+                this._chartjs.update();
             } else {
                 var _data = this.component.get("data");
                 if (_data !== undefined) {
