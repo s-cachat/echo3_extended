@@ -34,7 +34,7 @@ public class BlockComponent<T extends Component> extends BlockField<T> {
             if (li instanceof WindowPane windowPane) {
                 BeanTools.setRaw(editor, "parentPane", windowPane);
             }
-        } catch (IllegalArgumentException|SecurityException |InvocationTargetException| NoSuchMethodException | InstantiationException | IllegalAccessException | NoSuchElementException | ParseException ex) {
+        } catch (IllegalArgumentException | SecurityException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException | NoSuchElementException ex) {
             Logger.getLogger(BlockComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -54,7 +54,7 @@ public class BlockComponent<T extends Component> extends BlockField<T> {
             if (li instanceof WindowPane) {
                 BeanTools.setRaw(editor, "parentPane", (WindowPane) li);
             }
-        } catch (NoSuchMethodException|InvocationTargetException|InstantiationException | IllegalAccessException | NoSuchElementException | ParseException ex) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchElementException ex) {
             Logger.getLogger(BlockComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -65,7 +65,7 @@ public class BlockComponent<T extends Component> extends BlockField<T> {
             try {
                 final Object current = getParent().getCurrent();
                 BeanTools.setRaw(editor, "current", current);
-            } catch (NoSuchElementException | ParseException ex) {
+            } catch (NoSuchElementException ex) {
                 Logger.getLogger(BlockComponent.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

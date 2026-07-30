@@ -1570,13 +1570,7 @@ public abstract class BasicEditor<TypeObjet> extends BasicWindow implements Full
                 Component comp = te.getComp(this, index);
                 T bean = (T) te.getData(index);
                 logger.log(Level.INFO, "TEText : saving {0} to {1}.{2}", new Object[]{comp, bean, getProperty()});
-                try {
-                    BeanTools.setRaw(te.data.get(index), getProperty(), ((DateTimeField) comp).getDate());
-                } catch (ParseException pe) {
-                    ((DateTimeField) comp).setToolTipText(pe.getMessage());
-                    comp.setBackground(Color.RED);
-                    return true;
-                }
+                BeanTools.setRaw(te.data.get(index), getProperty(), ((DateTimeField) comp).getDate());
                 ((DateTimeField) comp).setToolTipText("");
                 comp.setBackground(null);
                 return false;

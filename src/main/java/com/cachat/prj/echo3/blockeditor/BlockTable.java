@@ -335,7 +335,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             if (mb != null) {
                 try {
                     BeanTools.setRaw(x, mb, current);
-                } catch (NoSuchElementException | ParseException ex) {
+                } catch (NoSuchElementException ex) {
                     Logger.getLogger(BlockTable.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

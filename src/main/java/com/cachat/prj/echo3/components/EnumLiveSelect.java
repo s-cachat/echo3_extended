@@ -65,7 +65,7 @@ public class EnumLiveSelect<T, V extends Enum> extends Row {
      * @param enumClass le type de la propriété
      * @param enumConstants les valeurs de l'enum a présenter
      * @param property le nom de la propriété
-     * @param saveAction l'action pour l'enregistrement 
+     * @param saveAction l'action pour l'enregistrement
      * @param unselectedStyle le style désélectionné
      * @param selectedStyle le style sélectionné
      */
@@ -93,7 +93,7 @@ public class EnumLiveSelect<T, V extends Enum> extends Row {
                 }
             } catch (ConstraintViolationException ex) {
                 app.toastError(ex.getMessage());
-            } catch (NoSuchElementException | ParseException ex) {
+            } catch (NoSuchElementException ex) {
                 Logger.getLogger(EnumLiveSelect.class.getName()).log(Level.SEVERE, null, ex);
             }
         };
