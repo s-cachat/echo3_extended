@@ -553,28 +553,30 @@ public abstract class BaseMainPaneV6 extends MainPane {
      * @param window la fenetre affichée
      */
     protected void setMenuSelected(BasicWindow window) {
-        MenuElement mi2 = menuManager.getMenu(window);
-        if (mi2 != null) {
-            MenuElement mi1 = mi2.getParent();
-            if (mi1 != null) {
-                MenuElement mi0 = mi1.getParent();
-                if (mi0 != null) {
-                    while (mi0.getParent() != null) {
-                        mi2 = mi2.getParent();
-                        mi1 = mi1.getParent();
-                        mi0 = mi0.getParent();
+        if (menuManager != null) {
+            MenuElement mi2 = menuManager.getMenu(window);
+            if (mi2 != null) {
+                MenuElement mi1 = mi2.getParent();
+                if (mi1 != null) {
+                    MenuElement mi0 = mi1.getParent();
+                    if (mi0 != null) {
+                        while (mi0.getParent() != null) {
+                            mi2 = mi2.getParent();
+                            mi1 = mi1.getParent();
+                            mi0 = mi0.getParent();
+                        }
+                    } else {
+                        mi1 = mi2;
+                        mi2 = null;
                     }
-                } else {
-                    mi1 = mi2;
-                    mi2 = null;
-                }
-                Button but1 = menu1Map.get(mi1);
-                if (but1 != null) {
-                    activateMenu(mi1, new ActionEvent(window, ""), but1, false);
-                }
-                Button but2 = menu2Map.get(mi2);
-                if (but2 != null) {
-                    setMenu2Selected(but2);
+                    Button but1 = menu1Map.get(mi1);
+                    if (but1 != null) {
+                        activateMenu(mi1, new ActionEvent(window, ""), but1, false);
+                    }
+                    Button but2 = menu2Map.get(mi2);
+                    if (but2 != null) {
+                        setMenu2Selected(but2);
+                    }
                 }
             }
         }
@@ -720,7 +722,6 @@ public abstract class BaseMainPaneV6 extends MainPane {
             if (menuManager != null && menuManager.canUse(mel, app.getUser(), app.isSuperAdmin())) {
                 ButtonEx button = new ButtonEx(app.getString(mel.getLabel()), mel.getIcon() != null ? app.getStyles().getIcon(mel.getIcon()) : null);
                 button.setStyleName("Menu2");
-            
 
                 final ActionListener al;
                 if (mel instanceof MenuItem menuItem) {
@@ -739,10 +740,10 @@ public abstract class BaseMainPaneV6 extends MainPane {
                     al = null;
                 }
                 button.addActionListener(al);
-                    row.add(button);
+                row.add(button);
                 mp.addMenuItem(button);
                 addMenu2Button(mel, button);
-               
+
             }
         }
         menu2CE.add(row);

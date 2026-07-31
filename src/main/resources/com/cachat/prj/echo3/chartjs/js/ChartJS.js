@@ -10,21 +10,16 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
         Echo.Render.registerPeer("ChartJs", this);
         componentType : "ChartJs";
     },
-    _div: null,
+    _canvas: null,
     _chartjs: null,
     _click: null,
     renderAdd: function (update, parentElement) {
         try {
-            this._div = document.createElement("div");
-            this._div.id = this.component.renderId;
-            this._div.position = 'relative';
-            this._div.height = '100%';
-            Echo.Sync.renderComponentDefaults(this.component, this._div);
-            Extended.renderPositionnable(this.component, this._div);
-            parentElement.appendChild(this._div);
             this._canvas = document.createElement("canvas");
-            this._canvas.id = this.component.renderId + "_canvas";
-            this._div.appendChild(this._canvas);
+            this._canvas.id = this.component.renderId;
+            Echo.Sync.renderComponentDefaults(this.component, this._canvas);
+            Extended.renderPositionnable(this.component, this._canvas);
+            parentElement.appendChild(this._canvas);
         } catch (e) {
             if (console) {
                 console.log("ChartJs error in renderAdd : ", e);

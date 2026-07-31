@@ -8,6 +8,7 @@ public class ChartJsPlugins {
 
     private ChartJsPluginCustomCanvasBackgroundColor customCanvasBackgroundColor;
     private ChartJsLegend legend;
+    private ChartJsZoom zoom;
 
     public ChartJsPluginCustomCanvasBackgroundColor getCustomCanvasBackgroundColor() {
         if (customCanvasBackgroundColor == null) {
@@ -29,6 +30,14 @@ public class ChartJsPlugins {
 
     public void setLegend(ChartJsLegend legend) {
         this.legend = legend;
+    }
+
+    public ChartJsZoom getZoom() {if (zoom==null)zoom=new ChartJsZoom();
+        return zoom;
+    }
+
+    public void setZoom(ChartJsZoom zoom) {
+        this.zoom = zoom;
     }
 
 }
