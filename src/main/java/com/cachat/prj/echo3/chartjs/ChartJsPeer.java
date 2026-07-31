@@ -36,6 +36,7 @@ public class ChartJsPeer extends AbstractComponentSynchronizePeer {
     public ChartJsPeer() {
         addOutputProperty(ChartJs.PROPERTY_CONFIG);
         addOutputProperty(ChartJs.PROPERTY_DATA);
+        addOutputProperty(ChartJs.PROPERTY_WITH_DIV);
     }
 
     /*

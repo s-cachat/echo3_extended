@@ -31,9 +31,11 @@ public class ChartJs extends Component implements Positionable, Sizeable {
     public static final String INPUT_ACTION = "action";
     public static final String PROPERTY_CONFIG = "config";
     public static final String PROPERTY_DATA = "data";
+    public static final String PROPERTY_WITH_DIV = "withDiv";
     private String actionCommand;
 
     public ChartJs() {
+        setWithDiv(true);
     }
 
     @Override
@@ -237,4 +239,19 @@ public class ChartJs extends Component implements Positionable, Sizeable {
     public ChartJsData getData() {
         return (ChartJsData) get(PROPERTY_DATA);
     }
+
+    /**
+     * ajoute un div autour du canva
+     */
+    public void setWithDiv(Boolean withDiv) {
+        set(PROPERTY_WITH_DIV, withDiv);
+    }
+
+    /**
+     * ajoute un div autour du canva
+     */
+    public boolean getWithDiv() {
+        return (Boolean) get(PROPERTY_WITH_DIV);
+    }
+
 }
