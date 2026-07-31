@@ -112,6 +112,8 @@ public class ChartJsPeer extends AbstractComponentSynchronizePeer {
                 .registerTypeAdapter(ChartJsType.class, new LowercaseEnumSerializer())
                 .registerTypeAdapter(ChartJsLegendPosition.class, new LowercaseEnumSerializer())
                 .registerTypeAdapter(ChartJsLegendAlign.class, new LowercaseEnumSerializer())
+                .registerTypeAdapter(ChartJsScaleType.class, new LowercaseEnumSerializer())
+                .registerTypeAdapter(ChartJsTimeUnit.class, new LowercaseEnumSerializer())
                 .registerTypeAdapter(ChartJsPoint.class, new ChartJsPointSerializer())
                 .registerTypeAdapter(Color.class, new ChartJsColorSerializer())
                 .registerTypeAdapter(typeListColor, new ChartJsColorArraySerializer())
