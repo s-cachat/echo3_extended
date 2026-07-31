@@ -17,6 +17,8 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
         try {
             this._div = document.createElement("div");
             this._div.id = this.component.renderId;
+            this._div.position = 'relative';
+            this._div.height = '100%';
             Echo.Sync.renderComponentDefaults(this.component, this._div);
             Extended.renderPositionnable(this.component, this._div);
             parentElement.appendChild(this._div);

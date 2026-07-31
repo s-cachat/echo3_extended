@@ -11,7 +11,7 @@ public class ChartJsOptions {
     private ChartJsInteraction interaction;
     private ChartJsAnimation animations;
     private ChartJsScales scales;
-    private List<ChartJsPlugins> plugins;
+    private ChartJsPlugins plugins;
 
     public ChartJsInteraction getInteraction() {
         return interaction;
@@ -40,11 +40,14 @@ public class ChartJsOptions {
         this.scales = scales;
     }
 
-    public List<ChartJsPlugins> getPlugins() {
+    public ChartJsPlugins getPlugins() {
+        if (plugins == null) {
+            plugins = new ChartJsPlugins();
+        }
         return plugins;
     }
 
-    public void setPlugins(List<ChartJsPlugins> plugins) {
+    public void setPlugins(ChartJsPlugins plugins) {
         this.plugins = plugins;
     }
 

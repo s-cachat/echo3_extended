@@ -9,5 +9,6 @@ public enum ChartJsType {
     BAR,
     BUBBLE,
     PIE,
-    DOUGNUT
+    SCATTER,
+    DOUGHNUT
 }

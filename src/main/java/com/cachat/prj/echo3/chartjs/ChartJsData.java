@@ -63,6 +63,7 @@ public class ChartJsData {
         getDatasets().add(ds);
         return ds;
     }
+
     /**
      * ajoute un dataset line
      *
@@ -73,6 +74,7 @@ public class ChartJsData {
         getDatasets().add(ds);
         return ds;
     }
+
     /**
      * ajoute un dataset pie
      *
@@ -83,6 +85,7 @@ public class ChartJsData {
         getDatasets().add(ds);
         return ds;
     }
+
     /**
      * ajoute un dataset line
      *
@@ -93,4 +96,18 @@ public class ChartJsData {
         getDatasets().add(ds);
         return ds;
     }
+
+
+    /**
+     * toujours false, pour forcer l'envoi de nouvelle mise à jour sans perdre
+     * de temps à chercher une différence dans une valeur.
+     *
+     * @param obj l'autre objet
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return false;
+    }
+
 }

@@ -134,7 +134,6 @@ public class ChartJsBarDataset extends ChartJsDataset {
         this.minBarLength = minBarLength;
     }
 
-
     public Integer getOrder() {
         return order;
     }
