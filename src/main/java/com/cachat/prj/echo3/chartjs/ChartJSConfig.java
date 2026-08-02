@@ -8,9 +8,9 @@ import java.util.Objects;
  */
 public class ChartJSConfig {
 
-    public ChartJsType type;
-    public ChartJsData data;
-    public ChartJsOptions options;
+    private ChartJsType type;
+    private ChartJsData data;
+    private ChartJsOptions options;
 
     public ChartJsType getType() {
         return type;

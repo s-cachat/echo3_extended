@@ -5,5 +5,15 @@ package com.cachat.prj.echo3.chartjs;
  * @author scachat
  */
 public class ChartJsInteraction {
-    ChartJsInteractionMode mode;
+
+    private ChartJsInteractionMode mode;
+
+    public ChartJsInteractionMode getMode() {
+        return mode;
+    }
+
+    public void setMode(ChartJsInteractionMode mode) {
+        this.mode = mode;
+    }
+
 }

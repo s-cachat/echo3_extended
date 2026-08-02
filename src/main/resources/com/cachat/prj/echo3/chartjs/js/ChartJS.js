@@ -18,13 +18,6 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
         try {
             v = this.component.render("withDiv");
             if (v) {
-                this._canvas = document.createElement("canvas");
-                this._canvas.id = this.component.renderId;
-                Echo.Sync.renderComponentDefaults(this.component, this._canvas);
-                Extended.renderPositionnable(this.component, this._canvas);
-                parentElement.appendChild(this._canvas);
-                console.log("chartJs without div");
-            } else {
                 this._div = document.createElement("div");
                 this._div.id = this.component.renderId;
                 Echo.Sync.renderComponentDefaults(this.component, this._div);
@@ -33,7 +26,14 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
                 this._canvas = document.createElement("canvas");
                 this._canvas.id = this.component.renderId + "_canvas";
                 this._div.appendChild(this._canvas);
-                console.log("chartJs with div");
+                console.log("chartJs with div", v);
+            } else {
+                this._canvas = document.createElement("canvas");
+                this._canvas.id = this.component.renderId;
+                Echo.Sync.renderComponentDefaults(this.component, this._canvas);
+                Extended.renderPositionnable(this.component, this._canvas);
+                parentElement.appendChild(this._canvas);
+                console.log("chartJs without div", v);
             }
         } catch (e) {
             if (console) {
@@ -67,23 +67,26 @@ ChartJs.Sync = Core.extend(Echo.Render.ComponentSync, {
     },
     renderUpdate: function (update) {
         try {
-            var _config = this.component.get("config");
-            if (_config !== undefined) {
-                var config = JSON.parse(_config).chartModel;
-                console.log("update chart " + this.component.renderId, " new model ");
-                this._chartjs.data = config.data;
-                this._chartjs.update();
-            } else {
-                var _data = this.component.get("data");
-                if (_data !== undefined) {
-                    var data = JSON.parse(_data).chartData;
-                    console.log("update chart " + this.component.renderId, " new data ");
-                    this._chartjs.data = data;
-                    this._chartjs.update();
-                } else {
-                    console.log("update chart " + this.component.renderId, " skipped");
+            if (update.hasUpdatedProperties()) {
+                const properties = update.getUpdatedPropertyNames();
+                for (var property of properties) {
+                    if ("config" === property) {
+                        var config = JSON.parse(this.component.get("config")).chartModel;
+                        console.log("update chart " + this.component.renderId, " new model with data : ", config);
+                        this._chartjs.data = config.data;
+                        this._chartjs.update();
+                    } else if ("data" === property) {
+                        var data = JSON.parse(this.component.get("data")).chartData;
+                        console.log("update chart " + this.component.renderId, " new data ", data);
+                        this._chartjs.data = data;
+                        this._chartjs.update();
+                    }
+                }
+                if (date !== undefined || date2 !== undefined) {
+                    this.setDate(date, date2);
                 }
             }
+
         } catch (e) {
             if (console) {
                 console.log("ChartJs error in renderUpdate : " + e);
