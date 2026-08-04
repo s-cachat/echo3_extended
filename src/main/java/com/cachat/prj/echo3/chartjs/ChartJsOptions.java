@@ -15,6 +15,9 @@ public class ChartJsOptions {
     private Double aspectRatio;
     private Double resizeDelay;
     private String locale;
+    private double circumference;
+    private double cutout;
+    private double rotation;
 
     public ChartJsInteraction getInteraction() {
         return interaction;
@@ -92,6 +95,30 @@ public class ChartJsOptions {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public double getCircumference() {
+        return circumference;
+    }
+
+    public void setCircumference(double circumference) {
+        this.circumference = circumference;
+    }
+
+    public double getCutout() {
+        return cutout;
+    }
+
+    public void setCutout(double cutout) {
+        this.cutout = cutout;
+    }
+
+    public double getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(double rotation) {
+        this.rotation = rotation;
     }
 
 }
