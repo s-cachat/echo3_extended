@@ -33,7 +33,10 @@ public class ChartJsPlugins {
         this.legend = legend;
     }
 
-    public ChartJsZoom getZoom() {if (zoom==null)zoom=new ChartJsZoom();
+    public ChartJsZoom getZoom() {
+        if (zoom == null) {
+            zoom = new ChartJsZoom();
+        }
         return zoom;
     }
 
@@ -42,6 +45,9 @@ public class ChartJsPlugins {
     }
 
     public ChartJsTooltip getTooltip() {
+        if (tooltip == null) {
+            tooltip = new ChartJsTooltip();
+        }
         return tooltip;
     }
 
