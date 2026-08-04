@@ -145,7 +145,7 @@ public class BaseLoginWindowV6 extends MainPane {
      * @param app l'application
      */
     public BaseLoginWindowV6(BaseApp app) {
-        this(app, true, true);
+        this(app, false, true);
     }
 
     /**
