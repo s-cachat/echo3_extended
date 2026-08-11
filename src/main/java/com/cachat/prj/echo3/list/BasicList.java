@@ -561,7 +561,13 @@ public abstract class BasicList<TypeObjet extends Object> extends BasicWindow im
             public Component getTableCellRendererComponent(Table table, java.lang.Object value, int column, int row) {
                 Row r = new Row();
                 r.setStyleName("TableCell");
-                r.add((Component) value);
+                if (value instanceof Component comp) {
+                    r.add(comp);
+                } else {
+                    final LabelEx l = new LabelEx("Bad class " + value.getClass().getSimpleName() + " : " + value);
+                    l.setStyleName("error");
+                    r.add(l);
+                }
                 return r;
             }
         });

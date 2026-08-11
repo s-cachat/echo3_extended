@@ -94,10 +94,18 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
     private final WindowPaneListener wpl = (WindowPaneEvent e) -> removeWindow((WindowPane) e.getSource());
 
     /**
-     * la liste des lien entre fenetre (liste/detail)
+     * la liste des lien entre fenetre tel que liste/detail. (utilisé si
+     * useWindowStack = false)
      */
-    private final HashMap<WindowPane, WindowPane> windowsLinks = new HashMap<>();
-
+    private final HashMap<WindowPane, WindowPane> windowsLinks;
+    /**
+     * la pile des fenêtre. (utilisé si useWindowStack = true)
+     */
+    private final Stack<WindowPane> windowsStack;
+    /**
+     * si true, utilise windowStack, sinon windowLink
+     */
+    private boolean useWindowStack = false;
     /**
      * Ressources
      */
@@ -137,6 +145,24 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * Constructeur
      */
     protected BaseApp() {
+        this(false);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param useWindowStack si true, utilise une pile de fenêtre, sinon utilise
+     * les liens entre fenêtres.
+     */
+    protected BaseApp(boolean useWindowStack) {
+        this.useWindowStack = useWindowStack;
+        if (useWindowStack) {
+            windowsLinks = null;
+            windowsStack = new Stack<>();
+        } else {
+            windowsLinks = new HashMap<>();
+            windowsStack = null;
+        }
         new FlotChartPeer();//initialisation statique des ressource à charger
     }
 
@@ -297,9 +323,21 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
     public void addWindow(WindowPane w, WindowPane parent) {
         MainPane mainPane = getMainPane();
         if (w != null) {
-            if (parent != null) {
-                synchronized (windowsLinks) {
-                    windowsLinks.put(w, parent);
+            if (useWindowStack) {
+                synchronized (windowsStack) {
+                    windowsStack.push(w);
+                    logger.severe("BASEAPP pushing " + (w == null ? "null" : w.getTitle()));
+                    StringBuilder sb = new StringBuilder("BASEAPP Now windowStack is :");
+                    for (WindowPane x : windowsStack) {
+                        sb.append("\nBASEAPP - ").append(x == null ? "null" : x.getTitle());
+                    }
+                    logger.severe(sb.toString());
+                }
+            } else {
+                if (parent != null) {
+                    synchronized (windowsLinks) {
+                        windowsLinks.put(w, parent);
+                    }
                 }
             }
             mainPane.addWindow(w, parent);
@@ -324,10 +362,20 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     public void clearWindows() {
         MainPane mainPane = getMainPane();
-        synchronized (windowsLinks) {
-            windowsLinks.clear();
-            if (mainPane != null) {
-                mainPane.clearWindows();
+        if (useWindowStack) {
+            synchronized (windowsStack) {
+                logger.severe("BASEAPP clearing");
+                windowsStack.clear();
+                if (mainPane != null) {
+                    mainPane.clearWindows();
+                }
+            }
+        } else {
+            synchronized (windowsLinks) {
+                windowsLinks.clear();
+                if (mainPane != null) {
+                    mainPane.clearWindows();
+                }
             }
         }
         if (mainPane != null) {
@@ -340,14 +388,32 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     public void removeWindow(WindowPane w) {
         MainPane mainPane = getMainPane();
-        synchronized (windowsLinks) {
-            WindowPane parent = windowsLinks.remove(w);
-            if (w instanceof WindowPaneListener) {
-                ((WindowPaneListener) w).windowPaneClosing(new WindowPaneEvent(""));
+        if (useWindowStack) {
+            synchronized (windowsStack) {
+                WindowPane toBeRemoved = windowsStack.isEmpty() ? null : windowsStack.pop();
+                WindowPane parent = windowsStack.isEmpty() ? null : windowsStack.peek();
+                logger.severe("BASEAPP poping " + (toBeRemoved == null ? "null" : toBeRemoved.getTitle()) + " and reveal " + (parent == null ? "null" : parent.getTitle()));
+                if (toBeRemoved instanceof WindowPaneListener) {
+                    ((WindowPaneListener) w).windowPaneClosing(new WindowPaneEvent(""));
+                }
+                mainPane.removeWindow(toBeRemoved);
+                mainPane.addWindow(parent, null);
+                StringBuilder sb = new StringBuilder("BASEAPP Now windowStack is :");
+                for (WindowPane x : windowsStack) {
+                    sb.append("\nBASEAPP - ").append(x == null ? "null" : x.getTitle());
+                }
+                logger.severe(sb.toString());
             }
-            mainPane.removeWindow(w);
-            mainPane.addWindow(parent, windowsLinks.get(parent));
-            logger.log(Level.FINEST, "Supression de la fenetre {0}", w.getTitle());
+        } else {
+            synchronized (windowsLinks) {
+                WindowPane parent = windowsLinks.remove(w);
+                if (w instanceof WindowPaneListener) {
+                    ((WindowPaneListener) w).windowPaneClosing(new WindowPaneEvent(""));
+                }
+                mainPane.removeWindow(w);
+                mainPane.addWindow(parent, windowsLinks.get(parent));
+                logger.log(Level.FINEST, "Supression de la fenetre {0}", w.getTitle());
+            }
         }
         mainPane.windowsUpdated();
     }
@@ -357,16 +423,25 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     public void removeAllWindow() {
         MainPane mainPane = getMainPane();
-        synchronized (windowsLinks) {
-            for (WindowPane w : windowsLinks.keySet()) {
-                if (w instanceof WindowPaneListener) {
-                    ((WindowPaneListener) w).windowPaneClosing(new WindowPaneEvent(""));
+        if (useWindowStack) {
+            for (WindowPane w : windowsStack) {
+                logger.severe("BASEAPP batch removing" + (w == null ? "null" : w.getTitle()));
+                if (w instanceof WindowPaneListener windowPaneListener) {
+                    windowPaneListener.windowPaneClosing(new WindowPaneEvent(""));
                 }
                 mainPane.removeWindow(w);
             }
-
-            mainPane.addWindow(null, null);
+        } else {
+            synchronized (windowsLinks) {
+                for (WindowPane w : windowsLinks.keySet()) {
+                    if (w instanceof WindowPaneListener) {
+                        ((WindowPaneListener) w).windowPaneClosing(new WindowPaneEvent(""));
+                    }
+                    mainPane.removeWindow(w);
+                }
+            }
         }
+        mainPane.addWindow(null, null);
         mainPane.windowsUpdated();
     }
 
@@ -1021,9 +1096,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
 
     }
 
-
     //</editor-fold>
-
     /**
      * les app (fenêtre de navigateur) filles
      */

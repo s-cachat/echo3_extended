@@ -29,8 +29,8 @@ public class MenuBar extends MenuBarPane implements MenuContainer {
     private void propagate(ActionEvent e, MenuModel item) {
         for (int i = 0; i < item.getItemCount(); i++) {
             ItemModel x = item.getItem(i);
-            if (x instanceof MenuModel) {
-                propagate(e, (MenuModel) x);
+            if (x instanceof MenuModel menuModel) {
+                propagate(e, menuModel);
             } else if (x instanceof OptionModel) {
                 if (e.getActionCommand().equals(x.getId())) {
                     ((MenuItem) x).fireActionEvent(e);

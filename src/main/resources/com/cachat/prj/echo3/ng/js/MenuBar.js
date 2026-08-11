@@ -26,7 +26,7 @@ function mydump(arr, level) {
 ;
 
 
-String.prototype.metric = function(pFontSize) {
+String.prototype.metric = function (pFontSize) {
     var lDiv = document.createElement('lDiv');
 
     document.body.appendChild(lDiv);
@@ -44,7 +44,8 @@ String.prototype.metric = function(pFontSize) {
 
     document.body.removeChild(lDiv);
     lDiv = null;
-    if (console) console.log("fs=" + pFontSize + " txt=" + this + " w=" + lResult.width + " h=" + lResult.height);
+    if (console)
+        console.log("fs=" + pFontSize + " txt=" + this + " w=" + lResult.width + " h=" + lResult.height);
     return lResult;
 };
 
@@ -52,7 +53,7 @@ String.prototype.metric = function(pFontSize) {
  * MenuBar component: a menu bar containing "pull down" menus.
  */
 Extended.MenuBar = Core.extend(Extras.MenuComponent, {
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType("Extended.MenuBar", this);
     },
     /** @see Echo.Component#componentType */
@@ -72,7 +73,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
             insets: "3px 0px"
         }
     },
-    $load: function() {
+    $load: function () {
         if (window.console)
             console.log("menu register");
         Echo.Render.registerPeer("Extended.MenuBar", this);
@@ -100,14 +101,14 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
     /**
      * Constructor.
      */
-    $construct: function() {
+    $construct: function () {
         Extras.Sync.Menu.call(this);
         this.itemElements = {};
         if (window.console)
             console.log("menu construct, app=" + this.application);
     },
     /** @see Extras.Sync.Menu#activate */
-    activate: function() {
+    activate: function () {
         if (Extras.Sync.Menu.prototype.activate.call(this)) {
             this.addMenu(this);
         }
@@ -115,7 +116,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
     /**
      * Closes the menu.
      */
-    close: function() {
+    close: function () {
         if (this._activeItem) {
             this._setItemHighlight(this._activeItem, false);
             this._activeItem = null;
@@ -128,7 +129,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
      * @return the TD element
      * @type Element
      */
-    _getItemElement: function(element) {
+    _getItemElement: function (element) {
         if (element == null) {
             return null;
         }
@@ -148,7 +149,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
      * @return the ItemModel id
      * @type String
      */
-    _getItemModel: function(element) {
+    _getItemModel: function (element) {
         var itemModelId = null;
         element = this._getItemElement(element);
         if (element == null) {
@@ -170,7 +171,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
         }
     },
     /** @see Echo.Render.ComponnetSync#getPreferredSize */
-    getPreferredSize: function() {
+    getPreferredSize: function () {
         if (window.console)
             console.log("menu getPreferredSize");
         this._menuBarDiv.style.height = "";
@@ -178,7 +179,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
         return {height: new Core.Web.Measure.Bounds(this.element).height + insets.top + insets.bottom};
     },
     /** @see Extras.Sync.Menu#getSubMenuPosition */
-    getSubMenuPosition: function(menuModel) {
+    getSubMenuPosition: function (menuModel) {
         var itemElement = this.itemElements[menuModel.id];
         if (!itemElement) {
             throw new Error("Invalid menu: " + menuModel);
@@ -194,7 +195,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
      *
      * @param e the event
      */
-    _processClick: function(e) {
+    _processClick: function (e) {
         if (!this.client || !this.client.verifyInput(this.component)) {
             return true;
         }
@@ -219,7 +220,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
      *
      * @param e the event
      */
-    _processItemEnter: function(e) {
+    _processItemEnter: function (e) {
         this._processRollover(e, true);
     },
     /**
@@ -227,7 +228,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
      *
      * @param e the event
      */
-    _processItemExit: function(e) {
+    _processItemExit: function (e) {
         this._processRollover(e, false);
     },
     /**
@@ -236,7 +237,7 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
      * @param e the event
      * @param {Boolean} state the rollover state, true indicating the mouse is currently rolled over an item
      */
-    _processRollover: function(e, state) {
+    _processRollover: function (e, state) {
         if (!this.client || !this.client.verifyInput(this.component) || Core.Web.dragInProgress) {
             return true;
         }
@@ -260,19 +261,17 @@ Extended.Sync.MenuBar = Core.extend(Extras.Sync.Menu, {
         }
     },
     /** @see Echo.Render.ComponentSync#renderDisplay */
-    renderDisplay: function() {
+    renderDisplay: function () {
         if (window.console)
             console.log("menu renderDisplay");
         Extras.Sync.Menu.prototype.renderDisplay.call(this);
         Core.Web.VirtualPosition.redraw(this.element);
         var bounds = new Core.Web.Measure.Bounds(this.element.parentNode);
-console.log(bounds);
         var height = bounds.height - this._menuBarBorderHeight;
-console.log(height);
         this._menuBarDiv.style.height = height <= 0 ? "" : height + "px";
     },
     /** @see Echo.Render.ComponentSync#renderDispose */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         if (window.console)
             console.log("menu renderDispose");
         this._menuBarDiv = null;
@@ -280,7 +279,7 @@ console.log(height);
         Extras.Sync.Menu.prototype.renderDispose.call(this, update);
     },
     /** @see Extras.Sync.Menu#renderMain */
-    renderMain: function(update) {
+    renderMain: function (update) {
         if (window.console)
             console.log("menu renderMain");
         this._menuBarDiv = document.createElement("div");
@@ -293,7 +292,9 @@ console.log(height);
         this._menuBarDiv.style.position = "absolute";
 
         Echo.Sync.renderComponentDefaults(this.component, this._menuBarDiv);
+        
         var border = this.component.render("border", Extras.Sync.Menu.DEFAULTS.border);
+        console.log("XLOG : render menu border ",border);
         var multisided = Echo.Sync.Border.isMultisided(border);
         this._menuBarBorderHeight = Echo.Sync.Border.getPixelSize(border, "top") + Echo.Sync.Border.getPixelSize(border, "bottom");
         Echo.Sync.Border.render(multisided ? border.top : border, this._menuBarDiv, "borderTop");
@@ -329,7 +330,7 @@ console.log(height);
 
         return this._menuBarDiv;
     },
-    _createMenuBarItem: function(text, icon) {
+    _createMenuBarItem: function (text, icon) {
         var innerDiv;
         var outerDiv;
         var borderImage = this.component.render("borderImage");
@@ -397,7 +398,7 @@ console.log(height);
      * @param {Extras.ItemModel} itemModel the item
      * @param {Boolean} execute flag indicating whether the item should be executed
      */
-    _setActiveItem: function(itemModel, execute) {
+    _setActiveItem: function (itemModel, execute) {
         if (this._activeItem == itemModel) {
             return;
         }
@@ -422,7 +423,7 @@ console.log(height);
      * @param {Extras.ItemModel} itemModel the item
      * @param {Boolean} state the highlight state
      */
-    _setItemHighlight: function(itemModel, state) {
+    _setItemHighlight: function (itemModel, state) {
         var element = this.itemElements[itemModel.id];
 //        if (state) {
 //            Echo.Sync.FillImage.render(this.component.render("selectionBackgroundImage"), element);

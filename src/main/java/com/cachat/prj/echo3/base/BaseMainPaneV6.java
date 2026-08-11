@@ -378,7 +378,9 @@ public abstract class BaseMainPaneV6 extends MainPane {
      */
     @Override
     public void removeWindow(WindowPane w) {
-
+        if (w == modalWindow) {
+            modalClosing();
+        }
     }
 
     public void modalClosing() {

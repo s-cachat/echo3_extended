@@ -41,6 +41,7 @@ public abstract class ChildApp extends BaseApp {
      * @param defaultLocale la locale par défaut
      */
     public ChildApp(BaseApp masterApp, String entityManagerName, Locale defaultLocale) {
+        super(true);
         this.masterApp = masterApp;
         masterApp.addChildApp(this);
         this.entityManagerName = entityManagerName;
@@ -75,7 +76,8 @@ public abstract class ChildApp extends BaseApp {
     public String generateId() {
         return this.pathInfo + "_" + super.generateId();
     }
-       /**
+
+    /**
      * change la locale
      *
      * @param loc la nouvelle
@@ -84,6 +86,7 @@ public abstract class ChildApp extends BaseApp {
     public final void setMyLocale(Locale loc) {
         super.setLocale(loc);
     }
+
     /**
      * donne l'application de base
      *
@@ -107,6 +110,7 @@ public abstract class ChildApp extends BaseApp {
     public User validLogin(String name, String pass) {
         return getMainApp().validLogin(name, pass);
     }
+
     @Override
     public User getUser() {
         return masterApp.getUser();
@@ -273,7 +277,6 @@ public abstract class ChildApp extends BaseApp {
             addWindow(pane, parent);
         }
     }
-
 
     @Override
     public String getCopyright() {
