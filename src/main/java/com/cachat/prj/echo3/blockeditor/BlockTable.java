@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.Validator;
+import java.util.Collection;
 import java.util.function.Consumer;
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Border;
@@ -26,6 +27,8 @@ import nextapp.echo.app.Color;
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.Extent;
+import nextapp.echo.app.ImageReference;
+import nextapp.echo.app.Insets;
 import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.Row;
 import nextapp.echo.app.Table;
@@ -41,6 +44,7 @@ import nextapp.echo.app.table.DefaultTableCellRenderer;
  * comme localizedItem, en ajoutant le titleKey aux clés
  *
  * @author scachat
+ * @param <T> le type d'objet traité
  */
 public class BlockTable<T> implements BlockContainer, BlockBase<Column>, LocalisedItem {
 
@@ -56,12 +60,14 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     private BlockContainer parent;
     private final EditTableModel model;
     private final String property;
-    private final List<T> removed;
-    private final List<T> added;
+    private final List<T> editList;
     private final Class[] clazz;
     private final boolean canAdd;
     private final DeleteMode deleteMode;
     private boolean enabled = true;
+    private String sortProperty;
+    private List<BlockField> sortView = new ArrayList<>();
+    private Consumer<T> editAction;
     /**
      * couleur de fond des lignes impaires
      */
@@ -182,8 +188,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         cld.setAlignment(Alignment.ALIGN_TOP);
         LabelEx label = new LabelEx(li.getString(property));
 
-        removed = new ArrayList<>();
-        added = new ArrayList<>();
+        editList = new ArrayList<>();
         Row r = new Row();
         column.add(r);
         r.add(label);
@@ -214,7 +219,53 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     }
 
     /**
+     * donne la propriété de tri. Si elle est présente, les éléments sont triés
+     * en fonction d'elle, et des boutons de changement d'ordre sont ajoutés
+     * (icone up et down)
+     *
+     * @return la propriété de tri
+     */
+    public String getSortProperty() {
+        return sortProperty;
+    }
+
+    /**
+     * donne la propriété de tri. Elle doit être de type int. Si elle est
+     * présente, les éléments sont triés en fonction d'elle, et des boutons de
+     * changement d'ordre sont ajoutés (icone up et down)
+     *
+     * @param sortProperty la propriété de tri
+     */
+    public void setSortProperty(String sortProperty) {
+        this.sortProperty = sortProperty;
+    }
+
+    /**
+     * défini une action d'édition hors table (par exemple qui fera apparaitre
+     * une popup). Si défini, un bouton éditer est ajouté et déclenche cette
+     * action.
+     *
+     * @return l'action
+     */
+    public Consumer<T> getEditAction() {
+        return editAction;
+    }
+
+    /**
+     * défini une action d'édition hors table (par exemple qui fera apparaitre
+     * une popup). Si défini, un bouton éditer est ajouté et déclenche cette
+     * action.
+     *
+     * @param editAction l'action
+     */
+    public void setEditAction(Consumer<T> editAction) {
+        this.editAction = editAction;
+    }
+
+    /**
      * Ajoute une ligne
+     *
+     * @param cl le type
      */
     protected void addRow(Class cl, String property) {
         try {
@@ -223,7 +274,10 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             BlockLine bl;
             rows.add(bl = new BlockLine(x));
             bl.copyObjectToUi();
-            added.add(x);
+            editList.add(x);
+            if (sortProperty != null) {
+                renumber();
+            }
             setReciproque(getParent().getCurrent(), property, x);
             model.update();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
@@ -237,14 +291,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
      * @param line la ligne
      */
     public void removeRow(BlockLine line) throws RuntimeException {
-        removed.add(line.getCurrent());
+        editList.remove(line.getCurrent());
         if (!rows.remove(line)) {
             throw new RuntimeException("Can't remove row !");
         }
         column.remove(table);
         column.add(table);
-//            int lno = BlockTable.this.current.indexOf(this.line.getCurrent());
-//            model.fireTableRowsUpdated(lno, lno);
         model.fireTableStructureChanged();
         model.update();
     }
@@ -342,21 +394,15 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         }
     }
 
-    class ButtonDel extends ButtonEx implements ActionListener, BlockInterface {
+    public abstract class ButtonBase extends ButtonEx implements ActionListener, BlockInterface {
 
-        BlockLine line;
+        protected BlockLine line;
 
-        public ButtonDel(BlockLine line) {
-            super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/delete.png"));
+        public ButtonBase(ImageReference icon, BlockLine line) {
+            super(icon);
+            setInsets(new Insets(2));
             this.line = line;
             addActionListener(this);
-            setEnabled(canDelete(line.getCurrent()));
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            setEnabled(false);
-            removeRow(line);
         }
 
         @Override
@@ -387,10 +433,141 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         }
 
         @Override
+        public abstract Object clone();
+    }
+
+    public class ButtonDel extends ButtonBase {
+
+        public ButtonDel(BlockLine line) {
+            super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/del_raw16.png"), line);
+            setEnabled(canDelete(line.getCurrent()));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setEnabled(false);
+            removeRow(line);
+        }
+
+        @Override
         public Object clone() {
             return new ButtonDel(line);
         }
 
+    }
+
+    public class ButtonActivable extends ButtonBase {
+
+        public ButtonActivable(BlockLine line) {
+            super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/inactif_raw16.png"), line);
+            setEnabled(canDelete(line.getCurrent()));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Object x = line.getCurrent();
+            if (x instanceof Activable activable) {
+                final boolean actif = !activable.getActif();
+                activable.setActif(actif);
+                setIcon(new ResourceImageReference(actif ? "/com/cachat/prj/echo3/blockeditor/actif_raw16.png" : "/com/cachat/prj/echo3/blockeditor/inactif_raw16.png"));
+            }
+        }
+
+        @Override
+        public void copyObjectToUi() {
+            Object x = line.getCurrent();
+            if (x instanceof Activable activable) {
+                final boolean actif = activable.getActif();
+                setIcon(new ResourceImageReference(actif ? "/com/cachat/prj/echo3/blockeditor/actif_raw16.png" : "/com/cachat/prj/echo3/blockeditor/inactif_raw16.png"));
+            }
+        }
+
+        @Override
+        public Object clone() {
+            return new ButtonActivable(line);
+        }
+    }
+
+    public class ButtonEdit extends ButtonBase {
+
+        public ButtonEdit(BlockLine line) {
+            super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/edit_raw16.png"), line);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            T x = line.getCurrent();
+            editAction.accept(x);
+        }
+
+        @Override
+        public Object clone() {
+            return new ButtonEdit(line);
+        }
+
+    }
+
+    public class ButtonUp extends ButtonBase {
+
+        public ButtonUp(BlockLine line) {
+            super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/up_raw16.png"), line);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            T x = line.getCurrent();
+            int i = editList.indexOf(x);
+            if (i > 0) {
+                editList.remove(i);
+                editList.add(i - 1, x);
+                BlockLine z = rows.remove(i);
+                rows.add(i - 1, z);
+                renumber();
+                model.fireTableStructureChanged();
+                model.update();
+            }
+        }
+
+        @Override
+        public Object clone() {
+            return new ButtonUp(line);
+        }
+
+    }
+
+    public class ButtonDown extends ButtonBase {
+
+        public ButtonDown(BlockLine line) {
+            super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/down_raw16.png"), line);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            T x = line.getCurrent();
+            int i = editList.indexOf(x);
+            if (i < editList.size() - 1) {
+                editList.remove(i);
+                editList.add(i + 1, x);
+                BlockLine z = rows.remove(i);
+                rows.add(i + 1, z);
+                renumber();
+                model.fireTableStructureChanged();
+                model.update();
+            }
+        }
+
+        @Override
+        public Object clone() {
+            return new ButtonDown(line);
+        }
+
+    }
+
+    private void renumber() {
+        for (int i = 0; i < editList.size(); i++) {
+            BeanTools.setRaw(editList.get(i), sortProperty, i + 1);
+        }
+        sortView.forEach(a -> a.copyObjectToUi());
     }
 
     /**
@@ -435,64 +612,6 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
 
     }
 
-    public class ButtonActivable extends ButtonEx implements ActionListener, BlockInterface {
-
-        BlockLine line;
-
-        public ButtonActivable(BlockLine line) {
-            super(new ResourceImageReference("/com/cachat/prj/echo3/blockeditor/delete.png"));
-            this.line = line;
-            addActionListener(this);
-            setEnabled(canDelete(line.getCurrent()));
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Object x = line.getCurrent();
-            if (x instanceof Activable) {
-                final boolean actif = !((Activable) x).getActif();
-                ((Activable) x).setActif(actif);
-                setIcon(new ResourceImageReference(actif ? "/com/cachat/prj/echo3/blockeditor/add.png" : "/com/cachat/prj/echo3/blockeditor/delete.png"));
-            }
-        }
-
-        @Override
-        public void copyObjectToUi() {
-            Object x = line.getCurrent();
-            if (x instanceof Activable) {
-                final boolean actif = ((Activable) x).getActif();
-                setIcon(new ResourceImageReference(actif ? "/com/cachat/prj/echo3/blockeditor/add.png" : "/com/cachat/prj/echo3/blockeditor/delete.png"));
-            }
-        }
-
-        @Override
-        public boolean copyUiToObject(Validator validator, List<String> genericErrors) {
-            return false;
-        }
-
-        @Override
-        public void setParent(BlockContainer parent) {
-            //nop
-        }
-
-        /**
-         * ajouter un message d'erreur sur un champ
-         *
-         * @param pp le chemin de la propriété
-         * @param msg le message
-         * @return true si le message a pu être ajouté, false sinon
-         */
-        @Override
-        public boolean appendError(String pp, String msg) {
-            return false;
-        }
-
-        @Override
-        public Object clone() {
-            return new ButtonActivable(line);
-        }
-    }
-
     /**
      * ajoute un bloc. Cas particulier de la table, le bloc défin une colone, et
      * sera cloné pour chaque ligne.
@@ -528,8 +647,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         tbl.setDefaultRenderer(Component.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
-                if (value instanceof Component) {
-                    Component c = (Component) value;
+                if (value instanceof Component c) {
                     if (c1 != null && c2 != null) {
                         c.setBackground((row % 2 == 0) ? c1 : c2);
                     }
@@ -556,19 +674,34 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             for (BlockInterface bf : childs) {
                 BlockField x = (BlockField) ((BlockField) bf).clone();
                 add(x);
+                if (sortProperty != null && sortProperty.equals(x.getProperty())) {
+                    sortView.add(x);
+                }
+            }
+            if (editAction != null) {
+                ButtonEdit bedit = new ButtonEdit(this);
+                add(bedit);
+                editButtons.add(bedit);
             }
             switch (deleteMode) {
-                case DEACTIVATE: {
+                case DEACTIVATE -> {
                     ButtonActivable bb = new ButtonActivable(this);
                     add(bb);
                     editButtons.add(bb);
                 }
-                break;
-                case DELETE: {
+                case DELETE -> {
                     ButtonDel bb = new ButtonDel(this);
                     add(bb);
                     editButtons.add(bb);
                 }
+            }
+            if (sortProperty != null) {
+                ButtonUp bu = new ButtonUp(this);
+                add(bu);
+                editButtons.add(bu);
+                ButtonDown bd = new ButtonDown(this);
+                add(bd);
+                editButtons.add(bd);
             }
         }
 
@@ -597,8 +730,8 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
 
         public Component getComponent(int column) {
             BlockInterface x = lineChilds.get(column);
-            if (x instanceof Component) {
-                return (Component) x;
+            if (x instanceof Component component) {
+                return component;
             }
             BlockField bf = (BlockField) x;
             Column col = new Column();
@@ -612,8 +745,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
                 return null;
             }
             for (BlockInterface b : lineChilds) {
-                if (b instanceof BlockField) {
-                    BlockField bf = (BlockField) b;
+                if (b instanceof BlockField bf) {
                     if (property.equals(bf.getProperty())) {
                         return bf;
                     }
@@ -667,6 +799,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         public Object clone() {
             return new BlockLine(current);
         }
+
+        @Override
+        public String toString() {
+            return "BlockLine{" + "current=" + current + '}';
+        }
+
     }
 
     @Override
@@ -681,13 +819,14 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
 
     @Override
     public void copyObjectToUi() {
+        editList.clear();
+        editList.addAll(current);
         rows.clear();
-        if (current != null) {
-            for (T t : current) {
-                BlockLine bl;
-                rows.add(bl = new BlockLine(t));
-                bl.copyObjectToUi();
-            }
+        sortView.clear();
+        for (T t : editList) {
+            BlockLine bl;
+            rows.add(bl = new BlockLine(t));
+            bl.copyObjectToUi();
         }
         model.update();
         rows.forEach((r) -> r.setEnabled(enabled));
@@ -701,14 +840,16 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         for (BlockLine b : rows) {
             errors |= b.copyUiToObject(validator, genericErrors);
         }
-        for (T t : removed) {
-            current.remove(t);
+        for (T t : editList) {
+            if (!current.contains(t)) {
+                current.add(t);
+            }
         }
-        removed.clear();
-        for (T t : added) {
-            current.add(t);
+        for (T t : current) {
+            if (!editList.contains(t)) {
+                current.remove(t);
+            }
         }
-        added.clear();
         return errors;
     }
 
@@ -741,6 +882,12 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         editButtons.forEach((a) -> a.setVisible(enabled));
     }
 
+    /**
+     * CLone cet objet
+     *
+     * @return
+     * @throws CloneNotSupportedException
+     */
     @Override
     public Object clone() throws CloneNotSupportedException {
         return new BlockTable(this);
@@ -760,7 +907,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
 
         @Override
         public int getColumnCount() {
-            return childs.size() + (deleteMode != DeleteMode.NONE ? 1 : 0);
+            return childs.size() + (deleteMode != DeleteMode.NONE ? 1 : 0) + (sortProperty == null ? 0 : 2) + (editAction == null ? 0 : 1);
         }
 
         @Override
@@ -772,12 +919,6 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
         @Override
         public Object getValueAt(int column, int row) {
             Component x = rows.get(row).getComponent(column);
-            if (x instanceof Component) {
-                if (row < current.size() && removed.contains(current.get(row))) {
-                    x.setBackground(Color.RED);
-                    x.setEnabled(false);
-                }
-            }
             return x;
         }
 

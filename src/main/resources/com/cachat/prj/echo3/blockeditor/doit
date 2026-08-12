@@ -1,0 +1,10 @@
+#!/bin/bash
+for a in add.png del.png down.png edit.png up.png actif.png inactif.png;do
+   b=$(basename $a)
+   convert $a -resize 64x64 ${b%.png}_raw64.png32
+   mv ${b%.png}_raw64.png32 ${b%.png}_raw64.png
+   convert $a -resize 32x32 ${b%.png}_raw32.png32
+   mv ${b%.png}_raw32.png32 ${b%.png}_raw32.png
+   convert $a -resize 16x16 ${b%.png}_raw16.png32
+   mv ${b%.png}_raw16.png32 ${b%.png}_raw16.png
+done
