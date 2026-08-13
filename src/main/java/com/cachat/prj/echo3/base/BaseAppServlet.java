@@ -254,9 +254,10 @@ public abstract class BaseAppServlet extends WebContainerServlet {
         public void setCookie(String name, String value) {
             cookies.put(name, value);
             Cookie c = new Cookie(name, cookies.get(name));
+            c.setAttribute("SameSite", "Strict");
             c.setPath("/");
             c.setMaxAge(60 * 60 * 24 * 365);
-            c.setComment("persistent data for WebInforoute");
+            c.setSecure(DISABLE_CACHING);
             res.addCookie(c);
         }
 
