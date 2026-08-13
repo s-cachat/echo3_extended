@@ -78,6 +78,20 @@ public abstract class BlockEditor<T> extends BasicWindow {
      * @param h la hauteur de la fenetre
      * @param list la liste (a mettre a jour en fin d'edition)
      */
+    public BlockEditor(BaseApp app, String prefixe, String domaine, int w, int h, EntityModifiedListener list) {
+        this(app, prefixe, domaine, w, h);
+        this.list = list;
+    }
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le domaine de la fenetre
+     * @param w la largeur de la fenetre
+     * @param h la hauteur de la fenetre
+     * @param list la liste (a mettre a jour en fin d'edition)
+     */
     public BlockEditor(BaseApp app, String prefixe, String domaine, Extent w, Extent h, EntityModifiedListener list) {
         this(app, prefixe, domaine, w, h);
         this.list = list;
