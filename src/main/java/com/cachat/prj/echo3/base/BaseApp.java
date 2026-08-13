@@ -855,18 +855,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
         try {
             return getResource().getString(n);
         } catch (MissingResourceException e) {
-            int i = n.lastIndexOf('.');
-            if (i > 0) {
-                final String cloneName = n.substring(0, i) + ".clone";
-                String cloneBase = getResource().getString(cloneName);
-                if (cloneBase != null) {
-                    final String cloneTarget = cloneBase + "." + n.substring(i + 1);
-                    String v = getResource().getString(cloneTarget);
-                    if (v != null) {
-                        return v;
-                    }
-                }
-            }
+
             logger.log(Level.SEVERE, "Missing ressource {0}", n);
             return n;
         }
@@ -949,7 +938,10 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     protected static class MyResourceBundle extends ResourceBundle {
 
-        private Locale loc;
+        /**
+         * cache pour les valeurs clonées
+         */
+        private Map<String, String> cloneCache = new HashMap<>();
 
         /**
          * Constructeur
@@ -957,7 +949,6 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
         public MyResourceBundle(Locale loc) {
             this("com.cachat.prj.echo3.editor", loc);
             logger.log(Level.SEVERE, "LOCALE : App.MyResourceBundle({0})", loc);
-            this.loc = loc;
         }
 
         /**
@@ -966,7 +957,6 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
         public MyResourceBundle(String path, Locale loc) {
             logger.log(Level.SEVERE, "LOCALE : App.MyResourceBundle({0})", loc);
             myRes = ResourceBundle.getBundle(path, loc);
-            this.loc = loc;
         }
         /**
          * les resources sous jacentes
@@ -975,13 +965,36 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
 
         /**
          * gere l'obtention d'une cle
+         *
+         * @param key la clé
+         * @return la valeur
          */
         @Override
-        public String handleGetObject(String s) {
+        public String handleGetObject(String key) {
             try {
-                return myRes.getString(s);
+                String clone = cloneCache.get(key);
+                return clone == null ? myRes.getString(key) : clone;
             } catch (MissingResourceException e) {
-                return s;
+                int i = key.lastIndexOf('.');
+                if (i > 0) {
+                    final String cloneName = key.substring(0, i) + ".clone";
+                    String cloneBase = myRes.getString(cloneName);
+                    if (cloneBase != null) {
+                        final String cloneTarget = cloneBase + "." + key.substring(i + 1);
+                        String v = myRes.getString(cloneTarget);
+                        if (v != null) {
+                            cloneCache.put(key, v);
+                            return v;
+                        } else {
+                            logger.severe("No cloned value for " + cloneTarget);
+                            return key;
+                        }
+                    } else {
+                        return key;
+                    }
+                } else {
+                    return key;
+                }
             }
         }
 

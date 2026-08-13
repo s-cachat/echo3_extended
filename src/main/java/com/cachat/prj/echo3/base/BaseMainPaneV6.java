@@ -653,7 +653,7 @@ public abstract class BaseMainPaneV6 extends MainPane {
                 final ButtonEx button = new ButtonEx(app.getString(mel.getLabel()), app.getStyles().getIcon(mel.getIcon()));
                 button.setStyleName("Menu1");
                 col.add(button);
-                menu1Items.add(button);
+                addMenu1Button(mel, button);
                 button.addActionListener(e -> activateMenu(mel, e, button));
             }
         }

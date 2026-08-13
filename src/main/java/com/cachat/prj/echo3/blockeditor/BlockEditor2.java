@@ -27,6 +27,20 @@ public abstract class BlockEditor2<T> extends BlockEditor<T> {
      * @param h la hauteur de la fenetre
      * @param list la liste (a mettre a jour en fin d'edition)
      */
+    public BlockEditor2(BaseApp app, String prefixe, String domaine, int w, int h, EntityModifiedListener list) {
+        super(app, prefixe, domaine, w, h, list);
+    }
+
+    /**
+     * Constructeur
+     *
+     * @param app l'application
+     * @param prefixe le prefixe de la fenetre
+     * @param domaine le domaine de la fenetre
+     * @param w la largeur de la fenetre
+     * @param h la hauteur de la fenetre
+     * @param list la liste (a mettre a jour en fin d'edition)
+     */
     public BlockEditor2(BaseApp app, String prefixe, String domaine, Extent w, Extent h, EntityModifiedListener list) {
         super(app, prefixe, domaine, w, h, list);
     }

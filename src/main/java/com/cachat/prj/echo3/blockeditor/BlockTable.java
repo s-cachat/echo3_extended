@@ -263,6 +263,21 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     }
 
     /**
+     * lors d'une action d'édition hors table, signale que l'édition est finie
+     * et que la ligne doit être mise à jour  
+     *
+     * @param item l'item modifié
+     */
+    public void endEditAction(T item) {
+        int row = editList.indexOf(item);
+        if (row < 0) {
+            logger.log(Level.SEVERE, "Impossible de retrouver la ligne pour {0}", item);
+        } else {
+            rows.get(row).copyObjectToUi();
+        }
+    }
+
+    /**
      * Ajoute une ligne
      *
      * @param cl le type
@@ -280,6 +295,9 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
             }
             setReciproque(getParent().getCurrent(), property, x);
             model.update();
+            if (editAction!=null){
+                editAction.accept(x);
+            }
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
             logger.log(Level.SEVERE, null, ex);
         }

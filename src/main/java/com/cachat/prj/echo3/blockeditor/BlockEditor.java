@@ -82,6 +82,7 @@ public abstract class BlockEditor<T> extends BasicWindow {
         this(app, prefixe, domaine, w, h);
         this.list = list;
     }
+
     /**
      * Constructeur
      *
@@ -387,6 +388,8 @@ public abstract class BlockEditor<T> extends BasicWindow {
 
     /**
      * donne le prefixe des icones
+     *
+     * @return le nom de l'icone
      */
     public String getTypeIcon() {
         return "application_form";
@@ -412,19 +415,23 @@ public abstract class BlockEditor<T> extends BasicWindow {
      * exemple dans le cas de sous objet.
      */
     public void edite(T o, boolean refresh) {
-        try (ACEntityManager em = EntityManagerUtil.getACEntityManager(app.getEntityManagerName());) {
-            if (refresh) {
+        /* ici on a une partie du code qui est dupliqué et c'est ok : dans le 
+        premier cas on appelle reinitForm et copyObjectToUi dans le cadre d'un 
+        entity manager. Dans le second cas on ne veut pas aller chercher 
+        d'entity manager*/
+        if (refresh) {
+            try (ACEntityManager em = EntityManagerUtil.getACEntityManager(app.getEntityManagerName());) {
                 current = refresh(em, o);
                 if (current == null && o != null) {
                     logger.severe(String.format("ERROR : refresh of %s gave %s", o, current));
                 } else {
                     logger.info(String.format("OK : refresh of %s gave %s", o, current));
                 }
-
-            } else {
-                current = o;
+                reinitForm();
+                form.copyObjectToUi();
             }
-
+        } else {
+            current = o;
             reinitForm();
             form.copyObjectToUi();
         }

@@ -160,4 +160,11 @@ public class MenuElement {
     public void setParent(SubMenu parent) {
         this.parent = parent;
     }
+
+    @Override
+    public String toString() {
+        return "MenuElement{" + "label=" + label + '}';
+    }
+    
+    
 }
