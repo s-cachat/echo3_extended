@@ -98,8 +98,20 @@ public class BlockInstantDateSelect extends BlockField<InstantSelect4> {
 
     /**
      * donne la date sélectionnée
+     *
+     * @return la date/heure
      */
     public Instant getSelectedInstant() throws ParseException {
         return editor.getSelectedInstant();
+    }
+
+    /**
+     * force la date sélectionnée
+     *
+     * @param instant la date/heure
+     */
+    public void setSelectedInstant(Instant instant) {
+        editor.setSelectedInstant(instant);
+        BeanTools.setRaw(getParent().getCurrent(), property, instant);
     }
 }
