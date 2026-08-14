@@ -182,7 +182,7 @@ public class BlockSuggestMulti<T> extends BlockField<Column> implements SuggestI
 
     protected final void buildEditor() {
         editor = new Column();
-        
+
         addField = new SuggestField();
         addField.setStyleName("BlockEditor");
         addField.addSuggestItemSelectListener(this);
@@ -198,12 +198,13 @@ public class BlockSuggestMulti<T> extends BlockField<Column> implements SuggestI
 
         });
         addField.setDoServerFilter(true);
-        addField.setShowDescription(propertyDescription!=null && !propertyDescription.equals(propertyLabel));
+        addField.setShowDescription(propertyDescription != null && !propertyDescription.equals(propertyLabel));
         if (propertyDescription != null) {
             addField.setDescriptionFont(new Font(Font.ARIAL, Font.ITALIC, new Extent(8, Extent.PT)));
         }
         editor.add(addField);
-        selectedItems =new Grid(2);
+        selectedItems = new Grid(2);
+        editor.add(selectedItems);
         addField.setVisible(canWrite);
     }
 
@@ -250,6 +251,7 @@ public class BlockSuggestMulti<T> extends BlockField<Column> implements SuggestI
         T item = si == null ? null : (T) si.getUserObject();
         if (item != null) {
             selected.add(item);
+            updateUi();
         } else {
             return;
         }

@@ -187,7 +187,6 @@ public class InstantSelect4 extends Component {
         super();
         this.withTime = withTime;
         this.withNull = withNull;
-        this.range = true;
         setLocale(locale);
         set(PROPERTY_WITH_TIME, withTime);
         set(PROPERTY_WITH_NULL, withNull);
