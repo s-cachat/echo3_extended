@@ -186,7 +186,7 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
 
         });
         rwField.setDoServerFilter(true);
-        rwField.setShowDescription(propertyDescription!=null && !propertyDescription.equals(propertyLabel));
+        rwField.setShowDescription(propertyDescription != null && !propertyDescription.equals(propertyLabel));
         if (propertyDescription != null) {
             rwField.setDescriptionFont(new Font(Font.ARIAL, Font.ITALIC, new Extent(8, Extent.PT)));
         }
@@ -312,6 +312,12 @@ public class BlockSuggest<T> extends BlockField<Row> implements SuggestItemSelec
     //<editor-fold desc="Getters" defaultstate="collapsed">
     public T getSelectedValue() {
         return selected;
+    }
+
+    public void setSelectedValue(T value) {
+        this.selected = value;
+        rwField.setSuggestModel(new SuggestModel(new SuggestItem[]{suggest(value)}));
+        error.setText(null);
     }
 
     public String getPropertyDescription() {
