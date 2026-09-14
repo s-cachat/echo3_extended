@@ -281,11 +281,16 @@ public abstract class BaseAppServlet extends WebContainerServlet {
     @Override
     protected final void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
-            clientAddress.set(request.getRemoteAddr());
+            final String remoteAddr = request.getRemoteAddr();
+            if (remoteAddr == null) {
+                logger.severe("RemoteAddr is null!");
+            }
+            logger.severe("RemoteAddr is " + remoteAddr);
+            clientAddress.set(remoteAddr);
             BrowserCapability bc = (BrowserCapability) request.getSession().getAttribute("browserCapabilities");
             if (bc == null) {
                 bc = new BrowserCapability();
-                bc.parseUserAgent(request.getHeader("User-Agent"), request.getRemoteAddr());
+                bc.parseUserAgent(request.getHeader("User-Agent"), remoteAddr);
             }
             browserCapTL.set(bc);
             cookiesTL.set(new Cookies(request, response));
