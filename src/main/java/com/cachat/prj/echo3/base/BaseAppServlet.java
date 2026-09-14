@@ -278,15 +278,24 @@ public abstract class BaseAppServlet extends WebContainerServlet {
      *
      * @param request the incoming <code>HttpServletRequest</code>
      * @param response the outgoing <code>HttpServletResponse</code>
+     * @throws java.io.IOException en cas d'erreurs io
+     * @throws jakarta.servlet.ServletException en cas d'erreur servlet
+     * 
      */
     @Override
     protected final void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
-            clientAddress.set(request.getRemoteAddr());
+            final String remoteAddr = request.getRemoteAddr();
+            if (remoteAddr == null) {
+                logger.severe("Remote address is null !");
+            } else {
+                logger.severe("Remote address is " + remoteAddr);
+            }
+            clientAddress.set(remoteAddr);
             BrowserCapability bc = (BrowserCapability) request.getSession().getAttribute("browserCapabilities");
             if (bc == null) {
                 bc = new BrowserCapability();
-                bc.parseUserAgent(request.getHeader("User-Agent"), request.getRemoteAddr());
+                bc.parseUserAgent(request.getHeader("User-Agent"), remoteAddr);
             }
             browserCapTL.set(bc);
             cookiesTL.set(new Cookies(request, response));
