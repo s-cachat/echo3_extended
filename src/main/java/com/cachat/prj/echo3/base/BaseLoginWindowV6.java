@@ -157,6 +157,7 @@ public class BaseLoginWindowV6 extends MainPane {
     public BaseLoginWindowV6(BaseApp app, boolean showLanguageSelect) {
         this(app, false, showLanguageSelect, false);
     }
+
     /**
      * Constructeur
      *
@@ -343,7 +344,8 @@ public class BaseLoginWindowV6 extends MainPane {
      * @param name le nom utilisé pour l'authentification
      */
     protected void showLoginFailedMessage(String name) {
-        errorMsg.setText(app.getString("app.login.error"));
+        String s = app.getLastLoginErrorAndReset();
+        errorMsg.setText(s != null ? s : app.getString("app.login.error"));
     }
 
     /**
@@ -406,7 +408,6 @@ public class BaseLoginWindowV6 extends MainPane {
         }
         return -1;
     }
-
     //<editor-fold desc="Toast" defaultstate="collapsed">
     /**
      * Timer pour les toast
@@ -480,7 +481,7 @@ public class BaseLoginWindowV6 extends MainPane {
     public void clearWindows() {
         // nop
     }
-    
+
     /**
      * donne la liste de toutes les fenetres ouvertes
      *

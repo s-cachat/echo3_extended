@@ -285,7 +285,7 @@ public abstract class BaseAppServlet extends WebContainerServlet {
             if (remoteAddr == null) {
                 logger.severe("RemoteAddr is null!");
             }
-            logger.severe("RemoteAddr is " + remoteAddr);
+
             clientAddress.set(remoteAddr);
             BrowserCapability bc = (BrowserCapability) request.getSession().getAttribute("browserCapabilities");
             if (bc == null) {

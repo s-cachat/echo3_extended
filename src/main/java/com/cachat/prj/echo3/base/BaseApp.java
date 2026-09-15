@@ -72,7 +72,10 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      * identifiant pour la fenêtre de connexion
      */
     private String loginName;
-
+    /**
+     * la dernière erreur de login
+     */
+    protected String lastLoginError = null;
     /**
      * l'identite de l'utilisateur connecte initialement (ne change pas lors
      * d'un impersonate)
@@ -213,7 +216,8 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
      */
     public void doLogin() {
         boolean ok;
-        String msg = null;
+        String msg = lastLoginError;
+        lastLoginError = null;
         try {
             ok = checkSSOLogin();
         } catch (Exception e) {
@@ -243,6 +247,12 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
                 app.toast(getString("app.autoLogin"));
             }
         }
+    }
+
+    public String getLastLoginErrorAndReset() {
+        String s = lastLoginError;
+        lastLoginError = null;
+        return s;
     }
 
     /**
@@ -1021,9 +1031,7 @@ public abstract class BaseApp extends ApplicationInstance implements LocalisedIt
 
     }
 
-
     //</editor-fold>
-
     /**
      * les app (fenêtre de navigateur) filles
      */
