@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.Validator;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import nextapp.echo.app.Alignment;
 import nextapp.echo.app.Border;
@@ -861,9 +862,10 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
                 current.add(t);
             }
         }
-        for (T t : current) {
+        for (Iterator<T> it = current.iterator(); it.hasNext();) {
+            T t = it.next();
             if (!editList.contains(t)) {
-                current.remove(t);
+                it.remove();
             }
         }
         return errors;

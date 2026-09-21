@@ -1,7 +1,6 @@
 package com.cachat.prj.echo3.components;
 
 import static com.cachat.prj.echo3.components.GenericServices.JQUERY_SERVICE;
-import static com.cachat.prj.echo3.components.GenericServices.JQUERY_UI_SERVICE;
 import static com.cachat.prj.echo3.components.TimeSelectPeer.JS_TIME_PICKER_SERVICE;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.update.ClientUpdateManager;
@@ -19,7 +18,7 @@ import nextapp.echo.webcontainer.service.JavaScriptService;
  */
 public class InstantSelect4Peer extends AbstractComponentSynchronizePeer {
 
-     private static final Service JS_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.DateSelect4", "com/cachat/prj/echo3/components/js/DateSelect4.js");
+    private static final Service JS_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.InstantSelect4", "com/cachat/prj/echo3/components/js/InstantSelect4.js");
     private static final Service JS_FLAT_PICKER_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.FlatPicker", "com/cachat/prj/echo3/components/js/flatpicker.min.js");
     private static final Service JS_FLAT_PICKER_FR_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.FlatPicker.fr", "com/cachat/prj/echo3/components/js/flatpicker_fr.js");
     private static final Service JS_FLAT_PICKER_EN_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.FlatPicker.en", "com/cachat/prj/echo3/components/js/flatpicker_en.js");

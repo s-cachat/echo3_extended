@@ -18,10 +18,9 @@ import nextapp.echo.webcontainer.service.JavaScriptService;
  */
 public class InstantSelect3Peer extends AbstractComponentSynchronizePeer {
 
-  
     private static final Service JQUERY_TIMEPICKER = JavaScriptService.forResource("com.cachat.prj.echo3.components.jquery_ui_timepicker_addon", "com/cachat/prj/echo3/components/js/jquery-ui-timepicker-addon.js");
     private static final Service JQUERY_DATEPICKER = JavaScriptService.forResource("com.cachat.prj.echo3.components.jquery_ui_datepicker", "com/cachat/prj/echo3/components/js/jquery-ui-datepicker.js");
-    private static final Service JS_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.DateSelect3", "com/cachat/prj/echo3/components/js/DateSelect3.js");
+    private static final Service JS_SERVICE = JavaScriptService.forResource("com.cachat.prj.echo3.components.InstantSelect3", "com/cachat/prj/echo3/components/js/InstantSelect3.js");
     public static final String CHANGE_LISTENERS_CHANGED_PROPERTY = "changeListeners";
     public static final String ON_CHANGE_ACTION = "change";
 

@@ -7788,7 +7788,7 @@ OpenLayers.Layer.XYZ = OpenLayers.Class(OpenLayers.Layer.Grid, {isBaseLayer: !0,
                 arguments);
         this.tileOrigin || (this.tileOrigin = new OpenLayers.LonLat(this.maxExtent.left, this.maxExtent.bottom))
     }, CLASS_NAME: "OpenLayers.Layer.XYZ"});
-OpenLayers.Layer.OSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {name: "OpenStreetMap", url: ["http://a.tile.openstreetmap.org/${z}/${x}/${y}.png", "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png", "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"], attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors", sphericalMercator: !0, wrapDateLine: !0, tileOptions: null, initialize: function(a, b, c) {
+OpenLayers.Layer.OSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {name: "OpenStreetMap", url: ["https://tile.openstreetmap.org/${z}/${x}/${y}.png"], attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors", sphericalMercator: !0, wrapDateLine: !0, tileOptions: null, initialize: function(a, b, c) {
         OpenLayers.Layer.XYZ.prototype.initialize.apply(this, arguments);
         this.tileOptions =
                 OpenLayers.Util.extend({crossOriginKeyword: "anonymous"}, this.options && this.options.tileOptions)

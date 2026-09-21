@@ -91,6 +91,9 @@ DateSelect4.Sync = Core.extend(Echo.Render.ComponentSync, {
         if (this.withTime) {
             value = value + " " + this._timeField.value;
         }
+        if (value) {
+            value = value.trim();
+        }
         console.log("fireEvent date=", value);
         this.component.set("value", value);
         if (this.range) {

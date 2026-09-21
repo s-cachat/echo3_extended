@@ -126,6 +126,13 @@ OpenLayer.Sync = Core.extend(Echo.Render.ComponentSync, {
             numZoomLevels: maxZoom,
             units: 'm',
             projection: new OpenLayers.Projection("EPSG:900913"),
+            controls: [
+                new OpenLayers.Control.LayerSwitcher(),
+                new OpenLayers.Control.Navigation(),
+                new OpenLayers.Control.PanZoomBar(),
+                new OpenLayers.Control.MousePosition(),
+                new OpenLayers.Control.ScaleLine()
+            ],
             theme: "ol/theme/default/style.css"
                     //  displayProjection: new OpenLayers.Projection("EPSG:4326")
         });
@@ -220,11 +227,6 @@ OpenLayer.Sync = Core.extend(Echo.Render.ComponentSync, {
             });
         }
         map.addLayers([ol_wms]);
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
-        map.addControl(new OpenLayers.Control.Navigation());
-        map.addControl(new OpenLayers.Control.PanZoomBar());
-        map.addControl(new OpenLayers.Control.MousePosition());
-        map.addControl(new OpenLayers.Control.ScaleLine());
         map.peer = this;
         if (this._groupIcons) {
             map._strategyCluster = new OpenLayers.Strategy.ClusterExplode();
