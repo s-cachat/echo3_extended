@@ -659,6 +659,7 @@ public class BlockTable<T> implements BlockContainer, BlockBase<Column>, Localis
     protected TableEx buildTable() {
         TableEx tbl = new TableEx(model);
         tbl.setStyleName("BlockTable");
+        tbl.setInsets(new Insets(8));
         tbl.setBorder(new Border(1, Color.BLACK, Border.STYLE_SOLID));
         tbl.setWidth(new Extent(100, Extent.PERCENT));
         tbl.setDefaultRenderer(Component.class, new DefaultTableCellRenderer() {

@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -687,7 +688,9 @@ public abstract class BaseMainPaneV6 extends MainPane {
             logger.log(Level.FINE, "menu : {0}", e.getActionCommand());
             setSubMenuVisible(false);
             setMenu1Selected(button);
-            updateMainCE(menuItem);
+            if (e.getSource() != null && !Objects.equals(menuItem.getNewPane(), e.getSource().getClass().getName())) {
+                updateMainCE(menuItem);
+            }
         } else if (mel instanceof SubMenu sm) {
             setSubMenuVisible(false);
             setMenu1Selected(button);
